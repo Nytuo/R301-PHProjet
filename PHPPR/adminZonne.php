@@ -97,12 +97,13 @@ if (isset($_POST["name"])){
 
 
     $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
-    $price = filter_input(INPUT_POST, 'price', FILTER_SANITIZE_NUMBER_FLOAT);
+    $ref = filter_input(INPUT_POST, 'ref', FILTER_SANITIZE_STRING);
+    $public_price = filter_input(INPUT_POST, 'public_price', FILTER_SANITIZE_NUMBER_FLOAT);
+    $paid_price = filter_input(INPUT_POST, 'paid_price', FILTER_SANITIZE_NUMBER_FLOAT);
     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
     $image = $target_file;
     $quantity = filter_input(INPUT_POST, 'quantity', FILTER_SANITIZE_NUMBER_INT);
-    $category = filter_input(INPUT_POST, 'category', FILTER_SANITIZE_STRING);
-    $sql->insertProduct($name, $price, $description, $image, $quantity);
+    $sql->insertProduct($name,$ref, $public_price,$paid_price, $description, $image, $quantity);
     header("Location: adminZonne.php");
     exit(0);
 }
@@ -149,8 +150,10 @@ function showProducts(){
 <p>YOU CAN ADD PRODUCTS</p>
 <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
     <input type="text" name="name">
+    <input type="text" name="ref">
     <input type="text" name="description">
-    <input type="text" name="price">
+    <input type="text" name="public_price">
+    <input type="text" name="paid_price">
     <input type="text" name="quantity">
     <input type="file" name="image" id="image">
     <input type="submit" value="Add product">

@@ -43,11 +43,11 @@ class SqlApi
         }
     }
 
-    public function insertProduct(string $name, int $price, string $description, string $image, int $quantity)
+    public function insertProduct(string $name,string $ref, int $public_price,int $paid_price, string $description, string $image, int $quantity)
     {
-        $sqlQuery = "INSERT INTO products (name, price, description, image, quantity, category) VALUES (:name, :price, :description, :image, :quantity, :category)";
+        $sqlQuery = "INSERT INTO products (id,title,ref, public_price,paid_price, description, image, quantity) VALUES (NULL,:title,:ref, :public_price,:paid_price, :description, :image, :quantity)";
         $stmt = $this->db->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-        $stmt->execute(array(':name' => $name, ':price' => $price, ':description' => $description, ':image' => $image, ':quantity' => $quantity));
+        $stmt->execute(array('title' => $name,'ref' => $ref, 'public_price' => $public_price,'paid_price' => $paid_price, 'description' => $description, 'image' => $image, 'quantity' => $quantity));
 
     }
 
