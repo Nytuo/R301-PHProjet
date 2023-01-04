@@ -1,10 +1,10 @@
 <?php
 
-session_set_cookie_params(36000,'/');
+session_set_cookie_params(36000, '/');
 session_start();
 // importe SqlApi
 require_once "SqlApi.php";
-$sql=new SqlApi();
+$sql = new SqlApi();
 
 // open sql connection
 
@@ -13,7 +13,7 @@ $sql=new SqlApi();
 
 
 // pasword max 50 char
-if (isset($_POST['password'])){
+if (isset($_POST['password'])) {
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
 
     if (strlen($_POST['password']) > 50) {
@@ -22,13 +22,11 @@ if (isset($_POST['password'])){
         exit(0);
     }
     $ashPassword = hash('sha256', $_POST['password']);
-}
-else{
-    if (isset($_SESSION['password']) && isset($_SESSION['email'])){
+} else {
+    if (isset($_SESSION['password']) && isset($_SESSION['email'])) {
         $ashPassword = $_SESSION['password'];
         $email = $_SESSION['email'];
-    }
-    else{
+    } else {
         header("Location: connexion.php");
         exit(0);
     }
@@ -49,18 +47,18 @@ $_SESSION['password'] = $ashPassword;//todo en attendant (ou peut etre définiti
 $_SESSION['email'] = $email;
 
 var_dump($_FILES);
-if (isset($_POST["name"])){
+if (isset($_POST["name"])) {
 
     //save the image in the server
     $target_dir = "images/";
     // print in console the name of the file
     $target_file = $target_dir . basename($_FILES["image"]["name"]);
     $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     // Check if image file is a actual image or fake image
-    if(isset($_POST["name"])) {
+    if (isset($_POST["name"])) {
         $check = getimagesize($_FILES["image"]["tmp_name"]);
-        if($check !== false) {
+        if ($check !== false) {
             echo "File is an image - " . $check["mime"] . ".";
             $uploadOk = 1;
         } else {
@@ -79,17 +77,17 @@ if (isset($_POST["name"])){
         $uploadOk = 0;
     }
     // Allow certain file formats
-    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" ) {
+    if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
         echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
         $uploadOk = 0;
     }
     // Check if $uploadOk is set to 0 by an error
     if ($uploadOk == 0) {
         echo "Sorry, your file was not uploaded.";
-    // if everything is ok, try to upload file
+        // if everything is ok, try to upload file
     } else {
         if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-            echo "The file ". basename( $_FILES["image"]["name"]). " has been uploaded.";
+            echo "The file " . basename($_FILES["image"]["name"]) . " has been uploaded.";
         } else {
             echo "Sorry, there was an error uploading your file.";
         }
@@ -109,15 +107,18 @@ if (isset($_POST["name"])){
 }
 
 
-
-function closeConnection($db) {
+function closeConnection($db)
+{
     $db->close();
 }
 
-function showProducts(){
-    $allProducts = array();
+function showProducts($sql)
+{
     //get all products from DB
-    $dbhost = "localhost";
+
+    $allProducts = $sql->getProducts();
+
+
     echo "<h1>Products</h1>";
     echo "<table>";
     echo "<tr>";
@@ -128,6 +129,17 @@ function showProducts(){
     echo "<th>Image</th>";
     echo "<th>Quantity</th>";
     echo "</tr>";
+    foreach ($allProducts as $product) {
+        echo "<tr>";
+        echo "<td>" . $product['id'] . "</td>";
+        echo "<td>" . $product['title'] . "</td>";
+        echo "<td>" . $product['public_price'] . "</td>";
+        echo "<td>" . $product['description'] . "</td>";
+        echo "<td><img src=" . $product['image'] . " /></td>";
+        echo "<td>" . $product['quantity'] . "</td>";
+        echo "</tr>";
+    }
+
     echo "</table>";
 
 }
@@ -159,6 +171,6 @@ function showProducts(){
     <input type="submit" value="Add product">
 </form>
 <p>YOU CAN SHOW PRODUCTS</p>
-<?php showProducts() ?>
+<?php showProducts($sql) ?>
 </body>
 </html>

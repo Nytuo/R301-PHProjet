@@ -1,5 +1,5 @@
 <?php
-
+require_once "SqlApi.php";
 class product
 {
     public $ref;
@@ -11,16 +11,11 @@ class product
     public string $description;
     public string $image;
     public int $quantity;
-    public mysqli $db;
+    public SqlApi $sql;
 
     public function __construct($id)
     {
-        $this->db = new mysqli('localhost', 'root', '', 'comics');
-        if ($this->db->connect_errno) {
-            echo "Failed to connect to MySQL: " . $this->db->connect_error;
-            exit();
-        }
-
+        $this->sql = new SqlApi();
         $this->ref = $id;
         $this->getProduct();
 
@@ -120,13 +115,6 @@ class product
         $this->quantity = $quantity;
     }
 
-    /**
-     * @return string
-     */
-    public function getCategory(): string
-    {
-        return $this->category;
-    }
 
     /**
      * @param string $category
@@ -136,18 +124,14 @@ class product
         $this->category = $category;
     }
 
-    private function getProduct()
+    private function getProduct(): void
     {
-
-        $result = $this->db->query("SELECT * FROM products WHERE id = $this->ref");
-        $row = $result->fetch_assoc();
-        $this->title = $row['name'];
-        $this->publicPrice = $row['price'];
-        $this->description = $row['description'];
-        $this->image = $row['image'];
-        $this->quantity = $row['quantity'];
-        $this->category = $row['category'];
-
+        $result = $this->sql->getProduct($this->ref);
+        $this->title = $result['title'];
+        $this->publicPrice = $result['public_price'];
+        $this->description = $result['description'];
+        $this->image = $result['image'];
+        $this->quantity = $result['quantity'];
     }
 
     public function getRef()
