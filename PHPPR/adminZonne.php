@@ -114,6 +114,24 @@ function closeConnection($db) {
     $db->close();
 }
 
+function showProducts(){
+    $allProducts = array();
+    //get all products from DB
+    $dbhost = "localhost";
+    echo "<h1>Products</h1>";
+    echo "<table>";
+    echo "<tr>";
+    echo "<th>Id</th>";
+    echo "<th>Name</th>";
+    echo "<th>Price</th>";
+    echo "<th>Description</th>";
+    echo "<th>Image</th>";
+    echo "<th>Quantity</th>";
+    echo "</tr>";
+    echo "</table>";
+
+}
+
 ?>
 
 <!doctype html>
@@ -139,5 +157,7 @@ function closeConnection($db) {
     <input type="file" name="image">
     <input type="submit" value="Add product">
 </form>
+<p>YOU CAN SHOW PRODUCTS</p>
+<?php showProducts() ?>
 </body>
 </html>
