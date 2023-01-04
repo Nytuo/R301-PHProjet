@@ -21,6 +21,16 @@ class SqlApi
             email TEXT PRIMARY KEY NOT NULL,
             password TEXT NOT NULL
         );
+        create table products (
+            id INTEGER PRIMARY KEY,
+            ref varchar(255) not null,
+            title varchar(255) not null,
+            public_price float not null,
+            paid_price float not null,
+            description text not null,
+            image varchar(255) not null,
+            quantity int not null
+        );
         ";
         try {
             $this->db->exec($dbInit);
