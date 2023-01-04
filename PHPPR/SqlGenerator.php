@@ -23,25 +23,6 @@ try {
 
 }
 
-//create db if not exists
-$dbInit = "CREATE TABLE IF NOT EXISTS products (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
-    price INTEGER,
-    description TEXT,
-    image TEXT
-)";
-try {
-
-        $db->exec($dbInit);
-
-        echo "Database created <br>";
-
-    } catch (PDOException $e) {
-
-        echo $e->getMessage();
-
-}
 
 //db close
 

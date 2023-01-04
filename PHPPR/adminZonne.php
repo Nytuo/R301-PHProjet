@@ -1,63 +1,65 @@
 <?php
 
-session_set_cookie_params(360000,'/');
+session_set_cookie_params(36000,'/');
 session_start();
+// importe SqlApi
+require_once "SqlApi.php";
+$sql=new SqlApi();
 
 // open sql connection
 
 
 // filter input
-if (isset($_SESSION['password']))
-$email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+
+
 // pasword max 50 char
 if (isset($_POST['password'])){
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
 
-if (strlen($_POST['password']) < 50) {
-    $_SESSION['error'] = "Password too long";
-    header("Location: connexion.php");
-    exit(0);
-
-}
-
-$ashPassword = hash('sha256', $_POST['password']);
-    $dbhost = "localhost";
-    $dbuser = "root";
-    $dbpass = "1234";
-    $dbname ="ComicsSansMS";
-    $db = new mysqli($dbhost, $dbuser, $dbpass, $dbname) or die ("Error connecting to database");
-// do a pre generate sql query to thck if the admin password is correct
-    $sqlQuery="SELECT count(*) FROM admin WHERE email=':email' AND password=':password'";
-
-//prepare the query
-    $stmt = $db->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-//execute the query
-    $stmt->execute(array(':email' => $_POST['email'], ':password' => $_POST['password']));
-//fetch the result
-    $result = $stmt->fetch();
-
-    if ($result[0] == 0) {
-        // if the password is correct, open the admin zone
-        $_SESSION['error'] = "Wrong password";
+    if (strlen($_POST['password']) > 50) {
+        $_SESSION['error'] = "Password too long";
         header("Location: connexion.php");
-        closeConnection($db);
         exit(0);
     }
-// save
-
-// do a fonction to close the sql connection
-    $_SESSION['password'] = $ashPassword;//todo en attendant (ou peut etre définitif)
+    $ashPassword = hash('sha256', $_POST['password']);
+}
+else{
+    if (isset($_SESSION['password']) && isset($_SESSION['email'])){
+        $ashPassword = $_SESSION['password'];
+        $email = $_SESSION['email'];
+    }
+    else{
+        header("Location: connexion.php");
+        exit(0);
+    }
 }
 
-if (isset($_POST["submit"])){
+
+$result = $sql->connectUser($email, $ashPassword);
+if (!$result) {
+
+    // if the password is correct, open the admin zone
+    $_SESSION['error'] = "Wrong password";
+
+    header("Location: connexion.php");
+    exit(0);
+}
+
+$_SESSION['password'] = $ashPassword;//todo en attendant (ou peut etre définitif)
+$_SESSION['email'] = $email;
+
+var_dump($_FILES);
+if (isset($_POST["name"])){
 
     //save the image in the server
     $target_dir = "images/";
-    $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+    // print in console the name of the file
+    $target_file = $target_dir . basename($_FILES["image"]["name"]);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
     // Check if image file is a actual image or fake image
-    if(isset($_POST["submit"])) {
-        $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
+    if(isset($_POST["name"])) {
+        $check = getimagesize($_FILES["image"]["tmp_name"]);
         if($check !== false) {
             echo "File is an image - " . $check["mime"] . ".";
             $uploadOk = 1;
@@ -86,8 +88,8 @@ if (isset($_POST["submit"])){
         echo "Sorry, your file was not uploaded.";
     // if everything is ok, try to upload file
     } else {
-        if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
-            echo "The file ". basename( $_FILES["fileToUpload"]["name"]). " has been uploaded.";
+        if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+            echo "The file ". basename( $_FILES["image"]["name"]). " has been uploaded.";
         } else {
             echo "Sorry, there was an error uploading your file.";
         }
@@ -100,10 +102,7 @@ if (isset($_POST["submit"])){
     $image = $target_file;
     $quantity = filter_input(INPUT_POST, 'quantity', FILTER_SANITIZE_NUMBER_INT);
     $category = filter_input(INPUT_POST, 'category', FILTER_SANITIZE_STRING);
-    $sqlQuery = "INSERT INTO products (name, price, description, image, quantity, category) VALUES (:name, :price, :description, :image, :quantity, :category)";
-    $stmt = $db->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-    $stmt->execute(array(':name' => $name, ':price' => $price, ':description' => $description, ':image' => $image, ':quantity' => $quantity, ':category' => $category));
-    closeConnection($db);
+    $sql->insertProduct($name, $price, $description, $image, $quantity);
     header("Location: adminZonne.php");
     exit(0);
 }
@@ -130,13 +129,12 @@ function closeConnection($db) {
 <p>WELCOME <?php echo $_SESSION['email'] ?></p>
 <p>YOU ARE CONNECTED</p>
 <p>YOU CAN ADD PRODUCTS</p>
-<form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
+<form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
     <input type="text" name="name">
     <input type="text" name="description">
     <input type="text" name="price">
     <input type="text" name="quantity">
-    <input type="text" name="category">
-    <input type="file" name="image">
+    <input type="file" name="image" id="image">
     <input type="submit" value="Add product">
 </form>
 </body>

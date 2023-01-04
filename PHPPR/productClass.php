@@ -3,6 +3,7 @@
 class product
 {
     public $ref;
+
     public $id;
     public string $title;
     public float $publicPrice;
@@ -10,7 +11,6 @@ class product
     public string $description;
     public string $image;
     public int $quantity;
-    public string $category;
     public mysqli $db;
 
     public function __construct($id)
