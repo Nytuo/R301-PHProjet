@@ -51,6 +51,25 @@ class SqlApi
 
     }
 
+    public function getProducts(): array
+    {
+        $result = $this->db->query("SELECT * FROM products");
+        $result = $result->fetchAll();
+        $products = [];
+        foreach ($result as $product) {
+            $products[] = $product;
+        }
+        return $products;
+    }
+
+    public function getProduct(int $id)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM products WHERE id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $stmt->execute(array('id' => $id));
+        $result = $stmt->fetch();
+        return $result;
+    }
+
 
     public function close()
     {

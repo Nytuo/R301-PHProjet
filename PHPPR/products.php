@@ -6,43 +6,39 @@
     session_start();
 
     //get all products from database
-    $this->db = new mysqli('localhost', 'root', '', 'comics');
-    if ($this->db->connect_errno) {
-        echo "Failed to connect to MySQL: " . $this->db->connect_error;
-        exit();
-    }
-    $sql = "SELECT * FROM products";
-    $result = $this->db->query($sql);
-    $products = $result->fetch_all(MYSQLI_ASSOC);
-    $this->db->close();
+    require_once "SqlApi.php";
+    require_once "productClass.php";
+    $db=new SqlApi();
+
+    $products = $db->getProducts();
     $productList = array();
 
     //for each product create a product object
     foreach ($products as $product) {
         $productObject = new product($product['id']);
-        $productObject->setTitle($product['name']);
-        $productObject->setPublicPrice($product['price']);
+        $productObject->setTitle($product['title']);
+        $productObject->setPublicPrice($product['public_price']);
         $productObject->setDescription($product['description']);
         $productObject->setImage($product['image']);
         $productObject->setQuantity($product['quantity']);
-        $productObject->setCategory($product['category']);
         $productList[] = $productObject;
     }
 
     //display all products
     foreach ($productList as $product) {
+        echo '<a href="product.php?id=' . $product->ref . '">';
         echo "<div class='product'>";
-        echo "<img src='" . $product->getImage() . "' alt='product image'>";
+        echo "<img src=" . $product->getImage() . " alt='product image'>";
         echo "<h3>" . $product->getTitle() . "</h3>";
         echo "<p>" . $product->getDescription() . "</p>";
         echo "<p>" . $product->getPublicPrice() . "€</p>";
         echo "<p>Quantity: " . $product->getQuantity() . "</p>";
-        echo "<p>Category: " . $product->getCategory() . "</p>";
         echo "<form action='addProduct.php' method='post'>";
         echo "<input type='hidden' name='id' value='" . $product->getRef() . "'>";
         echo "<input type='submit' value='Add to cart'>";
         echo "</form>";
         echo "</div>";
+        echo "</a>";
     }
 
     ?>

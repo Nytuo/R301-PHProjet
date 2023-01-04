@@ -1,6 +1,6 @@
 <?php
-
-$product = new product($_POST['id']);
+require_once "productClass.php";
+$product = new product($_GET['id']);
 
 ?>
 
@@ -19,7 +19,6 @@ $product = new product($_POST['id']);
 <p><?php echo $product->getDescription() ?></p>
 <p><?php echo $product->getPublicPrice() ?></p>
 <p><?php echo $product->getQuantity() ?></p>
-<p><?php echo $product->getCategory() ?></p>
 <img src="<?php echo $product->getImage() ?>" alt="">
 <form action="addProduct.php" method="post">
     <input type="hidden" name="id" value="<?php echo $product->getRef() ?>">
