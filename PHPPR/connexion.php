@@ -1,4 +1,7 @@
-<div>
+<?php
+include_once "head.php"
+?>
+    <div>
     <!-- conexion form -->
 
     <form action="adminZonne.php" method="post">

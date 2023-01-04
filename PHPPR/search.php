@@ -11,7 +11,7 @@
         echo "Failed to connect to MySQL: " . $this->db->connect_error;
         exit();
     }
-    $sql = "SELECT * FROM products";
+    $sql = "SELECT * FROM products WHERE title LIKE '%" . $_POST['search'] . "%' OR ref LIKE '%" . $_POST['search'] . "%'";
     $result = $this->db->query($sql);
     $products = $result->fetch_all(MYSQLI_ASSOC);
     $this->db->close();

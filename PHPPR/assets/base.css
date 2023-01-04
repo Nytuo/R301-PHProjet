@@ -1,0 +1,26 @@
+:root{
+    --color-primary: #016fb9;
+    --color-secondary:#221D23;
+    --color-tertiary: #00f;
+}
+
+/* change all fonts to Comic Sans MS */
+body{
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    color: white;
+}
+header, main, footer {
+    padding-left: 300px;
+}
+nav{
+    background-color: var(--color-primary);
+}
+
+@media only screen and (max-width : 992px) {
+    header, main, footer {
+        padding-left: 0;
+    }
+}
+.sidenav{
+    background-color: var(--color-secondary);
+}

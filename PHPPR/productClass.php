@@ -2,14 +2,16 @@
 
 class product
 {
+    public $ref;
     public $id;
-    public $name;
-    public $price;
-    public $description;
-    public $image;
-    public $quantity;
-    public $category;
-    public $db;
+    public string $title;
+    public float $publicPrice;
+    public float $paidPrice;
+    public string $description;
+    public string $image;
+    public int $quantity;
+    public string $category;
+    public mysqli $db;
 
     public function __construct($id)
     {
@@ -19,41 +21,55 @@ class product
             exit();
         }
 
-        $this->id = $id;
+        $this->ref = $id;
         $this->getProduct();
 
     }
-
     /**
-     * @return string
+     * @return float
      */
-    public function getName(): string
+    public function getPaidPrice(): float
     {
-        return $this->name;
+        return $this->paidPrice;
     }
 
     /**
-     * @param string $name
+     * @param float $paidPrice
      */
-    public function setName(string $name): void
+    public function setPaidPrice(float $paidPrice): void
     {
-        $this->name = $name;
+        $this->paidPrice = $paidPrice;
+    }
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
     }
 
     /**
      * @return float
      */
-    public function getPrice(): float
+    public function getPublicPrice(): float
     {
-        return $this->price;
+        return $this->publicPrice;
     }
 
     /**
-     * @param float $price
+     * @param float $publicPrice
      */
-    public function setPrice(float $price): void
+    public function setPublicPrice(float $publicPrice): void
     {
-        $this->price = $price;
+        $this->publicPrice = $publicPrice;
     }
 
     /**
@@ -123,15 +139,20 @@ class product
     private function getProduct()
     {
 
-        $result = $this->db->query("SELECT * FROM products WHERE id = $this->id");
+        $result = $this->db->query("SELECT * FROM products WHERE id = $this->ref");
         $row = $result->fetch_assoc();
-        $this->name = $row['name'];
-        $this->price = $row['price'];
+        $this->title = $row['name'];
+        $this->publicPrice = $row['price'];
         $this->description = $row['description'];
         $this->image = $row['image'];
         $this->quantity = $row['quantity'];
         $this->category = $row['category'];
 
+    }
+
+    public function getRef()
+    {
+        return $this->ref;
     }
 
 
