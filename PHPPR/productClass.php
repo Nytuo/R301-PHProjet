@@ -1,5 +1,6 @@
 <?php
 require_once "SqlApi.php";
+
 class product
 {
     public $ref;
@@ -20,6 +21,7 @@ class product
         $this->getProduct();
 
     }
+
     /**
      * @return float
      */
@@ -35,6 +37,7 @@ class product
     {
         $this->paidPrice = $paidPrice;
     }
+
     /**
      * @return string
      */
@@ -119,13 +122,11 @@ class product
     {
         if ($this->quantity > 0) {
             return "<span class='InStock'>En stock</span>";
-        }else if ($this->quantity == 0){
+        } else if ($this->quantity == 0) {
             return "<span class='OutOfStock'>Rupture de stock</span>";
-        }
-        else if ($this->quantity<10){
-            return "<span class='NotThatMuch'>Plus que ".$this->quantity." exemplaire en stock</span>";
-        }
-        else {
+        } else if ($this->quantity < 10) {
+            return "<span class='NotThatMuch'>Plus que " . $this->quantity . " exemplaire en stock</span>";
+        } else {
             return "<span class='OutOfStock'>Non disponible à la vente</span>";
         }
     }
@@ -153,15 +154,17 @@ class product
         return $this->ref;
     }
 
-    public function displayProduct(){
-        echo "<a href='product.php?id=".$this->ref."'>";
+    public function displayProduct()
+    {
+        echo "<a href='product.php?id=" . $this->ref . "'>";
         echo "<div class='product'>";
         echo "<div class='flip'>";
-        echo "<div class='front' style='background-image: url(".$this->image.");background-size: cover;'>";
+        echo "<div class='front' style='background-image: url(" . $this->image . ");background-size: cover;'>";
         echo "</div>";
         echo "<div class='back'>";
-        echo "<h2>".$this->title."</h2>";
-        echo "<p>".$this->description."</p>";
+        echo "<h2>" . $this->title . "</h2>";
+        echo "<p>" . $this->publicPrice . "€</p>";
+        echo "<p>" . $this->description . "</p>";
         echo "</div>";
         echo "</div>";
         echo "</div>";

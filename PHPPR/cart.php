@@ -1,6 +1,9 @@
 <?php
 
 session_start();
+require_once "head.php";
+require_once "header.php";
+
 require_once "productClass.php";
 
 $cartList = array();
@@ -13,47 +16,82 @@ function calculateTotal($cartList) {
     foreach ($cartList as $cart) {
         $total += $cart['product']->getPublicPrice() * $cart['quantity'];
     }
+    if (isset($_SESSION['discount'])) {
+        $total = $total - ($_SESSION['discount']);
+    }
+    if (isset($_SESSION['shipping'])) {
+        $total = $total + $_SESSION['shipping'];
+    }
     return $total;
 }
 
 
 ?>
 
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
+
 <body>
+<main>
+
+
 <h1>Le chariot</h1>
 <?php
-foreach ($cartList as $cart) {
-    $qty = $cart['quantity'];
-    $cart = $cart['product'];
-    echo "<div class='product'>";
-    echo "<img src='" . $cart->getImage() . "' alt='product image'>";
-    echo "<h3>" . $cart->getTitle() . "</h3>";
-    echo "<p>" . $cart->getDescription() . "</p>";
-    echo "<p>" . $cart->getPublicPrice() . "€</p>";
-    echo "<p>Quantity: " . $cart->getQuantity() . "</p>";
-    echo "<form action='removeProduct.php' method='post'>";
-    echo "<input type='hidden' name='id' value='" . $cart->getRef() . "'>";
-    echo "<input type='submit' value='Remove from cart'>";
+if (count($cartList) > 0) {
+    foreach ($cartList as $cart) {
+        $qty = $cart['quantity'];
+        $cart = $cart['product'];
+        echo "<div class='product_cart'>";
+        echo "<img src='" . $cart->getImage() . "' alt='product image' class='product_img_cart'>";
+        echo "<span class='cart_title'><a href='product.php?id=" . $cart->getRef() . "'>" . $cart->getTitle() . "</a></span>";
+        echo "<span class='cart_price price'>" . $cart->getPublicPrice() . "€</span>";
+        echo "<form action='removeProduct.php' method='post'>";
+        echo "<input type='hidden' name='id' value='" . $cart->getRef() . "'>";
+        echo "</form>";
+        echo "<input type='number' name='quantity' min='1' max='" . $cart->getQuantity() . "' value='" . $qty . "' onchange='updateQuantity(this.value, " . $cart->getRef() . ")'>";
+        echo "<input type='submit' class='waves-effect btn' value='Supprimer'>";
+        echo "</div>";
+    }
+    //code promo
+    echo "<div class='promo'>";
+    echo "<form action='updatePromo.php' method='post'>";
+    echo "<input type='text' name='promo' id='submitCP'  placeholder='Code promo'>";
+    echo "<input type='submit' class='waves-effect btn' value='Valider'>";
     echo "</form>";
-    echo "<input type='number' name='quantity' min='1' max='" . $cart->getQuantity() . "' value='" . $qty . "' onchange='updateQuantity(this.value, " . $cart->getRef() . ")'>";
     echo "</div>";
+    //frais de port en fonction de l'adresse
+    echo "<div class='shipping'>";
+    echo "<form action='updateShipping.php' method='post'>";
+    echo "<div class='input-field col s12'>";
+    echo "<select name='shipping'>";
+    echo "<option value='0' selected disabled>Calculer les frais de port</option>";
+    echo "<option value='5.9'>France</option>";
+    echo "<option value='10'>Europe</option>";
+    echo "<option value='20'>International</option>";
+    echo "<label>Shipping</label>";
+    echo "</select>";
+    echo "<input type='submit' class='waves-effect btn' value='Valider'>";
+    echo "</form>";
+    echo "</div>";
+    if (isset($_SESSION['discount'])) {
+        echo "<p id='discount'>Code promo : " . $_SESSION['discount'] . "€</p>";
+        echo "<script>document.getElementById('submitCP').value = '".$_SESSION['discount_code']."'</script>";
+    }
+    if (isset($_SESSION['shipping'])) {
+        echo "<p id='shipping'>Frais de port : " . $_SESSION['shipping'] . "€</p>";
+    }
+    echo "<p id='totalHT'>Total Hors-Taxes : " . calculateTotal($cartList) - (calculateTotal($cartList) * 0.2) . "€</p>";
+    echo "<p id='TVA'>dont " . calculateTotal($cartList) * 0.2 . "€ de TVA (20%)</p>";
+    echo "<p id='totalTTC'>Total TTC : " . calculateTotal($cartList) . "€</p>";
+echo "<form action=''>
+<input type='submit' class='btn waves-effect' value='Payer via Paypal'>
+</form>";
+} else {
+    echo "<p>Le chariot est vide...</p>";
+    echo "<a href='products.php' class='btn waves-effect'>Retour aux produits</a>";
+
 }
+
 ?>
-<form action="">
-<input type="submit" value="Payer via Paypal">
-</form>
-<p id="totalHT">Total: <?php echo calculateTotal($cartList) ?>€</p>
-<p id="totalTTC">Total (TTC): <?php echo calculateTotal($cartList) * 1.2 ?>€</p>
-<p id="TVA">TVA : <?php echo calculateTotal($cartList) * 0.2 ?>€</p>
+
 <script>
     function updateQuantity(value,ref) {
         console.log(value);
@@ -69,6 +107,15 @@ foreach ($cartList as $cart) {
                window.location.reload();
             });
     }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems, {});
+    });
 </script>
+</main>
+<?php
+require_once "footer.php";
+?>
 </body>
-</html>

@@ -13,7 +13,31 @@
     width: 25%;
     object-fit: cover;
 }
-
+.product_img_cart {
+    width: 10%;
+    object-fit: cover;
+}
+.product_cart{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-tertiary);
+}
+.dropdown-content{
+ background-color: var(--color-secondary);
+    color: white;
+}
+.dropdown-content li > a, .dropdown-content li > span {
+    color: var(--text);
+}
+.product_cart > input:not([type]), .product_cart > input[type="text"]:not(.browser-default), .product_cart > input[type="password"]:not(.browser-default), .product_cart > input[type="email"]:not(.browser-default), .product_cart > input[type="url"]:not(.browser-default), .product_cart > input[type="time"]:not(.browser-default), .product_cart > input[type="date"]:not(.browser-default), .product_cart > input[type="datetime"]:not(.browser-default), .product_cart > input[type="datetime-local"]:not(.browser-default), .product_cart > input[type="tel"]:not(.browser-default), .product_cart > input[type="number"]:not(.browser-default), .product_cart > input[type="search"]:not(.browser-default),.product_cart >  textarea.materialize-textarea{
+    width: 50px;
+    color : var(--text);
+}
+.product_cart > span {
+    width: 25%;
+}
 .btn {
     background-color: var(--color-primary);
     color: var(--text);
@@ -24,7 +48,7 @@
     background-color: var(--color-tertiary);
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"],input[type="submit"] {
     color: var(--text);
 }
 
@@ -32,7 +56,15 @@ input:not([type]):focus:not([readonly]), input[type="text"]:not(.browser-default
     border-bottom: 1px solid var(--color-primary);
     box-shadow: 0 1px 0 0 var(--color-primary);
 }
-
+.select-dropdown li.disabled, .select-dropdown li.disabled > span, .select-dropdown li.optgroup {
+    color: var(--text);
+}
+.select-wrapper .caret {
+    fill: var(--text);
+}
+.select-dropdown.dropdown-content li:hover{
+    background-color: var(--color-tertiary);
+}
 /* change all fonts to Comic Sans MS */
 body {
     font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -103,7 +135,7 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     background: var(--color-tertiary);
 }
-.purchase > .price {
+.price {
     display: inline-block;
     color: yellow;
     font-size: 45px;
