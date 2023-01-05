@@ -71,6 +71,7 @@ if (count($cartList) > 0) {
     echo "<input type='submit' class='waves-effect btn' value='Valider'>";
     echo "</form>";
     echo "</div>";
+    echo "<div class='total'>";
     if (isset($_SESSION['discount'])) {
         echo "<p id='discount'>Code promo : " . $_SESSION['discount'] . "€</p>";
         echo "<script>document.getElementById('submitCP').value = '".$_SESSION['discount_code']."'</script>";
@@ -78,9 +79,9 @@ if (count($cartList) > 0) {
     if (isset($_SESSION['shipping'])) {
         echo "<p id='shipping'>Frais de port : " . $_SESSION['shipping'] . "€</p>";
     }
-    echo "<p id='totalHT'>Total Hors-Taxes : " . calculateTotal($cartList) - (calculateTotal($cartList) * 0.2) . "€</p>";
-    echo "<p id='TVA'>dont " . calculateTotal($cartList) * 0.2 . "€ de TVA (20%)</p>";
-    echo "<p id='totalTTC'>Total TTC : " . calculateTotal($cartList) . "€</p>";
+    echo "<p id='totalHT'>Total Hors-Taxes : " . calculateTotal($cartList) - (calculateTotal($cartList) * 0.2) . "€ dont " . calculateTotal($cartList) * 0.2 . "€ de TVA (20%)</p>";
+    echo "<p id='totalTTC' class='price'>Total TTC : " . calculateTotal($cartList) . "€</p>";
+    echo "</div>";
 echo "<form action=''>
 <input type='submit' class='btn waves-effect' value='Payer via Paypal'>
 </form>";

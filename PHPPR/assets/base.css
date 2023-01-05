@@ -44,7 +44,9 @@
     border-radius: 5px;
     cursor: pointer;
 }
-
+.total>p{
+    text-align: right;
+}
 .btn:hover {
     background-color: var(--color-tertiary);
 }
@@ -139,7 +141,7 @@ body {
 .price {
     display: inline-block;
     color: yellow;
-    font-size: 45px;
+    font-size: 3rem;
     font-weight: bold;
     line-height: 1;
     margin-top:5px;
