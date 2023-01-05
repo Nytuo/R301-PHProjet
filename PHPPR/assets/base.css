@@ -2,7 +2,9 @@
     --color-primary: #016fb9;
     --color-secondary:#221D23;
     --color-tertiary: #00f;
+    --text: #fff;
 }
+
 
 /* change all fonts to Comic Sans MS */
 body{
@@ -36,4 +38,143 @@ nav{
 }
 .spaceX{
     margin-bottom: 100px;
+}
+/* The snackbar - position it at the bottom and in the middle of the screen */
+#snackbar {
+    visibility: hidden; /* Hidden by default. Visible on click */
+    background-color: var(--color-secondary); /* Black background color */
+    min-width: 100%;
+    color: var(--text); /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 2px; /* Rounded borders */
+    padding: 16px; /* Padding */
+    position: fixed; /* Sit on top of the screen */
+    z-index: 10; /* Add a z-index if needed */
+    bottom: 30px; /* 30px from the bottom */
+}
+
+/*!* Show the snackbar when clicking on a button (class added with JavaScript) *!
+#snackbar.show {
+    visibility: visible; !* Show the snackbar *!
+    !* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+    However, delay the fade out process for 2.5 seconds *!
+    !*-webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;*!
+    animation: bounceInUp 1s, bounceOutDown 1s 2.5s;
+    !*animation: fadein 0.5s, fadeout 0.5s 2.5s;*!
+}*/
+.snack_container {
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease;
+}
+
+.snack_rectangle {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    positon: relative;
+    width: 50px;
+    height: 50px;
+    background: #380848;
+    transform: scale(0);
+    border-radius: 50%;
+    color: white;
+    opacity: 0;
+    overflow: hidden;
+    -webkit-animation: scale-in 0.3s ease-out forwards, expand 0.3s 0.6s ease-out forwards;
+    animation: scale-in 0.3s ease-out forwards, expand 0.3s 0.6s ease-out forwards;
+}
+
+.snack_notification {
+    display: flex;
+    align-items: center;
+    padding: 0 13px;
+    font-family: "Roboto", sans-serif;
+    font-size: 14px;
+    -webkit-animation: fade-in 0.65s ease-in forwards;
+    animation: fade-in 0.65s ease-in forwards;
+}
+
+@-webkit-keyframes scale-in {
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes scale-in {
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes expand {
+    50% {
+        width: 45vw;
+        border-radius: 6px;
+    }
+    100% {
+        width: 40vw;
+        border-radius: 4px;
+        box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 3px 3px -1px rgba(0, 0, 0, 0.12);
+    }
+}
+
+@keyframes expand {
+    50% {
+        width: 45vw;
+        border-radius: 6px;
+    }
+    100% {
+        width: 40vw;
+        border-radius: 4px;
+        box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 3px 3px -1px rgba(0, 0, 0, 0.12);
+    }
+}
+
+/* Animations to fade the snackbar in and out */
+@-webkit-keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
 }

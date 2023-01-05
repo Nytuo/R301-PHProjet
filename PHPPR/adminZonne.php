@@ -1,5 +1,6 @@
 <?php
-
+require_once "head.php";
+require_once "header.php";
 session_set_cookie_params(36000, '/');
 session_start();
 // importe SqlApi
@@ -144,33 +145,73 @@ function showProducts($sql)
 
 }
 
+//detect if a product's quantity is less than 10
+
+function detectQuantity($sql)
+{
+    $allProducts = $sql->getProducts();
+    foreach ($allProducts as $product) {
+        if ($product['quantity'] < 10) {
+            echo "<p>Attention, le produit " . $product['title'] . " est en rupture de stock</p>";
+            //call js function Toastification
+            echo "<script>Toastifycation('Vous avez des alertes de stock!','#ff0000')</script>";
+        }
+    }
+}
+
 ?>
 
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>SITE MY ADMIN</title>
-</head>
 <body>
-<h1>ADMIN ZONE</h1>
-<p>WELCOME <?php echo $_SESSION['email'] ?></p>
-<p>YOU ARE CONNECTED</p>
-<p>YOU CAN ADD PRODUCTS</p>
-<form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
-    <input type="text" name="name">
-    <input type="text" name="ref">
-    <input type="text" name="description">
-    <input type="text" name="public_price">
-    <input type="text" name="paid_price">
-    <input type="text" name="quantity">
-    <input type="file" name="image" id="image">
-    <input type="submit" value="Add product">
-</form>
-<p>YOU CAN SHOW PRODUCTS</p>
-<?php showProducts($sql) ?>
+
+<main>
+
+    <h1>ADMIN ZONE</h1>
+    <div class="snack_container">
+        <div class="snack_rectangle">
+            <div class="snack_notification">
+                <i class="material-icons">info</i>
+                <span id="snack_msg" style="margin-left: 20px ">This is a test notification.</span>
+            </div>
+        </div>
+    </div>
+    <script>
+        function Toastifycation(message, BGColor = "#333", FrontColor = "#ffffff") {
+            console.log("toast");
+            let x = document.querySelector("#snack_msg");
+            x.style.paddingLeft = "10px";
+            document.querySelector(".snack_container").style.display = "flex";
+            document.querySelector(".snack_container").style.opacity = "1";
+            document.querySelector(".snack_container").style.position = "fixed";
+            document.querySelector(".snack_rectangle").style.position = "absolute";
+            document.querySelector(".snack_rectangle").style.bottom = "235px";
+            document.querySelector(".snack_rectangle").style.left = "10px";
+            document.querySelector(".snack_container").style.zIndex = "10";
+            x.innerText = message;
+            document.querySelector(".snack_rectangle").style.backgroundColor = BGColor;
+            x.style.color = FrontColor;
+            setTimeout(function () {
+                document.querySelector(".snack_container").style.opacity = "0";
+            }, 8000);
+        }
+    </script>
+    <?php detectQuantity($sql); ?>
+    <p>WELCOME <?php echo $_SESSION['email'] ?></p>
+    <p>YOU ARE CONNECTED</p>
+    <p>YOU CAN ADD PRODUCTS</p>
+    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
+        <input type="text" name="name">
+        <input type="text" name="ref">
+        <input type="text" name="description">
+        <input type="text" name="public_price">
+        <input type="text" name="paid_price">
+        <input type="text" name="quantity">
+        <input type="file" name="image" id="image">
+        <input type="submit" value="Add product">
+    </form>
+    <p>YOU CAN SHOW PRODUCTS</p>
+    <?php showProducts($sql) ?>
+</main>
+
+
+
 </body>
-</html>
