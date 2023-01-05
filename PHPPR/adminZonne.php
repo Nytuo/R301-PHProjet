@@ -53,7 +53,7 @@ if (isset($_POST["name"])) {
     //save the image in the server
     $target_dir = "uploads/";
     // print in console the name of the file
-    $target_file = $target_dir . basename($_POST["name"]);
+    $target_file = $target_dir . $_POST["name"] . ".jpg";
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     // Check if image file is a actual image or fake image
@@ -80,6 +80,7 @@ if (isset($_POST["name"])) {
     // Allow certain file formats
     if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
         echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+        echo $imageFileType;
         $uploadOk = 0;
     }
     // Check if $uploadOk is set to 0 by an error
@@ -89,6 +90,8 @@ if (isset($_POST["name"])) {
     } else {
         if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
             echo "The file " . basename($_FILES["image"]["name"]) . " has been uploaded.";
+
+
         } else {
             echo "Sorry, there was an error uploading your file.";
         }
@@ -102,7 +105,7 @@ if (isset($_POST["name"])) {
     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
     $image = $target_file;
     $quantity = filter_input(INPUT_POST, 'quantity', FILTER_SANITIZE_NUMBER_INT);
-    $sql->insertProduct($name,$ref, $public_price,$paid_price, $description, $image, $quantity);
+    $sql->insertProduct($name, $ref, $public_price, $paid_price, $description, $image, $quantity);
     header("Location: adminZonne.php");
     exit(0);
 }
@@ -119,8 +122,6 @@ function showProducts($sql)
 
     $allProducts = $sql->getProducts();
 
-
-    echo "<h1>Products</h1>";
     echo "<table>";
     echo "<tr>";
     echo "<th>Id</th>";
@@ -136,11 +137,10 @@ function showProducts($sql)
         echo "<td>" . $product['title'] . "</td>";
         echo "<td>" . $product['public_price'] . "</td>";
         echo "<td>" . $product['description'] . "</td>";
-        echo "<td><img src=" . $product['image'] . " /></td>";
+        echo "<td><img src=" . $product['image'] . " /  width='100'></td>";
         echo "<td>" . $product['quantity'] . "</td>";
         echo "</tr>";
     }
-
     echo "</table>";
 
 }
@@ -152,7 +152,7 @@ function detectQuantity($sql)
     $allProducts = $sql->getProducts();
     foreach ($allProducts as $product) {
         if ($product['quantity'] < 10) {
-            echo "<p>Attention, le produit " . $product['title'] . " est en rupture de stock</p>";
+            echo "<p class='OutOfStock'>Attention, le produit " . $product['title'] . " est en rupture de stock</p>";
             //call js function Toastification
             echo "<script>Toastifycation('Vous avez des alertes de stock!','#ff0000')</script>";
         }
@@ -165,7 +165,7 @@ function detectQuantity($sql)
 
 <main>
 
-    <h1>ADMIN ZONE</h1>
+    <h1>Panel Sans MS de <?php echo $_SESSION['email'] ?></h1>
     <div class="snack_container">
         <div class="snack_rectangle">
             <div class="snack_notification">
@@ -195,23 +195,81 @@ function detectQuantity($sql)
         }
     </script>
     <?php detectQuantity($sql); ?>
-    <p>WELCOME <?php echo $_SESSION['email'] ?></p>
-    <p>YOU ARE CONNECTED</p>
-    <p>YOU CAN ADD PRODUCTS</p>
-    <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
-        <input type="text" name="name">
-        <input type="text" name="ref">
-        <input type="text" name="description">
-        <input type="text" name="public_price">
-        <input type="text" name="paid_price">
-        <input type="text" name="quantity">
-        <input type="file" name="image" id="image">
-        <input type="submit" value="Add product">
-    </form>
-    <p>YOU CAN SHOW PRODUCTS</p>
-    <?php showProducts($sql) ?>
+
+
+    <div class="row">
+        <div class="col s12">
+            <ul class="tabs tabs-fixed-width">
+                <li class="tab col s3"><a class="active" href="#compt">Comptabilité</a></li>
+                <li class="tab col s3"><a href="#addproduct">Ajouter un produit</a></li>
+                <li class="tab col s3"><a href="#addFour">Ajouter un fournisseur</a></li>
+                <li class="tab col s3"><a href="#listProducts">Liste des produits</a></li>
+                <li class="tab col s3"><a href="#listFour">Liste des fournisseurs</a></li>
+                <li class="tab col s3"><a href="#listClients">Liste des clients</a></li>
+                <li class="tab col s3"><a href="#listCommands">Liste des commandes</a></li>
+            </ul>
+        </div>
+        <div id="compt" class="col s12">Test 1</div>
+        <div id="addproduct" class="col s12">
+            <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
+                <div class="input-field">
+
+                <input type="text" name="name" id="name">
+                <label for="name">Nom du produit</label>
+                </div>
+                <div class="input-field">
+
+                <input type="text" name="ref" id="ref">
+                       <label for="ref">Référence</label>
+                </div>
+                <div class="input-field">
+
+                <input type="text" name="description" id="description">
+                <label for="description">Description</label>
+                </div>
+                <div class="input-field">
+                <input type="text" name="public_price" id="public_price">
+                <label for="public_price">Prix public</label>
+                </div>
+                <div class="input-field">
+                <input type="text" name="paid_price" id="paid_price">
+                <label for="paid_price">Prix d'achat</label>
+                </div>
+                <div class="input-field">
+                <input type="number" name="quantity" id="quantity">
+                <label for="quantity">Quantité</label>
+                </div>
+                <div class="file-field input-field">
+                    <div class="btn">
+                        <span>File</span>
+                        <input type="file" name="image" id="image">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text">
+                    </div>
+                </div>
+                <input type="submit" class="waves-effect btn" value="Add product">
+            </form>
+        </div>
+        <div id="addFour" class="col s12">Test 2</div>
+        <div id="listProducts" class="col s12">    <?php showProducts($sql) ?> </div>
+        <div id="listClients" class="col s12">    <?php showProducts($sql) ?> </div>
+        <div id="listFour" class="col s12">    <?php showProducts($sql) ?> </div>
+        <div id="listCommands" class="col s12">    <?php showProducts($sql) ?> </div>
+    </div>
+
+
 </main>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var elems = document.querySelectorAll('.tabs');
+    var instance = M.Tabs.init(elems, {
+        swipeable: true
+    });
+    });
+</script>
 
-
-
+<?php
+include 'footer.php';
+?>
 </body>

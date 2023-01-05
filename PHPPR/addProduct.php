@@ -6,5 +6,5 @@ if (isset($_POST['id'])) {
     $cart = $_SESSION['cart'];
     $cart[$id] = array('id' => $id, 'quantity' => 1);
     $_SESSION['cart'] = $cart;
-    header("Location: products.php");
+    header("Location: cart.php");
 }

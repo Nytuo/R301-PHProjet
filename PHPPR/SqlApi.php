@@ -79,6 +79,13 @@ class SqlApi
         $result = $stmt->fetch();
         return $result;
     }
+    public function searchProduct(string $search)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM products WHERE title LIKE :search OR ref LIKE :search", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $stmt->execute(array('search' => "%$search%"));
+        $result = $stmt->fetchAll();
+        return $result;
+    }
 
 
     public function close()

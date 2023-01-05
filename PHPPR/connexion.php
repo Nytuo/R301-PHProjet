@@ -3,7 +3,7 @@ include_once "head.php";
 include_once "header.php";
 ?>
     <main>
-        <h1>COMICS SANS ADMIN</h1>
+        <h1>ADMIN SANS MS</h1>
         <!-- conexion form -->
 
         <form action="adminZonne.php" method="post">

@@ -20,9 +20,9 @@
             </li>
             <li>
                 <div class="search-container">
-                    <form action="search.php" method="post">
+                    <form action="search.php" method="get">
                         <label>
-                            <input type="text" placeholder="Search.." name="search" style="width: 80%;margin-left: 5px">
+                            <input id="search" type="text" placeholder="Search.." name="search" style="width: 80%;margin-left: 5px">
                         </label>
                         <button type="submit" class="waves-effect waves-teal btn-flat"><i class="material-icons">search</i></button>
                     </form>
