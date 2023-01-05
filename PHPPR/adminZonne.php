@@ -51,9 +51,9 @@ var_dump($_FILES);
 if (isset($_POST["name"])) {
 
     //save the image in the server
-    $target_dir = "images/";
+    $target_dir = "uploads/";
     // print in console the name of the file
-    $target_file = $target_dir . basename($_FILES["image"]["name"]);
+    $target_file = $target_dir . basename($_POST["name"]);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     // Check if image file is a actual image or fake image

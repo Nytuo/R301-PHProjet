@@ -1,4 +1,9 @@
-<div>
+<?php
+require_once "head.php";
+require_once "header.php";
+?>
+<main>
+<h1>All Comics</h1>
 
     <!-- add products from product object -->
     <?php
@@ -26,21 +31,11 @@
 
     //display all products
     foreach ($productList as $product) {
-        echo '<a href="product.php?id=' . $product->ref . '">';
-        echo "<div class='product'>";
-        echo "<img src=" . $product->getImage() . " alt='product image'>";
-        echo "<h3>" . $product->getTitle() . "</h3>";
-        echo "<p>" . $product->getDescription() . "</p>";
-        echo "<p>" . $product->getPublicPrice() . "€</p>";
-        echo "<p>Quantity: " . $product->getQuantity() . "</p>";
-        echo "<form action='addProduct.php' method='post'>";
-        echo "<input type='hidden' name='id' value='" . $product->getRef() . "'>";
-        echo "<input type='submit' value='Add to cart'>";
-        echo "</form>";
+        echo "<div class='cards-list'>";
+        $product->displayProduct();
         echo "</div>";
-        echo "</a>";
     }
 
     ?>
 
-</div>
+</main>

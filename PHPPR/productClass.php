@@ -139,6 +139,21 @@ class product
         return $this->ref;
     }
 
+    public function displayProduct(){
+        echo "<a href='product.php?id=".$this->ref."'>";
+        echo "<div class='product'>";
+        echo "<div class='flip'>";
+        echo "<div class='front' style='background-image: url(".$this->image.");background-size: cover;'>";
+        echo "</div>";
+        echo "<div class='back'>";
+        echo "<h2>".$this->title."</h2>";
+        echo "<p>".$this->description."</p>";
+        echo "</div>";
+        echo "</div>";
+        echo "</div>";
+        echo "</a>";
+
+    }
 
 }
 
