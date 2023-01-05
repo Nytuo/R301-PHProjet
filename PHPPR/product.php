@@ -14,9 +14,9 @@ $product = new product($_GET['id']);
     <h1><?php echo $product->getTitle() ?></h1>
         <div class="purchase">
 
-    <span class="price"><?php echo $product->getPublicPrice() ?>€ (TTC)</span>
-    <span class="availability"><?php echo $product->isAvailable() ?></span>
-    <form action="addProduct.php" method="post" style="display: inline">
+    <p class="price"><?php echo $product->getPublicPrice() ?>€ (TTC)</p>
+    <p class="availability" style="position: relative;top: -40px"><?php echo $product->isAvailable() ?></p>
+    <form action="addProduct.php" method="post" style="position: relative;top: -40px">
         <input type="hidden" name="id" value="<?php echo $product->getRef() ?>">
         <input type="submit" value="Add to cart" class="waves-effect btn">
     </form>

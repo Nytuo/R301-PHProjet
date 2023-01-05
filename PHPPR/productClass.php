@@ -120,12 +120,12 @@ class product
 
     public function isAvailable()
     {
-        if ($this->quantity > 0) {
-            return "<span class='InStock'>En stock</span>";
-        } else if ($this->quantity == 0) {
+        if ($this->quantity == 0) {
             return "<span class='OutOfStock'>Rupture de stock</span>";
         } else if ($this->quantity < 10) {
-            return "<span class='NotThatMuch'>Plus que " . $this->quantity . " exemplaire en stock</span>";
+            return "<span class='NotThatMuch'>".$this->quantity . " restants</span>";
+        } else if ($this->quantity > 0) {
+            return "<span class='InStock'>En stock</span>";
         } else {
             return "<span class='OutOfStock'>Non disponible à la vente</span>";
         }
