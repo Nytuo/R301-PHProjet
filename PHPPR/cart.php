@@ -43,11 +43,11 @@ if (count($cartList) > 0) {
         echo "<img src='" . $cart->getImage() . "' alt='product image' class='product_img_cart'>";
         echo "<span class='cart_title'><a href='product.php?id=" . $cart->getRef() . "'>" . $cart->getTitle() . "</a></span>";
         echo "<span class='cart_price price'>" . $cart->getPublicPrice() . "€</span>";
+        echo "<input type='number' name='quantity' min='1' max='" . $cart->getQuantity() . "' value='" . $qty . "' onchange='updateQuantity(this.value, " . $cart->getRef() . ")'>";
         echo "<form action='removeProduct.php' method='post'>";
         echo "<input type='hidden' name='id' value='" . $cart->getRef() . "'>";
-        echo "</form>";
-        echo "<input type='number' name='quantity' min='1' max='" . $cart->getQuantity() . "' value='" . $qty . "' onchange='updateQuantity(this.value, " . $cart->getRef() . ")'>";
         echo "<input type='submit' class='waves-effect btn' value='Supprimer'>";
+        echo "</form>";
         echo "</div>";
     }
     //code promo
