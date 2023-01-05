@@ -1,62 +1,179 @@
-:root{
+:root {
     --color-primary: #162a80;
     --color-secondary: #0d132a;
     --color-tertiary: #1d3365;
     --text: #fff;
 }
-.material-icons{
+
+.material-icons {
     color: var(--text);
 }
-input[type="text"], input[type="password"]{
+
+.product_img {
+    width: 25%;
+    object-fit: cover;
+}
+
+.btn {
+    background-color: var(--color-primary);
+    color: var(--text);
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background-color: var(--color-tertiary);
+}
+
+input[type="text"], input[type="password"] {
     color: var(--text);
 }
-input:not([type]):focus:not([readonly]), input[type="text"]:not(.browser-default):focus:not([readonly]), input[type="password"]:not(.browser-default):focus:not([readonly]), input[type="email"]:not(.browser-default):focus:not([readonly]), input[type="url"]:not(.browser-default):focus:not([readonly]), input[type="time"]:not(.browser-default):focus:not([readonly]), input[type="date"]:not(.browser-default):focus:not([readonly]), input[type="datetime"]:not(.browser-default):focus:not([readonly]), input[type="datetime-local"]:not(.browser-default):focus:not([readonly]), input[type="tel"]:not(.browser-default):focus:not([readonly]), input[type="number"]:not(.browser-default):focus:not([readonly]), input[type="search"]:not(.browser-default):focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly]){
+
+input:not([type]):focus:not([readonly]), input[type="text"]:not(.browser-default):focus:not([readonly]), input[type="password"]:not(.browser-default):focus:not([readonly]), input[type="email"]:not(.browser-default):focus:not([readonly]), input[type="url"]:not(.browser-default):focus:not([readonly]), input[type="time"]:not(.browser-default):focus:not([readonly]), input[type="date"]:not(.browser-default):focus:not([readonly]), input[type="datetime"]:not(.browser-default):focus:not([readonly]), input[type="datetime-local"]:not(.browser-default):focus:not([readonly]), input[type="tel"]:not(.browser-default):focus:not([readonly]), input[type="number"]:not(.browser-default):focus:not([readonly]), input[type="search"]:not(.browser-default):focus:not([readonly]), textarea.materialize-textarea:focus:not([readonly]) {
     border-bottom: 1px solid var(--color-primary);
     box-shadow: 0 1px 0 0 var(--color-primary);
 }
+
 /* change all fonts to Comic Sans MS */
-body{
+body {
     font-family: 'Comic Sans MS', cursive, sans-serif;
     color: white;
-        background: var(--color-secondary);
+    background: var(--color-secondary);
 }
-h1{
-    text-align: center;
+
+#ColCover > img {
+    transition: margin-left .5s ease;
 }
-p{
+
+#ColCover {
+    position: absolute;
+    top: 15vh;
+}
+
+.purchase {
+    background-color: rgba(0, 0, 0, 0.4);
+    width: 300%;
+    height: 55px;
+
+}
+.InStock {
+    position: relative;
+    max-width: fit-content;
+    color: var(--text);
+    background-color: darkgreen;
+    padding: 5px;
+    border-radius: 6px;
+    margin-top: 10px;
+    transition: left .5s ease;
+}
+
+.NotThatMuch {
+    color: var(--text);
+    background-color: darkorange;
+    position: relative;
+    max-width: fit-content;
+    padding: 5px;
+    border-radius: 6px;
+    margin-top: 10px;
+    transition: left .5s ease;
+}
+.OutOfStock {
+    color: white;
+    background-color: darkred;
+    position: relative;
+    max-width: fit-content;
+    padding: 5px;
+    border-radius: 6px;
+    margin-top: 10px;
+    transition: left .5s ease;
+}
+/* scrollbar custom*/
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-tertiary);
+}
+.purchase > .price {
+    display: inline-block;
+    color: yellow;
+    font-size: 45px;
+    font-weight: bold;
+    line-height: 1;
+    margin-top:5px;
+}
+
+.purchase > form > .btn {
+    margin: 0 0 27px 80px;
+}
+
+.availability {
+    display: inline-block;
+    position: relative;
+    top: -12px;
+    margin-left: 80px;
+
+}
+
+#ColContent {
+    position: relative;
+    top: 1.75vh;
+    margin-left: 25vw;
+    margin-right: 25vw;
+}
+
+p {
     text-align: justify;
 }
-main{
+
+main {
     margin: 0 auto;
     width: 80%;
 }
-.sidenav li > a{
+
+.sidenav li > a {
     color: white;
 }
-.sidenav li > a:hover{
+
+.sidenav li > a:hover {
     color: white;
 }
-.waves-effect .waves-ripple{
-    background: rgba(255,255,255,0.5);
+
+.waves-effect .waves-ripple {
+    background: rgba(255, 255, 255, 0.5);
 }
+
 header, main, footer {
     padding-left: 300px;
 }
-nav{
+
+nav {
     background-color: var(--color-primary);
 }
 
-@media only screen and (max-width : 992px) {
+@media only screen and (max-width: 992px) {
     header, main, footer {
         padding-left: 0;
     }
 }
-.sidenav{
+
+.sidenav {
     background-color: var(--color-secondary);
 }
-.spaceX{
+
+.spaceX {
     margin-bottom: 100px;
 }
+
 /* The snackbar - position it at the bottom and in the middle of the screen */
 #snackbar {
     visibility: hidden; /* Hidden by default. Visible on click */
@@ -196,9 +313,11 @@ nav{
         opacity: 0;
     }
 }
+
 .flip {
     position: relative;
 }
+
 .flip > .front,
 .flip > .back {
     display: block;
@@ -206,9 +325,11 @@ nav{
     transition-duration: 0.5s;
     transition-property: transform, opacity;
 }
+
 .flip > .front {
     transform: rotateY(0deg);
 }
+
 .flip > .back {
     position: absolute;
     opacity: 0;
@@ -218,19 +339,24 @@ nav{
     height: 100%;
     transform: rotateY(-180deg);
 }
+
 .flip:hover > .front {
     transform: rotateY(180deg);
 }
+
 .flip:hover > .back {
     opacity: 1;
     transform: rotateY(0deg);
 }
+
 .flip.flip-vertical > .back {
     transform: rotateX(-180deg);
 }
+
 .flip.flip-vertical:hover > .front {
     transform: rotateX(180deg);
 }
+
 .flip.flip-vertical:hover > .back {
     transform: rotateX(0deg);
 }
@@ -242,6 +368,7 @@ nav{
     margin-bottom: 1em;
     width: 280px;
 }
+
 .flip > .front,
 .flip > .back {
     display: block;
@@ -254,6 +381,7 @@ nav{
     background: var(--color-tertiary);
     border-radius: 10px;
 }
+
 .flip > .front p,
 .flip > .back p {
     font-size: 0.9125rem;
@@ -261,7 +389,7 @@ nav{
     color: #999;
 }
 
-.cards-list{
+.cards-list {
     z-index: 0;
     margin-top: 125px;
     width: 100%;

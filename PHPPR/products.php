@@ -3,7 +3,7 @@ require_once "head.php";
 require_once "header.php";
 ?>
 <main>
-<h1>All Comics</h1>
+<h1 class="center">All Comics</h1>
 
     <!-- add products from product object -->
     <?php
