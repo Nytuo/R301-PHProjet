@@ -30,11 +30,11 @@ require_once "header.php";
     }
 
     //display all products
-    foreach ($productList as $product) {
         echo "<div class='cards-list'>";
+    foreach ($productList as $product) {
         $product->displayProduct();
-        echo "</div>";
     }
+        echo "</div>";
 
     ?>
 
