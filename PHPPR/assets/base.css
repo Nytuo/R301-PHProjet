@@ -74,7 +74,6 @@ body {
     color: white;
     background: var(--color-secondary);
 }
-
 #ColCover > img {
     transition: margin-left .5s ease;
 }

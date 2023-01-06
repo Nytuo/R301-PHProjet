@@ -53,7 +53,7 @@ if (isset($_POST["name"])) {
     //save the image in the server
     $target_dir = "uploads/";
     // print in console the name of the file
-    $target_file = $target_dir . $_POST["name"] . ".jpg";
+    $target_file = $target_dir . basename($_FILES["image"]["name"]);
     $uploadOk = 1;
     $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
     // Check if image file is a actual image or fake image
@@ -73,7 +73,7 @@ if (isset($_POST["name"])) {
         $uploadOk = 0;
     }
     // Check file size
-    if ($_FILES["fileToUpload"]["size"] > 500000) {
+    if ($_FILES["image"]["size"] > 5000000) {
         echo "Sorry, your file is too large.";
         $uploadOk = 0;
     }
@@ -266,6 +266,7 @@ function detectQuantity($sql)
     var instance = M.Tabs.init(elems, {
         swipeable: true
     });
+    document.querySelector(".tabs-content").style.height = "100vh";
     });
 </script>
 
