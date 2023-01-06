@@ -130,6 +130,7 @@ function showProducts($sql)
     echo "<th>Description</th>";
     echo "<th>Image</th>";
     echo "<th>Quantity</th>";
+    echo "<th>Delete</th>";
     echo "</tr>";
     foreach ($allProducts as $product) {
         echo "<tr>";
@@ -139,6 +140,7 @@ function showProducts($sql)
         echo "<td>" . $product['description'] . "</td>";
         echo "<td><img src=" . $product['image'] . " /  width='100'></td>";
         echo "<td>" . $product['quantity'] . "</td>";
+        echo "<td><a href='deleteProduct.php?id=" . $product['id'] . "'>Delete</a></td>";
         echo "</tr>";
     }
     echo "</table>";
@@ -150,12 +152,22 @@ function showProducts($sql)
 function detectQuantity($sql)
 {
     $allProducts = $sql->getProducts();
+    $count = 0;
     foreach ($allProducts as $product) {
         if ($product['quantity'] < 10) {
             echo "<p class='OutOfStock'>Attention, le produit " . $product['title'] . " est en rupture de stock</p>";
-            //call js function Toastification
-            echo "<script>Toastifycation('Vous avez des alertes de stock!','#ff0000')</script>";
+            $count++;
         }
+    }
+    return $count;
+
+}
+function showMessage($sql)
+{
+$messages = array("delOk" => "Entrée supprimer avec succès","delFail"=> "Erreur lors de la suppression de l'entrée");
+    echo "<script>Toastifycation('". $messages[$_GET['message']] ."')</script>";
+    if (detectQuantity($sql) !=0) {
+        echo "<script>Toastifycation('Vous avez des alertes de stock!','#ff0000')</script>";
     }
 }
 
@@ -175,26 +187,44 @@ function detectQuantity($sql)
         </div>
     </div>
     <script>
+        let notifList = [];
         function Toastifycation(message, BGColor = "#333", FrontColor = "#ffffff") {
             console.log("toast");
-            let x = document.querySelector("#snack_msg");
-            x.style.paddingLeft = "10px";
-            document.querySelector(".snack_container").style.display = "flex";
-            document.querySelector(".snack_container").style.opacity = "1";
-            document.querySelector(".snack_container").style.position = "fixed";
-            document.querySelector(".snack_rectangle").style.position = "absolute";
-            document.querySelector(".snack_rectangle").style.bottom = "235px";
-            document.querySelector(".snack_rectangle").style.left = "10px";
-            document.querySelector(".snack_container").style.zIndex = "10";
-            x.innerText = message;
-            document.querySelector(".snack_rectangle").style.backgroundColor = BGColor;
-            x.style.color = FrontColor;
-            setTimeout(function () {
-                document.querySelector(".snack_container").style.opacity = "0";
-            }, 8000);
+            notifList.push({
+                message: message,
+                BGColor: BGColor,
+                FrontColor: FrontColor
+            });
+
+
         }
+            function launchNotif(){
+                setInterval(() => {
+                    if (notifList.length > 0) {
+                        let notif = notifList.shift();
+                        let x = document.querySelector("#snack_msg");
+                        x.style.paddingLeft = "10px";
+                        document.querySelector(".snack_container").style.display = "flex";
+                        document.querySelector(".snack_container").style.opacity = "1";
+                        document.querySelector(".snack_container").style.position = "fixed";
+                        document.querySelector(".snack_rectangle").style.position = "absolute";
+                        document.querySelector(".snack_rectangle").style.bottom = "235px";
+                        document.querySelector(".snack_rectangle").style.left = "10px";
+                        document.querySelector(".snack_container").style.zIndex = "10";
+                        x.innerText = notif.message;
+                        document.querySelector(".snack_rectangle").style.backgroundColor = notif.BGColor;
+                        x.style.color = notif.FrontColor;
+                        setTimeout(function () {
+                            document.querySelector(".snack_container").style.opacity = "0";
+                        }, 8000);
+                    }
+                }, 9000);
+            }
+
+
     </script>
-    <?php detectQuantity($sql); ?>
+    <?php showMessage($sql); echo "<script>launchNotif()</script>"; ?>
+    ?>
 
 
     <div class="row">

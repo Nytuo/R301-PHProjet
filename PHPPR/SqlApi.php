@@ -87,6 +87,12 @@ class SqlApi
         return $result;
     }
 
+    public function deleteProduct(int $id)
+    {
+        $stmt = $this->db->prepare("DELETE FROM products WHERE id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $stmt->execute(array('id' => $id));
+    }
+
 
     public function close()
     {
