@@ -170,6 +170,34 @@ $messages = array("delOk" => "Entrée supprimer avec succès","delFail"=> "Erreu
         echo "<script>Toastifycation('Vous avez des alertes de stock!','#ff0000')</script>";
     }
 }
+function showClient($sql){
+    $allProducts = $sql->getClients();
+
+    echo "<table>";
+    echo "<tr>";
+       echo "<th>Id</th>";
+    echo "<th>Name</th>";
+    echo "<th>Address</th>";
+    echo "<th>City</th>";
+    echo "<th>Zip Code</th>";
+    echo "<th>Phone</th>";
+    echo "<th>Email</th>";
+    echo "<th>Delete</th>";
+    echo "</tr>";
+    foreach ($allProducts as $product) {
+        echo "<tr>";
+        echo "<td>" . $product['id'] . "</td>";
+        echo "<td>" . $product['name'] . "</td>";
+        echo "<td>" . $product['address'] . "</td>";
+        echo "<td>" . $product['city'] . "</td>";
+        echo "<td>" . $product['zip_code'] . "</td>";
+        echo "<td>" . $product['phone'] . "</td>";
+        echo "<td>" . $product['email'] . "</td>";
+        echo "<td><a href='deleteClient.php?id=" . $product['id'] . "'>Delete</a></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+}
 
 ?>
 
@@ -283,7 +311,7 @@ $messages = array("delOk" => "Entrée supprimer avec succès","delFail"=> "Erreu
         </div>
         <div id="addFour" class="col s12">Test 2</div>
         <div id="listProducts" class="col s12">    <?php showProducts($sql) ?> </div>
-        <div id="listClients" class="col s12">    <?php showProducts($sql) ?> </div>
+        <div id="listClients" class="col s12">    <?php showClient($sql) ?> </div>
         <div id="listFour" class="col s12">    <?php showProducts($sql) ?> </div>
         <div id="listCommands" class="col s12">    <?php showProducts($sql) ?> </div>
     </div>
