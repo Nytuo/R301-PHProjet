@@ -162,20 +162,23 @@ function detectQuantity($sql)
     return $count;
 
 }
+
 function showMessage($sql)
 {
-$messages = array("delOk" => "Entrée supprimer avec succès","delFail"=> "Erreur lors de la suppression de l'entrée");
-    echo "<script>Toastifycation('". $messages[$_GET['message']] ."')</script>";
-    if (detectQuantity($sql) !=0) {
+    $messages = array("delOk" => "Entrée supprimer avec succès", "delFail" => "Erreur lors de la suppression de l'entrée");
+    echo "<script>Toastifycation('" . $messages[$_GET['message']] . "')</script>";
+    if (detectQuantity($sql) != 0) {
         echo "<script>Toastifycation('Vous avez des alertes de stock!','#ff0000')</script>";
     }
 }
-function showClient($sql){
+
+function showClient($sql)
+{
     $allProducts = $sql->getClients();
 
     echo "<table>";
     echo "<tr>";
-       echo "<th>Id</th>";
+    echo "<th>Id</th>";
     echo "<th>Name</th>";
     echo "<th>Address</th>";
     echo "<th>City</th>";
@@ -199,6 +202,69 @@ function showClient($sql){
     echo "</table>";
 }
 
+function showFour($sql)
+{
+    $allProducts = $sql->getFour();
+
+    echo "<table>";
+    echo "<tr>";
+    echo "<th>Id</th>";
+    echo "<th>Name</th>";
+    echo "<th>Address</th>";
+    echo "<th>City</th>";
+    echo "<th>Zip Code</th>";
+    echo "<th>Phone</th>";
+    echo "<th>Email</th>";
+    echo "<th>Delete</th>";
+    echo "</tr>";
+
+    foreach ($allProducts as $product) {
+        echo "<tr>";
+        echo "<td>" . $product['id'] . "</td>";
+        echo "<td>" . $product['name'] . "</td>";
+        echo "<td>" . $product['address'] . "</td>";
+        echo "<td>" . $product['city'] . "</td>";
+        echo "<td>" . $product['zip_code'] . "</td>";
+        echo "<td>" . $product['phone'] . "</td>";
+        echo "<td>" . $product['email'] . "</td>";
+        echo "<td><a href='deleteFour.php?id=" . $product['id'] . "'>Delete</a></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+}
+function showCommands($sql){
+$allProducts = $sql->getCommands();
+
+    echo "<table>";
+    echo "<tr>";
+    echo "<th>Id</th>";
+    echo "<th>Client</th>";
+    echo "<th>Product</th>";
+    echo "<th>Quantity</th>";
+    echo "<th>Price</th>";
+    echo "<th>Command Date</th>";
+    echo "<th>Delivery Date</th>";
+    echo "<th>Delivery Status</th>";
+    echo "<th>Delete</th>";
+    echo "</tr>";
+
+    foreach ($allProducts as $product) {
+        echo "<tr>";
+        echo "<td>" . $product['id'] . "</td>";
+        echo "<td>" . $product['client_id'] . "</td>";
+        echo "<td>" . $product['product_id'] . "</td>";
+        echo "<td>" . $product['quantity'] . "</td>";
+        echo "<td>" . $product['total'] . "</td>";
+        echo "<td>" . $product['fournisseur_id'] . "</td>";
+        echo "<td>" . $product['date'] . "</td>";
+        echo "<td>" . $product['products'] . "</td>";
+        echo "<td><a href='deleteCommand.php?id=" . $product['id'] . "'>Delete</a></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+
+
+}
 ?>
 
 <body>
@@ -216,6 +282,7 @@ function showClient($sql){
     </div>
     <script>
         let notifList = [];
+
         function Toastifycation(message, BGColor = "#333", FrontColor = "#ffffff") {
             console.log("toast");
             notifList.push({
@@ -226,33 +293,34 @@ function showClient($sql){
 
 
         }
-            function launchNotif(){
-                setInterval(() => {
-                    if (notifList.length > 0) {
-                        let notif = notifList.shift();
-                        let x = document.querySelector("#snack_msg");
-                        x.style.paddingLeft = "10px";
-                        document.querySelector(".snack_container").style.display = "flex";
-                        document.querySelector(".snack_container").style.opacity = "1";
-                        document.querySelector(".snack_container").style.position = "fixed";
-                        document.querySelector(".snack_rectangle").style.position = "absolute";
-                        document.querySelector(".snack_rectangle").style.bottom = "235px";
-                        document.querySelector(".snack_rectangle").style.left = "10px";
-                        document.querySelector(".snack_container").style.zIndex = "10";
-                        x.innerText = notif.message;
-                        document.querySelector(".snack_rectangle").style.backgroundColor = notif.BGColor;
-                        x.style.color = notif.FrontColor;
-                        setTimeout(function () {
-                            document.querySelector(".snack_container").style.opacity = "0";
-                        }, 8000);
-                    }
-                }, 9000);
-            }
+
+        function launchNotif() {
+            setInterval(() => {
+                if (notifList.length > 0) {
+                    let notif = notifList.shift();
+                    let x = document.querySelector("#snack_msg");
+                    x.style.paddingLeft = "10px";
+                    document.querySelector(".snack_container").style.display = "flex";
+                    document.querySelector(".snack_container").style.opacity = "1";
+                    document.querySelector(".snack_container").style.position = "fixed";
+                    document.querySelector(".snack_rectangle").style.position = "absolute";
+                    document.querySelector(".snack_rectangle").style.bottom = "235px";
+                    document.querySelector(".snack_rectangle").style.left = "10px";
+                    document.querySelector(".snack_container").style.zIndex = "10";
+                    x.innerText = notif.message;
+                    document.querySelector(".snack_rectangle").style.backgroundColor = notif.BGColor;
+                    x.style.color = notif.FrontColor;
+                    setTimeout(function () {
+                        document.querySelector(".snack_container").style.opacity = "0";
+                    }, 8000);
+                }
+            }, 9000);
+        }
 
 
     </script>
-    <?php showMessage($sql); echo "<script>launchNotif()</script>"; ?>
-    ?>
+    <?php showMessage($sql);
+    echo "<script>launchNotif()</script>"; ?>
 
 
     <div class="row">
@@ -267,35 +335,52 @@ function showClient($sql){
                 <li class="tab col s3"><a href="#listCommands">Liste des commandes</a></li>
             </ul>
         </div>
-        <div id="compt" class="col s12">Test 1</div>
+        <div id="compt" class="col s12">
+            <p>Nombre de vente<?php
+                $sql->getNbVente();
+                ?></p>
+            <p>Chiffre d'affaire<?php
+
+                $sql->getChiffreAffaire();
+                ?></p>
+
+            <p>Achats et montant<?php
+                $sql->getAchatsEtMontant();
+                ?></p>
+            <p>Les bénefices<?php
+                $sql->getBenefices();
+                ?></p>
+
+            ?>
+        </div>
         <div id="addproduct" class="col s12">
             <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
                 <div class="input-field">
 
-                <input type="text" name="name" id="name">
-                <label for="name">Nom du produit</label>
+                    <input type="text" name="name" id="name">
+                    <label for="name">Nom du produit</label>
                 </div>
                 <div class="input-field">
 
-                <input type="text" name="ref" id="ref">
-                       <label for="ref">Référence</label>
+                    <input type="text" name="ref" id="ref">
+                    <label for="ref">Référence</label>
                 </div>
                 <div class="input-field">
 
-                <input type="text" name="description" id="description">
-                <label for="description">Description</label>
+                    <input type="text" name="description" id="description">
+                    <label for="description">Description</label>
                 </div>
                 <div class="input-field">
-                <input type="text" name="public_price" id="public_price">
-                <label for="public_price">Prix public</label>
+                    <input type="text" name="public_price" id="public_price">
+                    <label for="public_price">Prix public</label>
                 </div>
                 <div class="input-field">
-                <input type="text" name="paid_price" id="paid_price">
-                <label for="paid_price">Prix d'achat</label>
+                    <input type="text" name="paid_price" id="paid_price">
+                    <label for="paid_price">Prix d'achat</label>
                 </div>
                 <div class="input-field">
-                <input type="number" name="quantity" id="quantity">
-                <label for="quantity">Quantité</label>
+                    <input type="number" name="quantity" id="quantity">
+                    <label for="quantity">Quantité</label>
                 </div>
                 <div class="file-field input-field">
                     <div class="btn">
@@ -312,19 +397,19 @@ function showClient($sql){
         <div id="addFour" class="col s12">Test 2</div>
         <div id="listProducts" class="col s12">    <?php showProducts($sql) ?> </div>
         <div id="listClients" class="col s12">    <?php showClient($sql) ?> </div>
-        <div id="listFour" class="col s12">    <?php showProducts($sql) ?> </div>
-        <div id="listCommands" class="col s12">    <?php showProducts($sql) ?> </div>
+        <div id="listFour" class="col s12">    <?php showFour($sql) ?> </div>
+        <div id="listCommands" class="col s12">    <?php showCommands($sql) ?> </div>
     </div>
 
 
 </main>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         var elems = document.querySelectorAll('.tabs');
-    var instance = M.Tabs.init(elems, {
-        swipeable: true
-    });
-    document.querySelector(".tabs-content").style.height = "100vh";
+        var instance = M.Tabs.init(elems, {
+            swipeable: true
+        });
+        document.querySelector(".tabs-content").style.height = "100vh";
     });
 </script>
 

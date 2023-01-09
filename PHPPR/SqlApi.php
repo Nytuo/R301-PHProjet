@@ -51,8 +51,9 @@ class SqlApi
             fournisseur_id int not null,
             product_id int not null,
             quantity int not null,
-            total float not null,
-            date date not null,
+            total varchar(255) not null,
+            date date not null,          
+            products text not null,           
             foreign key (client_id) references client(id),
             foreign key (fournisseur_id) references fournisseur(id),
             foreign key (product_id) references products(id)
@@ -144,6 +145,69 @@ class SqlApi
     {
         $stmt = $this->db->prepare("DELETE FROM client WHERE id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->execute(array('id' => $id));
+    }
+    public function getFour(){
+        $result = $this->db->query("SELECT id,name,email,address,city,zip_code,country FROM fournisseur");
+        $result = $result->fetchAll();
+        $clients = [];
+        foreach ($result as $client) {
+            $clients[] = $client;
+        }
+        return $clients;
+    }
+    public function deleteFour(int $id)
+    {
+        $stmt = $this->db->prepare("DELETE FROM fournisseur WHERE id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $stmt->execute(array('id' => $id));
+    }
+    public function getCommands(){
+        $result = $this->db->query("SELECT id,name,email,address,city,zip_code,country FROM fournisseur");
+        $result = $result->fetchAll();
+        $clients = [];
+        foreach ($result as $client) {
+            $clients[] = $client;
+        }
+        return $clients;
+    }
+    public function deleteCommands(int $id)
+    {
+        $stmt = $this->db->prepare("DELETE FROM fournisseur WHERE id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $stmt->execute(array('id' => $id));
+    }
+    public function getNbVente(){
+        $result = $this->db->query("SELECT count(*) FROM facturation");
+        $result = $result->fetch();
+        return $result;
+    }
+
+    public function getChiffreAffaire(){
+        $result = $this->db->query("SELECT sum(total) FROM facturation");
+        return $result;
+    }
+
+    public function getAchatsEtMontant(){
+        //TODO
+        //avoir la quantité acheter par produit
+        $result = $this->db->query("SELECT products.title, sum(quantity) FROM facturation INNER JOIN products ON facturation.product_id = products.id GROUP BY products.title");
+        $result = $result->fetchAll();
+        //avoir le montant total de chaque produit
+        $result2 = $this->db->query("SELECT products.title, sum(total) FROM facturation INNER JOIN products ON facturation.product_id = products.id GROUP BY products.title");
+        $result2 = $result2->fetchAll();
+        //fusionner les deux tableaux
+        $result = array_map(function ($product) use ($result2) {
+            $product["total"] = $result2->fetch()["total"];
+            return $product;
+        }, $result);
+    }
+
+    function getBenefices(){
+        //TODO
+        $result = $this->db->query("SELECT sum(total) FROM facturation WHERE YEAR(date) = YEAR(CURDATE())");
+        $result = $result->fetch();
+        $result2 = $this->db->query("SELECT sum(paid_price) FROM products");
+        $result2 = $result2->fetch();
+        $benefice = $result["sum(total)"] - $result2["sum(paid_price)"];
+        return $benefice;
     }
 
     public function close()
