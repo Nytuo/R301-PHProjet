@@ -47,6 +47,18 @@ if (!$result) {
 $_SESSION['password'] = $ashPassword;//todo en attendant (ou peut etre définitif)
 $_SESSION['email'] = $email;
 
+if (isset($_POST['fname'])){
+    $fname = filter_input(INPUT_POST, 'fname', FILTER_SANITIZE_STRING);
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    $address = filter_input(INPUT_POST, 'address', FILTER_SANITIZE_STRING);
+    $city = filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING);
+     $zip_code= filter_input(INPUT_POST, 'ZipCode', FILTER_SANITIZE_STRING);
+    $country = filter_input(INPUT_POST, 'country', FILTER_SANITIZE_STRING);
+    $sql->insertFournisseur($fname, $email, $address, $city, $zip_code, $country);
+    header("Location: adminZonne.php");
+    exit(0);
+}
+
 var_dump($_FILES);
 if (isset($_POST["name"])) {
 
@@ -139,7 +151,9 @@ function showProducts($sql)
         echo "<td>" . $product['public_price'] . "</td>";
         echo "<td>" . $product['description'] . "</td>";
         echo "<td><img src=" . $product['image'] . " /  width='100'></td>";
-        echo "<td>" . $product['quantity'] . "</td>";
+        echo "<td class='inputTD'><input type='number' value=" . $product['quantity'] . " id='quantity" . $product['id'] . "'>
+<button class='btn waves-effect' onclick='updateQuantity(document.getElementById(\"quantity" . $product['id'] . "\"), ".$product['id'].")'>Modifier la quantité</button>
+</td>";
         echo "<td><a href='deleteProduct.php?id=" . $product['id'] . "'>Delete</a></td>";
         echo "</tr>";
     }
@@ -213,11 +227,9 @@ function showFour($sql)
     echo "<th>Address</th>";
     echo "<th>City</th>";
     echo "<th>Zip Code</th>";
-    echo "<th>Phone</th>";
     echo "<th>Email</th>";
     echo "<th>Delete</th>";
     echo "</tr>";
-
     foreach ($allProducts as $product) {
         echo "<tr>";
         echo "<td>" . $product['id'] . "</td>";
@@ -225,7 +237,6 @@ function showFour($sql)
         echo "<td>" . $product['address'] . "</td>";
         echo "<td>" . $product['city'] . "</td>";
         echo "<td>" . $product['zip_code'] . "</td>";
-        echo "<td>" . $product['phone'] . "</td>";
         echo "<td>" . $product['email'] . "</td>";
         echo "<td><a href='deleteFour.php?id=" . $product['id'] . "'>Delete</a></td>";
         echo "</tr>";
@@ -407,7 +418,38 @@ $allProducts = $sql->getCommands();
                 <input type="submit" class="waves-effect btn" value="Add product">
             </form>
         </div>
-        <div id="addFour" class="col s12">Test 2</div>
+        <div id="addFour" class="col s12">
+            <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
+                <div class="input-field">
+
+                    <input type="text" name="fname" id="fname">
+                    <label for="fname">Nom du fournisseur</label>
+                </div>
+                <div class="input-field">
+
+                    <input type="email" name="email" id="email">
+                    <label for="email">email</label>
+                </div>
+                <div class="input-field">
+
+                    <input type="text" name="adresse" id="adresse">
+                    <label for="adresse">adresse</label>
+                </div>
+                <div class="input-field">
+                    <input type="text" name="City" id="City">
+                    <label for="City">City</label>
+                </div>
+                <div class="input-field">
+                    <input type="text" name="ZipCode" id="ZipCode">
+                    <label for="ZipCode">ZipCode</label>
+                </div>
+                <div class="input-field">
+                    <input type="text" name="country" id="country">
+                    <label for="country">country</label>
+                </div>
+                <input type="submit" class="waves-effect btn" value="Add fournisseur">
+            </form>
+        </div>
         <div id="listProducts" class="col s12">    <?php showProducts($sql) ?> </div>
         <div id="listClients" class="col s12">    <?php showClient($sql) ?> </div>
         <div id="listFour" class="col s12">    <?php showFour($sql) ?> </div>
@@ -424,6 +466,21 @@ $allProducts = $sql->getCommands();
         });
         document.querySelector(".tabs-content").style.height = "100vh";
     });
+    function updateQuantity(value,ref) {
+        console.log(value);
+        fetch('updateQuantity.php', {
+            method: 'POST',
+            body: JSON.stringify({
+                quantity: value,
+                id: ref,
+                gs:true
+            })
+        })
+            .then(response => response.text())
+            .then(data => {
+                window.location.reload();
+            });
+    }
 </script>
 
 <?php

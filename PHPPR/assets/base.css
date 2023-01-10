@@ -50,6 +50,10 @@ table.highlight > tbody > tr:hover {
     width: 50px;
     color : var(--text);
 }
+.inputTD > input:not([type]), .inputTD > input[type="text"]:not(.browser-default), .inputTD > input[type="password"]:not(.browser-default), .inputTD > input[type="email"]:not(.browser-default), .inputTD > input[type="url"]:not(.browser-default), .inputTD > input[type="time"]:not(.browser-default), .inputTD > input[type="date"]:not(.browser-default), .inputTD > input[type="datetime"]:not(.browser-default), .inputTD > input[type="datetime-local"]:not(.browser-default), .inputTD > input[type="tel"]:not(.browser-default), .inputTD > input[type="number"]:not(.browser-default), .inputTD > input[type="search"]:not(.browser-default),.inputTD >  textarea.materialize-textarea{
+    width: 50px;
+    color : var(--text);
+}
 .product_cart > span {
     width: 25%;
 }

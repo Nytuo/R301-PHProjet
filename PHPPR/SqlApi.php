@@ -39,7 +39,6 @@ class SqlApi
             id INTEGER PRIMARY KEY,
             name varchar(255) not null,
             email varchar(255) not null,
-            password varchar(255) not null,
             address varchar(255) not null,
             city varchar(255) not null,
             zip_code varchar(255) not null,
@@ -91,6 +90,12 @@ class SqlApi
         $sqlQuery = "INSERT INTO products (id,title,ref, public_price,paid_price, description, image) VALUES (NULL,:title,:ref, :public_price,:paid_price, :description, :image)";
         $stmt = $this->db->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
         $stmt->execute(array('title' => $name, 'ref' => $ref, 'public_price' => $public_price, 'paid_price' => $paid_price, 'description' => $description, 'image' => $image));
+    }
+    public function insertFournisseur(string $name, string $email, string $address, string $city, string $zip_code, string $country)
+    {
+        $sqlQuery = "INSERT INTO fournisseur (id,name,email, address,city, zip_code, country) VALUES (NULL,:name,:email, :address,:city, :zip_code, :country)";
+        $stmt = $this->db->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+        $stmt->execute(array('name' => $name, 'email' => $email, 'address' => $address, 'city' => $city, 'zip_code' => $zip_code, 'country' => $country));
     }
 
     public function getProducts(): array
@@ -271,6 +276,12 @@ class SqlApi
         }
         $res .= "</tbody></table>";
         return $res;
+    }
+
+    public function updateQuantity(int $newqty, int $id):void{
+$stmt = $this->db->prepare("UPDATE gestionStock SET quantity=:quantity WHERE id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $stmt->execute(array('quantity' => $newqty, 'id' => $id));
+
     }
 
 
