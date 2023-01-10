@@ -248,7 +248,7 @@ class SqlApi
             }
             return $product;
         }, $result);
-        $res = "<table id='sample_1'>
+        $res = "<table id='achatMontant' class='responsive-table centered highlight'>
                     <thead>
                         <tr>
                             <th> ID</th>

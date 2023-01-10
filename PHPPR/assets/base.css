@@ -8,8 +8,21 @@
 .material-icons {
     color: var(--text);
 }
+#achatMontant{
+    color: var(--text);
+    text-align: center;
+    /*center table*/
+margin: 0 auto;
+}
+tr {
+    border-bottom: 1px solid rgba(196, 196, 196, 0.22);
+}
+table.highlight > tbody > tr:hover {
+    background-color: rgba(87, 87, 87, 0.5);
+}
 #benef,#CA,#NV{
-    font-size: 1.5rem;
+    font-size: 2rem;
+    text-align: center;
 }
 .product_img {
     width: 25%;

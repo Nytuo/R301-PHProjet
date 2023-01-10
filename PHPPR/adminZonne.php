@@ -122,7 +122,7 @@ function showProducts($sql)
 
     $allProducts = $sql->getProducts();
 
-    echo "<table>";
+    echo "<table  class='responsive-table centered highlight'>";
     echo "<tr>";
     echo "<th>Id</th>";
     echo "<th>Name</th>";
@@ -176,7 +176,7 @@ function showClient($sql)
 {
     $allProducts = $sql->getClients();
 
-    echo "<table>";
+    echo "<table  class='responsive-table centered highlight'>";
     echo "<tr>";
     echo "<th>Id</th>";
     echo "<th>Name</th>";
@@ -206,7 +206,7 @@ function showFour($sql)
 {
     $allProducts = $sql->getFour();
 
-    echo "<table>";
+    echo "<table  class='responsive-table centered highlight'>";
     echo "<tr>";
     echo "<th>Id</th>";
     echo "<th>Name</th>";
@@ -235,7 +235,7 @@ function showFour($sql)
 function showCommands($sql){
 $allProducts = $sql->getCommands();
 
-    echo "<table>";
+    echo "<table  class='responsive-table centered highlight'>";
     echo "<tr>";
     echo "<th>Id</th>";
     echo "<th>Client</th>";
@@ -337,20 +337,21 @@ $allProducts = $sql->getCommands();
         </div>
         <div id="compt" class="col s12">
             <h2>Comptabilité</h2>
-            <h3>Nombre de vente</h3>
-            <p class="soloInTheMiddle" id="NV"><?php
+            <div style="transform: translateX(50vw)">
+            <p class="InStock" id="benef">Bénéfice : <?php
+                echo $sql->getBenefices();
+                ?>€</p>
+            </div>
+
+            <p class="soloInTheMiddle" id="NV">Nombre de vente : <?php
                 echo $sql->getNbVente()
 
                 ?></p>
-            <h3>Chiffre d'affaire</h3>
-            <p class="priceFOnly soloInTheMiddle" id="CA"> <?php
+            <p class="priceFOnly soloInTheMiddle" id="CA">Chiffre d'affaire : <?php
                 echo $sql->getChiffreAffaire();
                 ?>€</p>
-            <h3>Bénéfice</h3>
-            <p class="InStock" id="benef"><?php
-                echo $sql->getBenefices();
-                ?>€</p>
-            <h3>Achats et montant</h3>
+
+            <h3 style="text-align: center">Achats et montant</h3>
             <?php
                 echo $sql->getAchatsEtMontant();
                 ?>
@@ -359,8 +360,10 @@ $allProducts = $sql->getCommands();
             let a = document.querySelector("#benef");
             if (a.innerText.includes("-")) {
                 a.className = "OutOfStock";
+                a.innerText = "Perte : " + a.innerText.split("-")[1];
             } else {
                 a.className = "InStock";
+                a.innerText = "Bénéfice : " + a.innerText.split("-")[1];
             }
         </script>
         <div id="addproduct" class="col s12">
