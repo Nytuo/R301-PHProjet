@@ -262,8 +262,8 @@ class SqlApi
                         <td>" . $product["product_id"] . "</td>
                         <td>" . $product["title"] . "</td>
                         <td>" . $product["quantity"] . "</td>
-                        <td>" . $product["paid_price"] . "</td>
-                        <td>" . $product["montant"] . "</td>  
+                        <td class='priceFOnly'>" . $product["paid_price"] . "€</td>
+                        <td class='priceFOnly'>" . $product["montant"] . "€</td>  
 
                     </tr>";
         }

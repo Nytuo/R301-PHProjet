@@ -8,7 +8,9 @@
 .material-icons {
     color: var(--text);
 }
-
+#benef,#CA,#NV{
+    font-size: 1.5rem;
+}
 .product_img {
     width: 25%;
     object-fit: cover;
@@ -86,6 +88,11 @@ body {
 .purchase {
 
 }
+.soloInTheMiddle{
+    text-align: center;
+    font-size: 2rem;
+    color: white;
+}
 .InStock {
     position: relative;
     max-width: fit-content;
@@ -136,6 +143,14 @@ body {
 }
 .price {
     display: inline-block;
+    color: yellow;
+    font-size: 3rem;
+    font-weight: bold;
+    line-height: 1;
+    margin-top:5px;
+}
+
+.priceFOnly {
     color: yellow;
     font-size: 3rem;
     font-weight: bold;

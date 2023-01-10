@@ -336,21 +336,33 @@ $allProducts = $sql->getCommands();
             </ul>
         </div>
         <div id="compt" class="col s12">
-            <p>Nombre de vente : <?php
+            <h2>Comptabilité</h2>
+            <h3>Nombre de vente</h3>
+            <p class="soloInTheMiddle" id="NV"><?php
                 echo $sql->getNbVente()
 
                 ?></p>
-            <p>Chiffre d'affaire : <?php
-
+            <h3>Chiffre d'affaire</h3>
+            <p class="priceFOnly soloInTheMiddle" id="CA"> <?php
                 echo $sql->getChiffreAffaire();
-                ?></p>
-            <p>Les bénefices : <?php
+                ?>€</p>
+            <h3>Bénéfice</h3>
+            <p class="InStock" id="benef"><?php
                 echo $sql->getBenefices();
-                ?></p>
-            <p>Achats et montant : <?php
+                ?>€</p>
+            <h3>Achats et montant</h3>
+            <?php
                 echo $sql->getAchatsEtMontant();
-                ?></p>
+                ?>
         </div>
+        <script>
+            let a = document.querySelector("#benef");
+            if (a.innerText.includes("-")) {
+                a.className = "OutOfStock";
+            } else {
+                a.className = "InStock";
+            }
+        </script>
         <div id="addproduct" class="col s12">
             <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
                 <div class="input-field">
