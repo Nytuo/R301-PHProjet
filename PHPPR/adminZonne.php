@@ -336,22 +336,20 @@ $allProducts = $sql->getCommands();
             </ul>
         </div>
         <div id="compt" class="col s12">
-            <p>Nombre de vente<?php
-                $sql->getNbVente();
-                ?></p>
-            <p>Chiffre d'affaire<?php
+            <p>Nombre de vente : <?php
+                echo $sql->getNbVente()
 
-                $sql->getChiffreAffaire();
                 ?></p>
+            <p>Chiffre d'affaire : <?php
 
-            <p>Achats et montant<?php
-                $sql->getAchatsEtMontant();
+                echo $sql->getChiffreAffaire();
                 ?></p>
-            <p>Les bénefices<?php
-                $sql->getBenefices();
+            <p>Les bénefices : <?php
+                echo $sql->getBenefices();
                 ?></p>
-
-            ?>
+            <p>Achats et montant : <?php
+                echo $sql->getAchatsEtMontant();
+                ?></p>
         </div>
         <div id="addproduct" class="col s12">
             <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
