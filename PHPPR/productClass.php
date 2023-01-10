@@ -115,6 +115,10 @@ class product
      */
     public function setQuantity(int $quantity): void
     {
+        if ($quantity < 0) {
+            $quantity = 0;
+        }
+
         $this->quantity = $quantity;
     }
 
@@ -146,7 +150,7 @@ class product
         $this->publicPrice = $result['public_price'];
         $this->description = $result['description'];
         $this->image = $result['image'];
-        $this->quantity = $result['quantity'];
+        $this->quantity = $result['quantity'] ?? 0;
     }
 
     public function getRef()

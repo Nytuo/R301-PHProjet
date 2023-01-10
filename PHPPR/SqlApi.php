@@ -96,17 +96,18 @@ class SqlApi
     public function getProducts(): array
     {
         $result = $this->db->query("SELECT * FROM products");
-        $qty = $this->db->query("SELECT quantity FROM gestionStock");
         $result = $result->fetchAll();
+        $qty = $this->db->query("SELECT products.id,quantity FROM gestionStock,products WHERE gestionStock.product_id=products.id");
+        $qty = $qty->fetchAll();
         $result = array_map(function ($product) use ($qty) {
-            $product["quantity"] = $qty->fetch()["quantity"];
+            foreach ($qty as $q) {
+                if ($product['id'] == $q['id']) {
+                    $product['quantity'] = $q['quantity'];
+                }
+            }
             return $product;
         }, $result);
-        $products = [];
-        foreach ($result as $product) {
-            $products[] = $product;
-        }
-        return $products;
+           return $result;
     }
 
     public function getProduct(int $id)
@@ -116,7 +117,8 @@ class SqlApi
         $qty = $this->db->prepare("SELECT quantity FROM gestionStock WHERE product_id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $qty->execute(array('id' => $id));
         $result = $stmt->fetch();
-        $result["quantity"] = $qty->fetch()["quantity"];
+        $result2=$qty->fetch();
+        $result["quantity"] = $result2["quantity"]??0;
         return $result;
     }
 

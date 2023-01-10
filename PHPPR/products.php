@@ -17,7 +17,6 @@ require_once "header.php";
 
     $products = $db->getProducts();
     $productList = array();
-
     //for each product create a product object
     foreach ($products as $product) {
         $productObject = new product($product['id']);
@@ -25,7 +24,7 @@ require_once "header.php";
         $productObject->setPublicPrice($product['public_price']);
         $productObject->setDescription($product['description']);
         $productObject->setImage($product['image']);
-        $productObject->setQuantity($product['quantity']);
+        $productObject->setQuantity($product['quantity']??0);
         $productList[] = $productObject;
     }
 
