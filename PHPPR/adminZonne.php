@@ -178,7 +178,8 @@ function detectQuantity($sql)
     $allProducts = $sql->getProducts();
     $count = 0;
     foreach ($allProducts as $product) {
-        if ($product['quantity'] < 10) {
+
+        if ($product['quantity'] !== null && $product['quantity'] !== "undefined" && $product['quantity'] < 10) {
             echo "<p class='OutOfStock'>Attention, le produit " . $product['title'] . " est en rupture de stock</p>";
             $count++;
         }
@@ -262,15 +263,14 @@ function showCommands($sql)
     echo "<tr>";
     echo "<th>Id</th>";
     echo "<th>Client</th>";
-    echo "<th>Product</th>";
+    echo "<th>Product ID</th>";
     echo "<th>Quantity</th>";
     echo "<th>Price</th>";
-    echo "<th>Command Date</th>";
-    echo "<th>Delivery Date</th>";
-    echo "<th>Delivery Status</th>";
+    echo "<th>fournisseur_id</th>";
+    echo "<th>Delivery date</th>";
+    echo "<th>Products</th>";
     echo "<th>Delete</th>";
     echo "</tr>";
-
     foreach ($allProducts as $product) {
         echo "<tr>";
         echo "<td>" . $product['id'] . "</td>";
@@ -307,6 +307,8 @@ function showCommands($sql)
     <script>
         let notifList = [];
 
+
+        let notifDelay = 2500;
         function Toastifycation(message, BGColor = "#333", FrontColor = "#ffffff") {
             console.log("toast");
             notifList.push({
@@ -320,6 +322,7 @@ function showCommands($sql)
             setInterval(() => {
                 if (notifList.length > 0) {
                     let notif = notifList.shift();
+                    console.log(notif);
                     let x = document.querySelector("#snack_msg");
                     x.style.paddingLeft = "10px";
                     document.querySelector(".snack_container").style.display = "flex";
@@ -334,9 +337,9 @@ function showCommands($sql)
                     x.style.color = notif.FrontColor;
                     setTimeout(function () {
                         document.querySelector(".snack_container").style.opacity = "0";
-                    }, 8000);
+                    }, notifDelay);
                 }
-            }, 9000);
+            }, notifDelay+1000);
         }
 
 

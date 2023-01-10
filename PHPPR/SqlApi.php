@@ -177,7 +177,7 @@ class SqlApi
 
     public function getCommands()
     {
-        $result = $this->db->query("SELECT id,name,email,address,city,zip_code,country FROM fournisseur");
+        $result = $this->db->query("SELECT id,client_id,fournisseur_id,product_id,quantity,total,date,products FROM facturation");
         $result = $result->fetchAll();
         $clients = [];
         foreach ($result as $client) {
@@ -188,7 +188,7 @@ class SqlApi
 
     public function deleteCommands(int $id)
     {
-        $stmt = $this->db->prepare("DELETE FROM fournisseur WHERE id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $stmt = $this->db->prepare("DELETE FROM facturation WHERE id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->execute(array('id' => $id));
     }
 

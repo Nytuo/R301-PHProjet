@@ -257,6 +257,7 @@ nav {
     !*animation: fadein 0.5s, fadeout 0.5s 2.5s;*!
 }*/
 .snack_container {
+    display: none;
     height: 100%;
     justify-content: center;
     align-items: center;
