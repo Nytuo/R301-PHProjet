@@ -279,7 +279,7 @@ class SqlApi
     }
 
     public function updateQuantity(int $newqty, int $id):void{
-$stmt = $this->db->prepare("UPDATE gestionStock SET quantity=:quantity WHERE id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+$stmt = $this->db->prepare("UPDATE gestionStock SET quantity=:quantity WHERE product_id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->execute(array('quantity' => $newqty, 'id' => $id));
 
     }

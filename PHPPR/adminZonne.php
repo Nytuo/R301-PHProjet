@@ -47,12 +47,18 @@ if (!$result) {
 $_SESSION['password'] = $ashPassword;//todo en attendant (ou peut etre définitif)
 $_SESSION['email'] = $email;
 
-if (isset($_POST['fname'])){
+if (isset($_POST["changeQty"])){
+    $sql->updateQuantity($_POST["changeQty"], $_POST["id"]);
+    header("Location: adminZonne.php?message=updateOK");
+    exit(0);
+}
+
+if (isset($_POST['fname'])) {
     $fname = filter_input(INPUT_POST, 'fname', FILTER_SANITIZE_STRING);
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $address = filter_input(INPUT_POST, 'address', FILTER_SANITIZE_STRING);
     $city = filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING);
-     $zip_code= filter_input(INPUT_POST, 'ZipCode', FILTER_SANITIZE_STRING);
+    $zip_code = filter_input(INPUT_POST, 'ZipCode', FILTER_SANITIZE_STRING);
     $country = filter_input(INPUT_POST, 'country', FILTER_SANITIZE_STRING);
     $sql->insertFournisseur($fname, $email, $address, $city, $zip_code, $country);
     header("Location: adminZonne.php");
@@ -151,8 +157,12 @@ function showProducts($sql)
         echo "<td>" . $product['public_price'] . "</td>";
         echo "<td>" . $product['description'] . "</td>";
         echo "<td><img src=" . $product['image'] . " /  width='100'></td>";
-        echo "<td class='inputTD'><input type='number' value=" . $product['quantity'] . " id='quantity" . $product['id'] . "'>
-<button class='btn waves-effect' onclick='updateQuantity(document.getElementById(\"quantity" . $product['id'] . "\"), ".$product['id'].")'>Modifier la quantité</button>
+        echo "<td >";
+        echo "<form class='inputTD' action='adminZonne.php' method='post'>";
+        echo "<input name='changeQty'  type='number' value=" . $product['quantity'] . " id='quantity" . $product['id'] . "'>
+        <input type='hidden' name='id' value=" . $product['id'] . ">
+<input type='submit' value='Modifier la quantité' class='btn waves-effect'/>
+</form>
 </td>";
         echo "<td><a href='deleteProduct.php?id=" . $product['id'] . "'>Delete</a></td>";
         echo "</tr>";
@@ -179,7 +189,7 @@ function detectQuantity($sql)
 
 function showMessage($sql)
 {
-    $messages = array("delOk" => "Entrée supprimer avec succès", "delFail" => "Erreur lors de la suppression de l'entrée");
+    $messages = array("delOk" => "Entrée supprimer avec succès", "delFail" => "Erreur lors de la suppression de l'entrée","updateOK" => "Quantité modifié avec succès", "updateFail" => "Erreur lors de la modification de la quantité");
     echo "<script>Toastifycation('" . $messages[$_GET['message']] . "')</script>";
     if (detectQuantity($sql) != 0) {
         echo "<script>Toastifycation('Vous avez des alertes de stock!','#ff0000')</script>";
@@ -243,8 +253,10 @@ function showFour($sql)
     }
     echo "</table>";
 }
-function showCommands($sql){
-$allProducts = $sql->getCommands();
+
+function showCommands($sql)
+{
+    $allProducts = $sql->getCommands();
 
     echo "<table  class='responsive-table centered highlight'>";
     echo "<tr>";
@@ -276,6 +288,7 @@ $allProducts = $sql->getCommands();
 
 
 }
+
 ?>
 
 <body>
@@ -301,8 +314,6 @@ $allProducts = $sql->getCommands();
                 BGColor: BGColor,
                 FrontColor: FrontColor
             });
-
-
         }
 
         function launchNotif() {
@@ -349,9 +360,9 @@ $allProducts = $sql->getCommands();
         <div id="compt" class="col s12">
             <h2>Comptabilité</h2>
             <div style="transform: translateX(50vw)">
-            <p class="InStock" id="benef">Bénéfice : <?php
-                echo $sql->getBenefices();
-                ?>€</p>
+                <p class="InStock" id="benef">Bénéfice : <?php
+                    echo $sql->getBenefices();
+                    ?>€</p>
             </div>
 
             <p class="soloInTheMiddle" id="NV">Nombre de vente : <?php
@@ -364,8 +375,8 @@ $allProducts = $sql->getCommands();
 
             <h3 style="text-align: center">Achats et montant</h3>
             <?php
-                echo $sql->getAchatsEtMontant();
-                ?>
+            echo $sql->getAchatsEtMontant();
+            ?>
         </div>
         <script>
             let a = document.querySelector("#benef");
@@ -466,21 +477,6 @@ $allProducts = $sql->getCommands();
         });
         document.querySelector(".tabs-content").style.height = "100vh";
     });
-    function updateQuantity(value,ref) {
-        console.log(value);
-        fetch('updateQuantity.php', {
-            method: 'POST',
-            body: JSON.stringify({
-                quantity: value,
-                id: ref,
-                gs:true
-            })
-        })
-            .then(response => response.text())
-            .then(data => {
-                window.location.reload();
-            });
-    }
 </script>
 
 <?php
