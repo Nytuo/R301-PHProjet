@@ -5,6 +5,7 @@ session_set_cookie_params(36000, '/');
 session_start();
 // importe SqlApi
 require_once "SqlApi.php";
+require_once "productClass.php";
 $sql = new SqlApi();
 
 // open sql connection
@@ -47,7 +48,7 @@ if (!$result) {
 $_SESSION['password'] = $ashPassword;//todo en attendant (ou peut etre définitif)
 $_SESSION['email'] = $email;
 
-if (isset($_POST["changeQty"])){
+if (isset($_POST["changeQty"])) {
     $sql->updateQuantity($_POST["changeQty"], $_POST["id"]);
     header("Location: adminZonne.php?message=updateOK");
     exit(0);
@@ -67,15 +68,17 @@ if (isset($_POST['fname'])) {
 
 var_dump($_FILES);
 if (isset($_POST["name"])) {
+    $fileUploaded = false;
+    if (isset($_POST["image"])) {
+        $fileUploaded = true;
+        //save the image in the server
+        $target_dir = "uploads/";
+        // print in console the name of the file
+        $target_file = $target_dir . basename($_FILES["image"]["name"]);
+        $uploadOk = 1;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        // Check if image file is a actual image or fake image
 
-    //save the image in the server
-    $target_dir = "uploads/";
-    // print in console the name of the file
-    $target_file = $target_dir . basename($_FILES["image"]["name"]);
-    $uploadOk = 1;
-    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-    // Check if image file is a actual image or fake image
-    if (isset($_POST["name"])) {
         $check = getimagesize($_FILES["image"]["tmp_name"]);
         if ($check !== false) {
             echo "File is an image - " . $check["mime"] . ".";
@@ -84,45 +87,53 @@ if (isset($_POST["name"])) {
             echo "File is not an image.";
             $uploadOk = 0;
         }
-    }
-    // Check if file already exists
-    if (file_exists($target_file)) {
-        echo "Sorry, file already exists.";
-        $uploadOk = 0;
-    }
-    // Check file size
-    if ($_FILES["image"]["size"] > 5000000) {
-        echo "Sorry, your file is too large.";
-        $uploadOk = 0;
-    }
-    // Allow certain file formats
-    if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
-        echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-        echo $imageFileType;
-        $uploadOk = 0;
-    }
-    // Check if $uploadOk is set to 0 by an error
-    if ($uploadOk == 0) {
-        echo "Sorry, your file was not uploaded.";
-        // if everything is ok, try to upload file
-    } else {
-        if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-            echo "The file " . basename($_FILES["image"]["name"]) . " has been uploaded.";
 
-
+        // Check if file already exists
+        if (file_exists($target_file)) {
+            echo "Sorry, file already exists.";
+            $uploadOk = 0;
+        }
+        // Check file size
+        if ($_FILES["image"]["size"] > 5000000) {
+            echo "Sorry, your file is too large.";
+            $uploadOk = 0;
+        }
+        // Allow certain file formats
+        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
+            echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            echo $imageFileType;
+            $uploadOk = 0;
+        }
+        // Check if $uploadOk is set to 0 by an error
+        if ($uploadOk == 0) {
+            echo "Sorry, your file was not uploaded.";
+            // if everything is ok, try to upload file
         } else {
-            echo "Sorry, there was an error uploading your file.";
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                echo "The file " . basename($_FILES["image"]["name"]) . " has been uploaded.";
+
+
+            } else {
+                echo "Sorry, there was an error uploading your file.";
+            }
         }
     }
 
-
     $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
     $ref = filter_input(INPUT_POST, 'ref', FILTER_SANITIZE_STRING);
-    $public_price = filter_input(INPUT_POST, 'public_price', FILTER_SANITIZE_NUMBER_FLOAT);
-    $paid_price = filter_input(INPUT_POST, 'paid_price', FILTER_SANITIZE_NUMBER_FLOAT);
     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
-    $image = $target_file;
+    $image = "uploads/default.png";
+    if ($fileUploaded) {
+        $image = $target_file;
+    } else if (isset($_POST["imageURL"])) {
+        $image = $_POST["imageURL"];
+    }
     $quantity = filter_input(INPUT_POST, 'quantity', FILTER_SANITIZE_NUMBER_INT);
+    if ($quantity == null) {
+        $quantity = 0;
+    }
+    $public_price = filter_input(INPUT_POST, 'public_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    $paid_price = filter_input(INPUT_POST, 'paid_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
     $sql->insertProduct($name, $ref, $public_price, $paid_price, $description, $image, $quantity);
     header("Location: adminZonne.php");
     exit(0);
@@ -190,7 +201,7 @@ function detectQuantity($sql)
 
 function showMessage($sql)
 {
-    $messages = array("delOk" => "Entrée supprimer avec succès", "delFail" => "Erreur lors de la suppression de l'entrée","updateOK" => "Quantité modifié avec succès", "updateFail" => "Erreur lors de la modification de la quantité");
+    $messages = array("delOk" => "Entrée supprimer avec succès", "delFail" => "Erreur lors de la suppression de l'entrée", "updateOK" => "Quantité modifié avec succès", "updateFail" => "Erreur lors de la modification de la quantité");
     echo "<script>Toastifycation('" . $messages[$_GET['message']] . "')</script>";
     if (detectQuantity($sql) != 0) {
         echo "<script>Toastifycation('Vous avez des alertes de stock!','#ff0000')</script>";
@@ -289,13 +300,16 @@ function showCommands($sql)
 
 }
 
+putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
+
 ?>
 
 <body>
 
 <main>
 
-    <h1>Panel Sans MS de <?php echo $_SESSION['email'] ?><span class="sprt s-category-border-rr inline-block"></span></h1>
+    <h1>Panel Sans MS de <?php echo $_SESSION['email'] ?><span class="sprt s-category-border-rr inline-block"></span>
+    </h1>
     <div class="snack_container">
         <div class="snack_rectangle">
             <div class="snack_notification">
@@ -309,6 +323,7 @@ function showCommands($sql)
 
 
         let notifDelay = 2500;
+
         function Toastifycation(message, BGColor = "#333", FrontColor = "#ffffff") {
             console.log("toast");
             notifList.push({
@@ -339,7 +354,7 @@ function showCommands($sql)
                         document.querySelector(".snack_container").style.opacity = "0";
                     }, notifDelay);
                 }
-            }, notifDelay+1000);
+            }, notifDelay + 1000);
         }
 
 
@@ -429,8 +444,29 @@ function showCommands($sql)
                         <input class="file-path validate" type="text">
                     </div>
                 </div>
+                <div class="input-field">
+                    <input type="text" id="imageURL" name="imageURL">
+                </div>
                 <input type="submit" class="waves-effect btn" value="Add product">
             </form>
+
+            <div id="GoogleBooksAPI">
+                <h3>Google Books API</h3>
+
+                option 1 : <input type="text" id="ISBN" placeholder="ISBN">
+                <button class="waves-effect btn" onclick="getBookByISBN(document.querySelector('#ISBN').value)">Get
+                    book
+                </button>
+                <br>
+                option 2 : <input type="text" id="title" placeholder="Title">
+                <button class="waves-effect btn" onclick="getBookByTitle(document.querySelector('#title').value)">Get
+                    book
+                </button>
+
+                <div id="GBContent"></div>
+
+            </div>
+
         </div>
         <div id="addFour" class="col s12">
             <form action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post" enctype="multipart/form-data">
@@ -478,8 +514,158 @@ function showCommands($sql)
         var instance = M.Tabs.init(elems, {
             swipeable: true
         });
-        document.querySelector(".tabs-content").style.height = "100vh";
+        document.querySelector(".tabs-content").style.height = "1000vh";
     });
+
+    async function getBookByTitle(name = "") {
+        if (name === "") {
+            console.log("GETGOOGLEAPI_book : name is empty");
+            return;
+        }
+
+        name = name.replaceAll(/[(].+[)]/g, "");
+        name = name.replaceAll(/[\[].+[\]]/g, "");
+        name = name.replaceAll(/[\{].+[\}]/g, "");
+        name = name.replaceAll(/[#][0-9]{1,}/g, "");
+        name = name.replace(/\s+$/, "");
+        console.log("GETGOOGLEAPI_book : name : " + name);
+        let url = "https://www.googleapis.com/books/v1/volumes?q=" + encodeURIComponent(name) + "&maxResults=10&key=<?php echo $_ENV["GBAPIKEY"] ?>";
+        let response = await fetch(url);
+        let data = await response.json();
+        console.log(data);
+        let div = document.createElement("div");
+        div.classList.add("cards-list");
+        if (data["totalItems"] > 0) {
+            for (let i = 0; i < (data["items"].length); i++) {
+                let cdata = data["items"][i];
+                console.log(cdata);
+                let cover;
+                if (cdata["volumeInfo"]["imageLinks"] !== undefined) {
+
+                    cover = cdata["volumeInfo"]["imageLinks"]
+                    if (cover["large"] !== undefined) {
+                        cover = cover["large"]
+                    } else if (cover["thumbnail"] !== undefined) {
+                        cover = cover["thumbnail"]
+                    } else {
+                        cover = null
+                    }
+                } else {
+                    cover = null;
+                }
+                let price;
+                if (cdata["saleInfo"]["retailPrice"] !== undefined) {
+                    price = cdata["saleInfo"]["retailPrice"]["amount"]
+                } else {
+                    price = null;
+                }
+                let card = document.createElement("div");
+                card.classList.add("product");
+                let subDiv = document.createElement("div");
+                subDiv.classList.add("flip");
+                let subDiv2 = document.createElement("div");
+                subDiv2.classList.add("front");
+                subDiv2.style.backgroundImage = "url(" + cover + ")";
+                subDiv2.style.backgroundSize = "cover";
+                subDiv.appendChild(subDiv2);
+                let subDiv3 = document.createElement("div");
+                subDiv3.classList.add("back");
+                subDiv3.innerHTML = "<h3>" + cdata["volumeInfo"]["title"] + "</h3><p>" + cdata["volumeInfo"]["description"] + "</p>";
+                subDiv.appendChild(subDiv3);
+                card.appendChild(subDiv);
+                card.addEventListener("click", () => {
+                    document.querySelector("#name").value = cdata["volumeInfo"]["title"];
+                    document.querySelector("#ref").value = cdata["id"];
+                    document.querySelector("#description").value = cdata["volumeInfo"]["description"];
+                    document.querySelector("#public_price").value = price;
+                    document.querySelector("#paid_price").value = 0;
+                    document.querySelector("#imageURL").value = cover;
+                })
+                div.appendChild(card);
+            }
+        } else {
+            let title = document.createElement("p");
+            title.innerText = "No results";
+            div.appendChild(title);
+        }
+
+        document.getElementById("GBContent").appendChild(div);
+
+    }
+
+    async function getBookByISBN(ISBN = "") {
+        if (ISBN === "") {
+            console.log("GETGOOGLEAPI_book : ISBN is empty");
+            return;
+        }
+
+        ISBN = ISBN.replaceAll(/[(].+[)]/g, "");
+        ISBN = ISBN.replaceAll(/[\[].+[\]]/g, "");
+        ISBN = ISBN.replaceAll(/[\{].+[\}]/g, "");
+        ISBN = ISBN.replaceAll(/[#][0-9]{1,}/g, "");
+        ISBN = ISBN.replace(/\s+$/, "");
+        console.log("GETGOOGLEAPI_book : ISBN : " + ISBN);
+        let url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:" + encodeURIComponent(ISBN) + "&maxResults=1&key=key=<?php echo $_ENV["GBAPIKEY"] ?>";
+        let response = await fetch(url);
+        let cdata = await response.json();
+        let div = document.createElement("div");
+        if (cdata["totalItems"] > 0) {
+            for (let i = 0; i < cdata["totalItems"]; i++) {
+                let cdata = cdata["items"][i];
+                let cover;
+                if (cdata["volumeInfo"]["imageLinks"] !== undefined) {
+
+                    cover = cdata["volumeInfo"]["imageLinks"]
+                    if (cover["large"] !== undefined) {
+                        cover = cover["large"]
+                    } else if (cover["thumbnail"] !== undefined) {
+                        cover = cover["thumbnail"]
+                    } else {
+                        cover = null
+                    }
+                } else {
+                    cover = null;
+                }
+                let price;
+                if (cdata["saleInfo"]["retailPrice"] !== undefined) {
+                    price = cdata["saleInfo"]["retailPrice"]["amount"]
+                } else {
+                    price = null;
+                }
+                let card = document.createElement("div");
+                card.classList.add("card");
+                let title = document.createElement("p");
+                title.innerHTML = cdata["title"];
+                let coverImg = document.createElement("img");
+                coverImg.src = cover;
+                let id = document.createElement("p");
+                id.innerHTML = cdata["id"];
+                let priceP = document.createElement("p");
+                priceP.innerHTML = price;
+                card.appendChild(title);
+                card.appendChild(coverImg);
+                card.appendChild(id);
+                card.appendChild(priceP);
+                card.addEventListener("click", () => {
+                    document.querySelector("#name").value = cdata["volumeInfo"]["title"];
+                    document.querySelector("#ref").value = cdata["id"];
+                    document.querySelector("#description").value = cdata["volumeInfo"]["description"];
+                    document.querySelector("#public_price").value = price;
+                    document.querySelector("#paid_price").value = 0;
+                    document.querySelector("#imageURL").value = cover;
+                })
+                div.appendChild(card);
+            }
+        } else {
+            let title = document.createElement("p");
+            title.innerText = "No results";
+            div.appendChild(title);
+        }
+
+        document.getElementById("GBContent").appendChild(div);
+    }
+
+
 </script>
 
 <?php

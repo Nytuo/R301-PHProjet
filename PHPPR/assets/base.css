@@ -208,7 +208,10 @@ body {
 
 .purchase > form > .btn {
 }
-
+.card{
+    cursor: pointer;
+    background-color: rgba(0,0,0,0.5);
+}
 .availability {
     position: relative;
 
@@ -218,7 +221,6 @@ body {
     position: relative;
     top: 1.75vh;
     margin-left: 25vw;
-    margin-right: 25vw;
 }
 
 p {

@@ -85,11 +85,18 @@ class SqlApi
         }
     }
 
-    public function insertProduct(string $name, string $ref, int $public_price, int $paid_price, string $description, string $image, int $quantity)
+    public function insertProduct(string $name, string $ref, float $public_price, float $paid_price, string $description, string $image, int $quantity)
     {
         $sqlQuery = "INSERT INTO products (id,title,ref, public_price,paid_price, description, image) VALUES (NULL,:title,:ref, :public_price,:paid_price, :description, :image)";
         $stmt = $this->db->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
         $stmt->execute(array('title' => $name, 'ref' => $ref, 'public_price' => $public_price, 'paid_price' => $paid_price, 'description' => $description, 'image' => $image));
+        $sqlQuery = "SELECT id FROM products WHERE ref=:ref";
+        $stmt = $this->db->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+        $stmt->execute(array('ref' => $ref));
+        $id = $stmt->fetch()["id"];
+        $sqlQuery = "INSERT INTO gestionStock (product_id,quantity) VALUES (:product_id,:quantity)";
+        $stmt = $this->db->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+        $stmt->execute(array('product_id' => $id, 'quantity' => $quantity));
     }
     public function insertFournisseur(string $name, string $email, string $address, string $city, string $zip_code, string $country)
     {
