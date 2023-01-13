@@ -11,7 +11,7 @@ $product = new product($_GET['id']);
     <img src="<?php echo $product->getImage() ?>" alt="" class="product_img">
     </div>
     <div id="ColContent">
-    <h1><?php echo $product->getTitle() ?></h1>
+    <h1><?php echo $product->getTitle() ?><span class="sprt s-category-border-rr inline-block"></span></h1>
         <div class="purchase">
 
     <p class="price"><?php echo $product->getPublicPrice() ?>€ (TTC)</p>

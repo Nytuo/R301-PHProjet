@@ -33,7 +33,7 @@ function calculateTotal($cartList) {
 <main>
 
 
-<h1>Le chariot</h1>
+<h1>Le chariot<span class="sprt s-category-border-rr inline-block"></span></h1>
 <?php
 if (count($cartList) > 0) {
     foreach ($cartList as $cart) {

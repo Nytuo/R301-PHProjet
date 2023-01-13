@@ -295,7 +295,7 @@ function showCommands($sql)
 
 <main>
 
-    <h1>Panel Sans MS de <?php echo $_SESSION['email'] ?></h1>
+    <h1>Panel Sans MS de <?php echo $_SESSION['email'] ?><span class="sprt s-category-border-rr inline-block"></span></h1>
     <div class="snack_container">
         <div class="snack_rectangle">
             <div class="snack_notification">

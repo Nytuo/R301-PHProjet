@@ -7,7 +7,7 @@
     require_once "SqlApi.php";
     ?>
     <main>
-    <h1 class="center">Résultat de recherche</h1>
+    <h1 class="center">Résultat de recherche<span class="sprt s-category-border-rr inline-block"></span></h1>
         <div class="cards-list">
     <?php
     echo "<script>document.getElementById('search').value = '" . $_GET['search'] . "'</script>";

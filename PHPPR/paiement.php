@@ -13,7 +13,7 @@ session_start();
     <title>Document</title>
 </head>
 <body>
-<h1>PAIEMENT SECURISE PAR LES TECHNICIENS DE L'EXTREME</h1>
+<h1>PAIEMENT SECURISE PAR LES TECHNICIENS DE L'EXTREME<span class="sprt s-category-border-rr inline-block"></span></h1>
 //TODO PAYPAL
 
 <?php

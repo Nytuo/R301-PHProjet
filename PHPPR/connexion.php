@@ -3,7 +3,7 @@ include_once "head.php";
 include_once "header.php";
 ?>
     <main>
-        <h1>ADMIN SANS MS</h1>
+        <h1>ADMIN SANS MS<span class="sprt s-category-border-rr inline-block"></span></h1>
         <!-- conexion form -->
 
         <form action="adminZonne.php" method="post">

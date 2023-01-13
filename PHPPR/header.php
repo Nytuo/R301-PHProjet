@@ -13,9 +13,8 @@
             <li>
                 <div class="user-view" style="height: 150px">
                     <div class="background" style="background-color: #344288; height: 150px">
-                        <img src="assets/images/logo.webp" style="width: 100%; margin-top:-90px;scale: 0.8">
+                        <img src="assets/images/logo.webp" style="width: 100%; margin-top:-70px;scale: 1">
                     </div>
-                        <h5 style="margin-top: 80px">Comics Sans MS</h5>
                 </div>
             </li>
             <li>
@@ -33,6 +32,7 @@
             <li><a class="waves-effect" href="connexion.php">Connexion</a></li>
             <li><a class="waves-effect" href="about.php">About</a></li>
         </ul>
+        <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
     </div>
 </header>
 
