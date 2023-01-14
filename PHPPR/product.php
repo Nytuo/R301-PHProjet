@@ -64,7 +64,9 @@ $product = new product($DBProduct['ref'],$DBProduct['id'], $DBProduct['title'], 
     </div>
 </main>
 
-
+<?php
+require_once "footer.php";
+?>
 </body>
 
 

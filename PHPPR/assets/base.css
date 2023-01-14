@@ -336,7 +336,7 @@ nav {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    positon: relative;
+    position: relative;
     width: 50px;
     height: 50px;
     background: #380848;
@@ -376,8 +376,47 @@ nav {
         margin-top:5px;
     }
     h1{
-        margin: 15px;
+        margin: 14px 0 45px 0;
+        font-size: 1.5rem;
     }
+    h3  {
+        font-size: 2rem;
+    }
+    #benef, #CA, #NV, #MA {
+font-size: 1rem;
+    }
+    #ColContent {
+        position: relative;
+        margin-left: 0;
+    }
+    #ColContent>.purchase > form>input[type="submit"] {
+        width: 100%;
+    }
+    .InStock{
+        display: block;
+        max-width: 100%;
+        text-align: center;
+    }
+    #ColCover > img {
+        width: 100%;
+    }
+
+    #ColCover {
+        position: relative;
+        top: 1vh;
+    }
+    @keyframes expand {
+        50% {
+            width: 70vw;
+            border-radius: 6px;
+        }
+        100% {
+            width: 80vw;
+            border-radius: 4px;
+            box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 3px 3px -1px rgba(0, 0, 0, 0.12);
+        }
+    }
+
 }
 @-webkit-keyframes scale-in {
     100% {
@@ -399,23 +438,13 @@ nav {
         border-radius: 6px;
     }
     100% {
-        width: 40vw;
+        width: 50vw;
         border-radius: 4px;
         box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 3px 3px -1px rgba(0, 0, 0, 0.12);
     }
 }
 
-@keyframes expand {
-    50% {
-        width: 45vw;
-        border-radius: 6px;
-    }
-    100% {
-        width: 40vw;
-        border-radius: 4px;
-        box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 3px 3px -1px rgba(0, 0, 0, 0.12);
-    }
-}
+
 
 /* Animations to fade the snackbar in and out */
 @-webkit-keyframes fadein {
@@ -462,80 +491,7 @@ nav {
     }
 }
 
-.flip {
-    position: relative;
-}
 
-.flip > .front,
-.flip > .back {
-    display: block;
-    transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transition-duration: 0.5s;
-    transition-property: transform, opacity;
-}
-
-.flip > .front {
-    transform: rotateY(0deg);
-}
-
-.flip > .back {
-    position: absolute;
-    opacity: 0;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    transform: rotateY(-180deg);
-}
-
-.flip:hover > .front {
-    transform: rotateY(180deg);
-}
-
-.flip:hover > .back {
-    opacity: 1;
-    transform: rotateY(0deg);
-}
-
-.flip.flip-vertical > .back {
-    transform: rotateX(-180deg);
-}
-
-.flip.flip-vertical:hover > .front {
-    transform: rotateX(180deg);
-}
-
-.flip.flip-vertical:hover > .back {
-    transform: rotateX(0deg);
-}
-
-.flip {
-    position: relative;
-    display: inline-block;
-    margin-right: 2px;
-    margin-bottom: 1em;
-    width: 280px;
-}
-
-.flip > .front,
-.flip > .back {
-    display: block;
-    color: white;
-    width: inherit;
-    background-size: cover !important;
-    background-position: center !important;
-    height: 395px;
-    padding: 1em 2em;
-    background: var(--color-tertiary);
-    border-radius: 10px;
-}
-
-.flip > .front p,
-.flip > .back p {
-    font-size: 0.9125rem;
-    line-height: 160%;
-    color: #999;
-}
 
 .cards-list {
     z-index: 0;
