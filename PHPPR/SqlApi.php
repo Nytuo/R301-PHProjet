@@ -279,8 +279,8 @@ class SqlApi
             return $product;
         }, $result);
         return array_reduce($result, function ($carry, $item) {
-                return $carry + ($item["paid_price"] * $item["quantity"]);
-            }, 0);
+            return $carry + ($item["paid_price"] * $item["quantity"]);
+        }, 0);
     }
 
     public function getAchatsEtMontant(): string
@@ -352,7 +352,7 @@ class SqlApi
 
     public function connectUser(mixed $email, mixed $ashPassword): bool
     {
-$stmt = $this->db->prepare("SELECT count(*) FROM client WHERE email=:email AND password=:password", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $stmt = $this->db->prepare("SELECT count(*) FROM client WHERE email=:email AND password=:password", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->execute(array('email' => $email, 'password' => $ashPassword));
         $result = $stmt->fetch();
         if ($result["count(*)"] == 0) {

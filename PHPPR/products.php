@@ -12,10 +12,6 @@ require_once "header.php";
         $productList = array();
         foreach ($products as $product) {
             $productObject = new product($product['ref'], $product['id'], $product['title'], $product['public_price'], $product['paid_price'], $product['description'], $product['image'], $product['quantity'], $product['pages'], $product['publisher'], $product['out_date'], $product['author'], $product['language'], $product['format'], $product['dimensions'], $product['category']);
-            $productObject->setTitle($product['title']);
-            $productObject->setPublicPrice($product['public_price']);
-            $productObject->setDescription($product['description']);
-            $productObject->setImage($product['image']);
             $productObject->setQuantity($product['quantity'] ?? 0);
             $productList[] = $productObject;
         }

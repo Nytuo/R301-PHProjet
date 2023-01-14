@@ -51,14 +51,12 @@ function calculateTotal($cartList)
             echo "</form>";
             echo "</div>";
         }
-        //code promo
         echo "<div class='promo'>";
         echo "<form action='sessionUpdater.php' method='post'>";
         echo "<input type='text' name='promo' id='submitCP'  placeholder='Code promo'>";
         echo "<input type='submit' class='waves-effect btn' value='Valider'>";
         echo "</form>";
         echo "</div>";
-        //frais de port en fonction de l'adresse
         echo "<div class='shipping'>";
         echo "<form action='sessionUpdater.php' method='post'>";
         echo "<div class='input-field col s12'>";

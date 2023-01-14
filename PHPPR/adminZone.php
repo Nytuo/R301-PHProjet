@@ -216,7 +216,7 @@ function showMessage($sql): void
 
 function showClient($sql): void
 {
-    $allProducts = $sql->getClients();
+    $allClients = $sql->getClients();
 
     echo "<table  class='responsive-table  highlight'>";
     echo "<tr>";
@@ -229,16 +229,16 @@ function showClient($sql): void
     echo "<th>Code postal</th>";
     echo "<th>Suppression</th>";
     echo "</tr>";
-    foreach ($allProducts as $product) {
+    foreach ($allClients as $client) {
         echo "<tr>";
-        echo "<td>" . $product['id'] . "</td>";
-        echo "<td>" . $product['name'] . "</td>";
-        echo "<td>" . $product['firstName'] . "</td>";
-        echo "<td>" . $product['email'] . "</td>";
-        echo "<td>" . $product['address'] . "</td>";
-        echo "<td>" . $product['city'] . "</td>";
-        echo "<td>" . $product['zip_code'] . "</td>";
-        echo "<td><a href='deleter.php?client=1&id=" . $product['id'] . "'>Supprimer</a></td>";
+        echo "<td>" . $client['id'] . "</td>";
+        echo "<td>" . $client['name'] . "</td>";
+        echo "<td>" . $client['firstName'] . "</td>";
+        echo "<td>" . $client['email'] . "</td>";
+        echo "<td>" . $client['address'] . "</td>";
+        echo "<td>" . $client['city'] . "</td>";
+        echo "<td>" . $client['zip_code'] . "</td>";
+        echo "<td><a href='deleter.php?client=1&id=" . $client['id'] . "'>Supprimer</a></td>";
         echo "</tr>";
     }
     echo "</table>";
@@ -246,7 +246,7 @@ function showClient($sql): void
 
 function showFour($sql): void
 {
-    $allProducts = $sql->getFour();
+    $allFour = $sql->getFour();
 
     echo "<table  class='responsive-table highlight'>";
     echo "<tr>";
@@ -259,16 +259,16 @@ function showFour($sql): void
     echo "<th>Pays</th>";
     echo "<th>Suppression</th>";
     echo "</tr>";
-    foreach ($allProducts as $product) {
+    foreach ($allFour as $four) {
         echo "<tr>";
-        echo "<td>" . $product['id'] . "</td>";
-        echo "<td>" . $product['name'] . "</td>";
-        echo "<td>" . $product['email'] . "</td>";
-        echo "<td>" . $product['address'] . "</td>";
-        echo "<td>" . $product['city'] . "</td>";
-        echo "<td>" . $product['zip_code'] . "</td>";
-        echo "<td>" . $product['country'] . "</td>";
-        echo "<td><a href='deleter.php?four=1&id=" . $product['id'] . "'>Supprimer</a></td>";
+        echo "<td>" . $four['id'] . "</td>";
+        echo "<td>" . $four['name'] . "</td>";
+        echo "<td>" . $four['email'] . "</td>";
+        echo "<td>" . $four['address'] . "</td>";
+        echo "<td>" . $four['city'] . "</td>";
+        echo "<td>" . $four['zip_code'] . "</td>";
+        echo "<td>" . $four['country'] . "</td>";
+        echo "<td><a href='deleter.php?four=1&id=" . $four['id'] . "'>Supprimer</a></td>";
         echo "</tr>";
     }
     echo "</table>";
@@ -276,7 +276,7 @@ function showFour($sql): void
 
 function showCommands($sql): void
 {
-    $allProducts = $sql->getCommands();
+    $allCommands = $sql->getCommands();
 
     echo "<table  class='responsive-table  highlight'>";
     echo "<tr>";
@@ -290,17 +290,17 @@ function showCommands($sql): void
     echo "<th>Products</th>";
     echo "<th>Suppression</th>";
     echo "</tr>";
-    foreach ($allProducts as $product) {
+    foreach ($allCommands as $command) {
         echo "<tr>";
-        echo "<td>" . $product['id'] . "</td>";
-        echo "<td>" . $product['client_id'] . "</td>";
-        echo "<td>" . $product['product_id'] . "</td>";
-        echo "<td>" . $product['quantity'] . "</td>";
-        echo "<td>" . $product['total'] . "</td>";
-        echo "<td>" . $product['fournisseur_id'] . "</td>";
-        echo "<td>" . $product['date'] . "</td>";
-        echo "<td>" . $product['products'] . "</td>";
-        echo "<td><a href='deleter.php?command=1&id=" . $product['id'] . "'>Supprimer</a></td>";
+        echo "<td>" . $command['id'] . "</td>";
+        echo "<td>" . $command['client_id'] . "</td>";
+        echo "<td>" . $command['product_id'] . "</td>";
+        echo "<td>" . $command['quantity'] . "</td>";
+        echo "<td>" . $command['total'] . "</td>";
+        echo "<td>" . $command['fournisseur_id'] . "</td>";
+        echo "<td>" . $command['date'] . "</td>";
+        echo "<td>" . $command['products'] . "</td>";
+        echo "<td><a href='deleter.php?command=1&id=" . $command['id'] . "'>Supprimer</a></td>";
         echo "</tr>";
     }
     echo "</table>";
@@ -643,11 +643,11 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
         console.log("GETGOOGLEAPI_book : ISBN : " + ISBN);
         let url = "https://www.googleapis.com/books/v1/volumes?q=ISBN:" + encodeURIComponent(ISBN) + "&maxResults=1&key=key=<?php echo $_ENV["GBAPIKEY"] ?>";
         let response = await fetch(url);
-        let cdata = await response.json();
+        let data = await response.json();
         let div = document.createElement("div");
-        if (cdata["totalItems"] > 0) {
-            for (let i = 0; i < cdata["totalItems"]; i++) {
-                let cdata = cdata["items"][i];
+        if (data["totalItems"] > 0) {
+            for (let i = 0; i < data["totalItems"]; i++) {
+                let cdata = data["items"][i];
                 let cover;
                 if (cdata["volumeInfo"]["imageLinks"] !== undefined) {
 
@@ -707,7 +707,7 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
             title.innerText = "No results";
             div.appendChild(title);
         }
-        document.querySelector("#GBContent").innerHTML = "Results for " + ISBN + "<span class='sprt s-category-border-rr inline-block'></span></h1>";
+        document.querySelector("#GBContent").innerHTML = "Résultat pour " + ISBN + "<span class='sprt s-category-border-rr inline-block'></span></h1>";
         document.getElementById("GBContent").appendChild(div);
     }
 
