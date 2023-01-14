@@ -170,7 +170,7 @@ class SqlApi
 
     public function getClients()
     {
-        $result = $this->db->query("SELECT id,name,email,address,city,zip_code,country FROM client");
+        $result = $this->db->query("SELECT id,name,firstName,email,address,city,zip_code,country FROM client");
         $result = $result->fetchAll();
         $clients = [];
         foreach ($result as $client) {

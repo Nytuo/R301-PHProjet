@@ -160,19 +160,21 @@ class Product {
 
     displayProduct() {
         let product = document.createElement("div");
-        product.classList.add("product");
+        product.classList.add("col");
+        product.classList.add("s12");
         let flip = document.createElement("div");
-        flip.classList.add("flip");
-        let front = document.createElement("div");
-        front.classList.add("front");
+        let imgDiv = document.createElement("div");
+        let img = document.createElement("img");
         if (this.image !== null) {
-            front.style.backgroundImage = "url(" + this.image + ")";
+            img.src = this.image;
         } else {
-            front.style.backgroundImage = "url(assets/images/no-image.webp)";
+            img.src = "assets/images/no-image.webp";
         }
-        front.style.backgroundSize = "cover";
-        let back = document.createElement("div");
-        back.classList.add("back");
+        img.width = 300;
+        img.height = 450;
+        imgDiv.classList.add("col");
+        imgDiv.classList.add("s6");
+        imgDiv.appendChild(img);
         let title = document.createElement("h2");
         title.innerHTML = this.title;
         let price = document.createElement("p");
@@ -184,12 +186,14 @@ class Product {
         let description = document.createElement("p");
         description.innerHTML = this.description !== undefined ? this.description : "";
         description.innerHTML = description.innerHTML.split(" ").splice(0, 20).join(" ") + "...";
-        back.appendChild(title);
-        back.appendChild(price);
-        back.appendChild(description);
-        flip.appendChild(front);
-        flip.appendChild(back);
+        flip.classList.add("col");
+        flip.classList.add("s6");
+        flip.appendChild(title);
+        flip.appendChild(price);
+        flip.appendChild(description);
+        product.appendChild(imgDiv);
         product.appendChild(flip);
+
         product.style.cursor = "pointer";
         return product;
     }

@@ -234,7 +234,6 @@ function showClient($sql)
     echo "<th>Adresse</th>";
     echo "<th>Ville</th>";
     echo "<th>Code postal</th>";
-    echo "<th>Téléphone</th>";
     echo "<th>Suppression</th>";
     echo "</tr>";
     foreach ($allProducts as $product) {
@@ -246,7 +245,6 @@ function showClient($sql)
         echo "<td>" . $product['address'] . "</td>";
         echo "<td>" . $product['city'] . "</td>";
         echo "<td>" . $product['zip_code'] . "</td>";
-        echo "<td>" . $product['phone'] . "</td>";
         echo "<td><a href='deleteClient.php?id=" . $product['id'] . "'>Supprimer</a></td>";
         echo "</tr>";
     }
@@ -580,7 +578,6 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
         let data = await response.json();
         console.log(data);
         let div = document.createElement("div");
-        div.classList.add("cards-list");
         if (data["totalItems"] > 0) {
             for (let i = 0; i < (data["items"].length); i++) {
                 let cdata = data["items"][i];
@@ -609,21 +606,21 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                 let card = new Product(cdata["volumeInfo"]["industryIdentifiers"][0]["identifier"], cdata["id"], cdata["volumeInfo"]["title"], price, price, cdata["volumeInfo"]["description"], cover, 1, cdata["volumeInfo"]["pageCount"], cdata["volumeInfo"]["publisher"], cdata["volumeInfo"]["publishedDate"], cdata["volumeInfo"]["authors"], cdata["volumeInfo"]["language"], cdata["volumeInfo"]["printType"], cdata["volumeInfo"]["dimensions"], cdata["volumeInfo"]["categories"]).displayProduct();
 
                 card.addEventListener("click", () => {
-                    window.location.scrollTo(0, 0);
+                    window.scrollTo(0, 0);
                     document.querySelector("#name").value = cdata["volumeInfo"]["title"];
                     document.querySelector("#ref").value = cdata["id"];
-                    document.querySelector("#description").value = cdata["volumeInfo"]["description"];
+                    document.querySelector("#description").value = cdata["volumeInfo"]["description"] ?? "";
                     document.querySelector("#public_price").value = price !== null ? price : 0;
                     document.querySelector("#paid_price").value = 0;
                     document.querySelector("#imageURL").value = cover;
-                    document.querySelector("#pages").value = cdata["volumeInfo"]["pageCount"];
-                    document.querySelector("#author").value = cdata["volumeInfo"]["authors"][0];
-                    document.querySelector("#editor").value = cdata["volumeInfo"]["publisher"];
-                    document.querySelector("#outDate").value = cdata["volumeInfo"]["publishedDate"];
-                    document.querySelector("#category").value = cdata["volumeInfo"]["categories"][0];
-                    document.querySelector("#language").value = cdata["volumeInfo"]["language"];
+                    document.querySelector("#pages").value = cdata["volumeInfo"]["pageCount"] !== undefined ? cdata["volumeInfo"]["pageCount"] : 0;
+                    document.querySelector("#author").value = cdata["volumeInfo"]["authors"] !== undefined ? cdata["volumeInfo"]["authors"].join(", ") : "";
+                    document.querySelector("#editor").value = cdata["volumeInfo"]["publisher"] !== undefined ? cdata["volumeInfo"]["publisher"] : "";
+                    document.querySelector("#outDate").value = cdata["volumeInfo"]["publishedDate"] !== undefined ? cdata["volumeInfo"]["publishedDate"] : "0000-00-00";
+                    document.querySelector("#category").value = cdata["volumeInfo"]["categories"] !== undefined ? cdata["volumeInfo"]["categories"][0] : "";
+                    document.querySelector("#language").value = cdata["volumeInfo"]["language"] !== undefined ? cdata["volumeInfo"]["language"] : "";
                     document.querySelector("#dimensions").value = cdata["volumeInfo"]["dimensions"] !== undefined ? cdata["volumeInfo"]["dimensions"]["height"] + "x" + cdata["volumeInfo"]["dimensions"]["width"] + "x" + cdata["volumeInfo"]["dimensions"]["thickness"] : "unknown";
-                    document.querySelector("#format").value = cdata["volumeInfo"]["printType"];
+                    document.querySelector("#format").value = cdata["volumeInfo"]["printType"] !== undefined ? cdata["volumeInfo"]["printType"] : "";
 
 
                 })
@@ -715,7 +712,7 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
             title.innerText = "No results";
             div.appendChild(title);
         }
-        document.querySelector("#GBContent").innerHTML = "Results for " + ISBN;
+        document.querySelector("#GBContent").innerHTML = "Results for " + ISBN+"<span class='sprt s-category-border-rr inline-block'></span></h1>";
         document.getElementById("GBContent").appendChild(div);
     }
 
