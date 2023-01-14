@@ -19,7 +19,16 @@
                     <li><a  href="index.php"><i class="material-icons left">home</i>Accueil</a></li>
                     <li><a  href="products.php"><i class="material-icons left">book</i>Comics</a></li>
                     <li><a href="cart.php"><i class="material-icons left">shopping_cart</i>Chariot</a></li>
-                    <li><a  href="connexion.php"><i class="material-icons left">account_circle</i>Profile</a></li>
+                    <?php
+                    session_start();
+                    if(isset($_SESSION['email'])){
+                        echo "<li><a href='connexion.php'><i class='material-icons left'>account_circle</i>Profile</a></li>";
+                        echo "<li><a href='logout.php'><i class='material-icons left'>exit_to_app</i>Se déconnecter</a></li>";
+                    }else{
+                        echo "<li><a href='connexion.php'><i class='material-icons left'>account_circle</i>Se connecter</a></li>";
+                    }
+                    session_abort();
+                    ?>
                 </ul>
             </div>
         </nav>

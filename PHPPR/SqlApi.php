@@ -36,6 +36,7 @@ class SqlApi
         create table client(
             id INTEGER PRIMARY KEY,
             name varchar(255) not null,
+            firstname varchar(255) not null,
             email varchar(255) not null,
             password varchar(255) not null,
             address varchar(255) not null,
@@ -81,7 +82,7 @@ class SqlApi
     }
 
     // foncion to conect to conect user
-    public function connectUser(string $email, string $ashPassword): bool
+    public function connectAdmin(string $email, string $ashPassword): bool
     {
         $stmt = $this->db->prepare("SELECT count(*) FROM admin WHERE email=:email AND password=:password", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->execute(array('email' => $email, 'password' => $ashPassword));
@@ -343,6 +344,26 @@ class SqlApi
     public function close()
     {
         $this->db = null;
+    }
+
+    public function insertUser(mixed $nom, mixed $prenom, mixed $email, mixed $password, mixed $adresse, mixed $ville, mixed $codePostal, mixed $pays)
+    {
+        $stmt = $this->db->prepare("INSERT INTO client (name,firstName,email,password,address,city,zip_code,country) VALUES (:nom,:prenom,:email,:password,:adresse,:ville,:codePostal,:pays)", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $password = hash('sha256', $password);
+        $stmt->execute(array('nom' => $nom, 'prenom' => $prenom, 'email' => $email, 'password' => $password, 'adresse' => $adresse, 'ville' => $ville, 'codePostal' => $codePostal, 'pays' => $pays));
+    }
+
+    public function connectUser(mixed $email, mixed $ashPassword)
+    {
+$stmt = $this->db->prepare("SELECT count(*) FROM client WHERE email=:email AND password=:password", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $stmt->execute(array('email' => $email, 'password' => $ashPassword));
+        $result = $stmt->fetch();
+        if ($result["count(*)"] == 0) {
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
 }

@@ -28,18 +28,16 @@ if (isset($_POST['password'])) {
 }
 
 
-$result = $sql->connectUser($email, $ashPassword);
+$result = $sql->connectAdmin($email, $ashPassword);
 if (!$result) {
-
-    // if the password is correct, open the admin zone
     $_SESSION['error'] = "Wrong password";
-
     header("Location: connexion.php");
     exit(0);
+} else {
+    $_SESSION['password'] = $ashPassword;//todo en attendant (ou peut etre définitif)
+    $_SESSION['email'] = $email;
 }
 
-$_SESSION['password'] = $ashPassword;//todo en attendant (ou peut etre définitif)
-$_SESSION['email'] = $email;
 
 if (isset($_POST["changeQty"])) {
     $sql->updateQuantity($_POST["changeQty"], $_POST["id"]);
@@ -167,7 +165,7 @@ function showProducts($sql)
         $description = implode(" ", $description);
         $description = $description . "...";
         echo "<td>" . $description . "</td>";
-                echo "<td>" . $product['out_date'] . "</td>";
+        echo "<td>" . $product['out_date'] . "</td>";
         echo "<td>" . $product['language'] . "</td>";
         echo "<td>" . $product['price'] . "</td>";
         echo "<td>" . $product['pages'] . "</td>";
@@ -316,6 +314,7 @@ function showCommands($sql)
 
 
 }
+
 putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
 
 ?>
@@ -368,9 +367,9 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                     x.style.color = notif.FrontColor;
                     setTimeout(function () {
                         document.querySelector(".snack_container").style.opacity = "0";
-                        setTimeout(function (){
+                        setTimeout(function () {
                             document.querySelector(".snack_container").style.display = "none";
-                        },notifDelay)
+                        }, notifDelay)
 
                     }, notifDelay);
                 }
@@ -396,9 +395,9 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
             </ul>
         </div>
         <div id="compt" class="col s12">
-                <p class="InStock soloInTheMiddle" id="benef">Bénéfice : <?php
-                    echo $sql->getBenefices();
-                    ?>€</p>
+            <p class="InStock soloInTheMiddle" id="benef">Bénéfice : <?php
+                echo $sql->getBenefices();
+                ?>€</p>
 
             <p class="soloInTheMiddle" id="NV">Nombre de vente : <?php
                 echo $sql->getNbVente()
@@ -499,11 +498,13 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                 <h3>Google Books API</h3>
 
                 <label for="ISBN">ISBN</label><input type="text" id="ISBN" placeholder="ISBN">
-                <button class="waves-effect btn" onclick="getBookByISBN(document.querySelector('#ISBN').value)">Rechercher
+                <button class="waves-effect btn" onclick="getBookByISBN(document.querySelector('#ISBN').value)">
+                    Rechercher
                 </button>
                 <br>
                 <label for="title">Titre</label><input type="text" id="title" placeholder="Titre">
-                <button class="waves-effect btn" onclick="getBookByTitle(document.querySelector('#title').value)">Rechercher
+                <button class="waves-effect btn" onclick="getBookByTitle(document.querySelector('#title').value)">
+                    Rechercher
                 </button>
 
                 <div id="GBContent"></div>
@@ -603,7 +604,7 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                 } else {
                     price = null;
                 }
-             let card = new Product(cdata["volumeInfo"]["industryIdentifiers"][0]["identifier"], cdata["id"], cdata["volumeInfo"]["title"], price, price, cdata["volumeInfo"]["description"], cover, 1, cdata["volumeInfo"]["pageCount"], cdata["volumeInfo"]["publisher"], cdata["volumeInfo"]["publishedDate"], cdata["volumeInfo"]["authors"], cdata["volumeInfo"]["language"], cdata["volumeInfo"]["printType"], cdata["volumeInfo"]["dimensions"], cdata["volumeInfo"]["categories"]).displayProduct();
+                let card = new Product(cdata["volumeInfo"]["industryIdentifiers"][0]["identifier"], cdata["id"], cdata["volumeInfo"]["title"], price, price, cdata["volumeInfo"]["description"], cover, 1, cdata["volumeInfo"]["pageCount"], cdata["volumeInfo"]["publisher"], cdata["volumeInfo"]["publishedDate"], cdata["volumeInfo"]["authors"], cdata["volumeInfo"]["language"], cdata["volumeInfo"]["printType"], cdata["volumeInfo"]["dimensions"], cdata["volumeInfo"]["categories"]).displayProduct();
 
                 card.addEventListener("click", () => {
                     window.location.scrollTo(0, 0);
@@ -619,7 +620,7 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                     document.querySelector("#outDate").value = cdata["volumeInfo"]["publishedDate"];
                     document.querySelector("#category").value = cdata["volumeInfo"]["categories"][0];
                     document.querySelector("#language").value = cdata["volumeInfo"]["language"];
-                    document.querySelector("#dimensions").value = cdata["volumeInfo"]["dimensions"] !== undefined ? cdata["volumeInfo"]["dimensions"]["height"] + "x" + cdata["volumeInfo"]["dimensions"]["width"] + "x" + cdata["volumeInfo"]["dimensions"]["thickness"]:"unknown";
+                    document.querySelector("#dimensions").value = cdata["volumeInfo"]["dimensions"] !== undefined ? cdata["volumeInfo"]["dimensions"]["height"] + "x" + cdata["volumeInfo"]["dimensions"]["width"] + "x" + cdata["volumeInfo"]["dimensions"]["thickness"] : "unknown";
                     document.querySelector("#format").value = cdata["volumeInfo"]["printType"];
 
 
