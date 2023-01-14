@@ -1,4 +1,5 @@
 <?php
+
 class product
 {
     public $ref;
@@ -296,7 +297,7 @@ class product
         if ($this->quantity == 0) {
             return "<span class='OutOfStock'>Rupture de stock</span>";
         } else if ($this->quantity < 10) {
-            return "<span class='NotThatMuch'>".$this->quantity . " restants</span>";
+            return "<span class='NotThatMuch'>" . $this->quantity . " restants</span>";
         } else if ($this->quantity > 0) {
             return "<span class='InStock'>En stock</span>";
         } else {
@@ -319,17 +320,11 @@ class product
 
     public function displayProduct()
     {
-        echo "<a href='product.php?id=" . $this->ref . "'>";
+        echo "<a href='product.php?id=" . $this->id . "'>";
         echo "<div class='product'>";
-        echo "<div class='flip'>";
-        echo "<div class='front' style='background-image: url(" . $this->image . ");background-size: cover;'>";
-        echo "</div>";
-        echo "<div class='back'>";
-        echo "<h2>" . $this->title . "</h2>";
-        echo "<p>" . $this->publicPrice . "€</p>";
-        echo "<p>" . $this->description . "</p>";
-        echo "</div>";
-        echo "</div>";
+        echo "<img src=" . $this->image . " alt='' width='300' height='450'>";
+        echo "<h2 style='font-size:  larger; text-align: center; margin-top: 5px'>" . $this->title . "</h2>";
+        echo "<p class='priceFOnly f1rem center'>" . $this->publicPrice . "€</p>";
         echo "</div>";
         echo "</a>";
 

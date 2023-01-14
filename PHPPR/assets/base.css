@@ -95,6 +95,16 @@ h1{
 .product_cart > span {
     width: 25%;
 }
+.product{
+    transform: scale(1);
+    transition: transform .3s ease-out;
+}
+.product:hover {
+    transform: scale(1.05);
+    transition: all 0.3s ease-in-out;
+}
+
+
 .btn {
     background-color: var(--color-primary);
     color: var(--text);
@@ -211,6 +221,10 @@ body {
     font-weight: bold;
     line-height: 1;
     margin-top:5px;
+}
+
+.f1rem{
+    font-size: 1rem;
 }
 
 .purchase > form > .btn {
