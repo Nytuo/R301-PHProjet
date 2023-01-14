@@ -63,7 +63,7 @@ h1{
     text-align: center;
 }
 .product_img {
-    width: 25%;
+    width: 20vw;
     object-fit: cover;
 }
 .product_img_cart {
