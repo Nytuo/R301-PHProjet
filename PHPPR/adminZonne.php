@@ -140,7 +140,7 @@ function showProducts($sql)
 
     $allProducts = $sql->getProducts();
 
-    echo "<table  class='responsive-table centered highlight'>";
+    echo "<table  class='responsive-table  highlight'>";
     echo "<tr>";
     echo "<th>Id</th>";
     echo "<th>Name</th>";
@@ -152,26 +152,28 @@ function showProducts($sql)
     echo "<th>Pages</th>";
     echo "<th>Auteur</th>";
     echo "<th>Éditeur</th>";
-    echo "<th>Format</th>";
-    echo "<th>Dimensions</th>";
     echo "<th>Catégorie</th>";
-    echo "<th>Quantity</th>";
-    echo "<th>Delete</th>";
+    echo "<th>Quantité</th>";
+    echo "<th>Suppression</th>";
     echo "</tr>";
     foreach ($allProducts as $product) {
         echo "<tr>";
         echo "<td>" . $product['id'] . "</td>";
         echo "<td>" . $product['title'] . "</td>";
         echo "<td><img src=" . $product['image'] . " /  width='100'></td>";
-        echo "<td>" . $product['description'] . "</td>";
-        echo "<td>" . $product['out_date'] . "</td>";
+        //truncate description for 20 words
+        $description = $product['description'];
+        $description = explode(" ", $description);
+        $description = array_slice($description, 0, 20);
+        $description = implode(" ", $description);
+        $description = $description . "...";
+        echo "<td>" . $description . "</td>";
+                echo "<td>" . $product['out_date'] . "</td>";
         echo "<td>" . $product['language'] . "</td>";
         echo "<td>" . $product['price'] . "</td>";
         echo "<td>" . $product['pages'] . "</td>";
         echo "<td>" . $product['author'] . "</td>";
         echo "<td>" . $product['publisher'] . "</td>";
-        echo "<td>" . $product['format'] . "</td>";
-        echo "<td>" . $product['dimensions'] . "</td>";
         echo "<td>" . $product['category'] . "</td>";
         echo "<td >";
         echo "<form class='inputTD' action='adminZonne.php' method='post'>";
@@ -180,7 +182,7 @@ function showProducts($sql)
 <input type='submit' value='Modifier' class='btn waves-effect'/>
 </form>
 </td>";
-        echo "<td><a href='deleteProduct.php?id=" . $product['id'] . "'>Delete</a></td>";
+        echo "<td><a href='deleteProduct.php?id=" . $product['id'] . "'>Supprimer</a></td>";
         echo "</tr>";
     }
     echo "</table>";
@@ -226,27 +228,27 @@ function showClient($sql)
 {
     $allProducts = $sql->getClients();
 
-    echo "<table  class='responsive-table centered highlight'>";
+    echo "<table  class='responsive-table  highlight'>";
     echo "<tr>";
     echo "<th>Id</th>";
-    echo "<th>Name</th>";
-    echo "<th>Address</th>";
-    echo "<th>City</th>";
-    echo "<th>Zip Code</th>";
-    echo "<th>Phone</th>";
+    echo "<th>Nom</th>";
     echo "<th>Email</th>";
-    echo "<th>Delete</th>";
+    echo "<th>Adresse</th>";
+    echo "<th>Ville</th>";
+    echo "<th>Code postal</th>";
+    echo "<th>Téléphone</th>";
+    echo "<th>Suppression</th>";
     echo "</tr>";
     foreach ($allProducts as $product) {
         echo "<tr>";
         echo "<td>" . $product['id'] . "</td>";
         echo "<td>" . $product['name'] . "</td>";
+        echo "<td>" . $product['email'] . "</td>";
         echo "<td>" . $product['address'] . "</td>";
         echo "<td>" . $product['city'] . "</td>";
         echo "<td>" . $product['zip_code'] . "</td>";
         echo "<td>" . $product['phone'] . "</td>";
-        echo "<td>" . $product['email'] . "</td>";
-        echo "<td><a href='deleteClient.php?id=" . $product['id'] . "'>Delete</a></td>";
+        echo "<td><a href='deleteClient.php?id=" . $product['id'] . "'>Supprimer</a></td>";
         echo "</tr>";
     }
     echo "</table>";
@@ -256,25 +258,27 @@ function showFour($sql)
 {
     $allProducts = $sql->getFour();
 
-    echo "<table  class='responsive-table centered highlight'>";
+    echo "<table  class='responsive-table highlight'>";
     echo "<tr>";
     echo "<th>Id</th>";
-    echo "<th>Name</th>";
-    echo "<th>Address</th>";
-    echo "<th>City</th>";
-    echo "<th>Zip Code</th>";
+    echo "<th>Nom</th>";
     echo "<th>Email</th>";
-    echo "<th>Delete</th>";
+    echo "<th>Adresse</th>";
+    echo "<th>Ville</th>";
+    echo "<th>Code postal</th>";
+    echo "<th>Pays</th>";
+    echo "<th>Suppression</th>";
     echo "</tr>";
     foreach ($allProducts as $product) {
         echo "<tr>";
         echo "<td>" . $product['id'] . "</td>";
         echo "<td>" . $product['name'] . "</td>";
+        echo "<td>" . $product['email'] . "</td>";
         echo "<td>" . $product['address'] . "</td>";
         echo "<td>" . $product['city'] . "</td>";
         echo "<td>" . $product['zip_code'] . "</td>";
-        echo "<td>" . $product['email'] . "</td>";
-        echo "<td><a href='deleteFour.php?id=" . $product['id'] . "'>Delete</a></td>";
+        echo "<td>" . $product['country'] . "</td>";
+        echo "<td><a href='deleteFour.php?id=" . $product['id'] . "'>Supprimer</a></td>";
         echo "</tr>";
     }
     echo "</table>";
@@ -284,7 +288,7 @@ function showCommands($sql)
 {
     $allProducts = $sql->getCommands();
 
-    echo "<table  class='responsive-table centered highlight'>";
+    echo "<table  class='responsive-table  highlight'>";
     echo "<tr>";
     echo "<th>Id</th>";
     echo "<th>Client</th>";
@@ -294,7 +298,7 @@ function showCommands($sql)
     echo "<th>fournisseur_id</th>";
     echo "<th>Delivery date</th>";
     echo "<th>Products</th>";
-    echo "<th>Delete</th>";
+    echo "<th>Suppression</th>";
     echo "</tr>";
     foreach ($allProducts as $product) {
         echo "<tr>";
@@ -306,7 +310,7 @@ function showCommands($sql)
         echo "<td>" . $product['fournisseur_id'] . "</td>";
         echo "<td>" . $product['date'] . "</td>";
         echo "<td>" . $product['products'] . "</td>";
-        echo "<td><a href='deleteCommand.php?id=" . $product['id'] . "'>Delete</a></td>";
+        echo "<td><a href='deleteCommand.php?id=" . $product['id'] . "'>Supprimer</a></td>";
         echo "</tr>";
     }
     echo "</table>";
@@ -366,6 +370,10 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                     x.style.color = notif.FrontColor;
                     setTimeout(function () {
                         document.querySelector(".snack_container").style.opacity = "0";
+                        setTimeout(function (){
+                            document.querySelector(".snack_container").style.display = "none";
+                        },notifDelay)
+
                     }, notifDelay);
                 }
             }, notifDelay + 1000);
@@ -390,12 +398,9 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
             </ul>
         </div>
         <div id="compt" class="col s12">
-            <h2>Comptabilité</h2>
-            <div style="transform: translateX(50vw)">
-                <p class="InStock" id="benef">Bénéfice : <?php
+                <p class="InStock soloInTheMiddle" id="benef">Bénéfice : <?php
                     echo $sql->getBenefices();
                     ?>€</p>
-            </div>
 
             <p class="soloInTheMiddle" id="NV">Nombre de vente : <?php
                 echo $sql->getNbVente()
@@ -489,20 +494,18 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                 <div class="input-field">
                     <label for="category">Catégorie</label><input type="text" id="category" name="category">
                 </div>
-                <input type="submit" class="waves-effect btn" value="Add product">
+                <input type="submit" class="waves-effect btn" value="Ajouter un produit">
             </form>
 
             <div id="GoogleBooksAPI">
                 <h3>Google Books API</h3>
 
-                option 1 : <input type="text" id="ISBN" placeholder="ISBN">
-                <button class="waves-effect btn" onclick="getBookByISBN(document.querySelector('#ISBN').value)">Get
-                    book
+                <label for="ISBN">ISBN</label><input type="text" id="ISBN" placeholder="ISBN">
+                <button class="waves-effect btn" onclick="getBookByISBN(document.querySelector('#ISBN').value)">Rechercher
                 </button>
                 <br>
-                option 2 : <input type="text" id="title" placeholder="Title">
-                <button class="waves-effect btn" onclick="getBookByTitle(document.querySelector('#title').value)">Get
-                    book
+                <label for="title">Titre</label><input type="text" id="title" placeholder="Titre">
+                <button class="waves-effect btn" onclick="getBookByTitle(document.querySelector('#title').value)">Rechercher
                 </button>
 
                 <div id="GBContent"></div>
@@ -529,17 +532,17 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                 </div>
                 <div class="input-field">
                     <input type="text" name="City" id="City">
-                    <label for="City">City</label>
+                    <label for="City">Ville</label>
                 </div>
                 <div class="input-field">
                     <input type="text" name="ZipCode" id="ZipCode">
-                    <label for="ZipCode">ZipCode</label>
+                    <label for="ZipCode">Code Postal</label>
                 </div>
                 <div class="input-field">
                     <input type="text" name="country" id="country">
-                    <label for="country">country</label>
+                    <label for="country">Pays</label>
                 </div>
-                <input type="submit" class="waves-effect btn" value="Add fournisseur">
+                <input type="submit" class="waves-effect btn" value="Ajouter un fournisseur">
             </form>
         </div>
         <div id="listProducts" class="col s12">    <?php showProducts($sql) ?> </div>
@@ -602,11 +605,10 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                 } else {
                     price = null;
                 }
-                //use php class to create card
-                //    constructor(ISBN, id, title, publicPrice, paidPrice, description, image, quantity, pages, publisher, outDate, author, language, format, dimensions, category) {
              let card = new Product(cdata["volumeInfo"]["industryIdentifiers"][0]["identifier"], cdata["id"], cdata["volumeInfo"]["title"], price, price, cdata["volumeInfo"]["description"], cover, 1, cdata["volumeInfo"]["pageCount"], cdata["volumeInfo"]["publisher"], cdata["volumeInfo"]["publishedDate"], cdata["volumeInfo"]["authors"], cdata["volumeInfo"]["language"], cdata["volumeInfo"]["printType"], cdata["volumeInfo"]["dimensions"], cdata["volumeInfo"]["categories"]).displayProduct();
 
                 card.addEventListener("click", () => {
+                    window.location.scrollTo(0, 0);
                     document.querySelector("#name").value = cdata["volumeInfo"]["title"];
                     document.querySelector("#ref").value = cdata["id"];
                     document.querySelector("#description").value = cdata["volumeInfo"]["description"];
@@ -631,7 +633,7 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
             title.innerText = "No results";
             div.appendChild(title);
         }
-        document.querySelector("#GBContent").innerHTML = "Results for " + name;
+        document.querySelector("#GBContent").innerHTML = "<h1>Résultat pour " + name + "<span class='sprt s-category-border-rr inline-block'></span></h1>";
         document.getElementById("GBContent").appendChild(div);
 
     }

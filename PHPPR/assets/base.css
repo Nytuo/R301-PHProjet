@@ -8,6 +8,21 @@
 .material-icons {
     color: var(--text);
 }
+.tabs {
+    background-color: var(--color-primary);
+}
+.tabs .tab a:hover, .tabs .tab a.active {
+    color: var(--text);
+}
+.tabs .tab a {
+    color: var(--text);
+}
+.tabs .tab a:focus, .tabs .tab a:focus.active {
+    background-color: var(--color-tertiary);
+}
+.tabs .indicator {
+    background-color: rgb(40, 97, 255);
+}
 #achatMontant{
     color: var(--text);
     text-align: center;

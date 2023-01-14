@@ -1,6 +1,6 @@
 <?php
 
-class product
+class product implements JsonSerializable
 {
     public $ref;
     public $id;
@@ -330,6 +330,27 @@ class product
 
     }
 
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'description' => $this->description,
+            'image' => $this->image,
+            'publicPrice' => $this->publicPrice,
+            'paidPrice' => $this->paidPrice,
+            'quantity' => $this->quantity,
+            'dimensions' => $this->dimensions,
+            'format' => $this->format,
+            'language' => $this->language,
+            'author' => $this->author,
+            'outDate' => $this->outDate,
+            'publisher' => $this->publisher,
+            'pages' => $this->pages,
+            'category' => $this->category,
+            'ref' => $this->ref
+        ];
+    }
 }
 
 ?>
