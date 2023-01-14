@@ -2,6 +2,7 @@
 require_once "head.php";
 require_once "header.php";
 require_once "SqlApi.php";
+require_once "Mailer.php";
 $sql = new SqlApi();
 session_start();
 
@@ -22,6 +23,7 @@ if (isset($_SESSION['password']) && isset($_SESSION['email'])) {
         if ($resultUser){
             if (isset($_POST["address"])){
                 $sql->updateUserAddress($email, $_POST["address"], $_POST["city"], $_POST["zip"], $_POST["country"]);
+                Mailer::sendMail($email, "[Comics Sans MS] Changement d'adresse", "Votre adresse a été changée pour votre compte sur le site Comics Sans MS. Si vous n'êtes pas à l'origine de ce changement, veuillez contacter l'administrateur du site.");
                 header("Location: userProfile.php");
             }
         }

@@ -3,6 +3,7 @@ session_start();
 require_once "head.php";
 require_once "header.php";
 require_once "SqlApi.php";
+require_once "Mailer.php";
 
 if (isset($_POST["nom"])){
     $nom = FILTER_INPUT(INPUT_POST, "nom", FILTER_SANITIZE_STRING);
@@ -17,6 +18,8 @@ if (isset($_POST["nom"])){
     $sql = new SqlApi();
     if ($password == $password2){
         $sql->insertUser($nom, $prenom, $email, $password, $adresse, $ville, $codePostal, $pays);
+        Mailer::sendMail($email, "Bienvenue sur Comics sans MS", "Bienvenue sur Comics Sans MS, vous venez de créé un compte et nous vous en remercions!
+        Vous pouvez maintenant vous connecter et commencez à acheter des comics!");
         header("Location: connexion.php");
         exit();
     }else{

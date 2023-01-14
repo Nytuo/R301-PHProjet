@@ -26,6 +26,7 @@ if (isset($_SESSION['password']) && isset($_SESSION['email'])) {
                     $sql->updateUserPassword($email, $_POST["password"]);
                     $_SESSION['email'] = null;
                     $_SESSION['password'] = null;
+                    Mailer::sendMail($email, "Changement de mot de passe", "Votre mot de passe a été changé pour votre compte sur le site Comics Sans MS. Si vous n'êtes pas à l'origine de ce changement, veuillez contacter l'administrateur du site.");
                     header("Location: connexion.php");
                 }else{
                     $_SESSION['error'] = "Les mots de passe ne correspondent pas";
