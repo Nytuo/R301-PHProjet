@@ -1,8 +1,6 @@
 <?php
 require_once "head.php";
 require_once "header.php";
-session_set_cookie_params(36000, '/');
-session_start();
 require_once "SqlApi.php";
 require_once "productClass.php";
 $sql = new SqlApi();
@@ -34,14 +32,14 @@ if (!$result) {
     header("Location: connexion.php");
     exit(0);
 } else {
-    $_SESSION['password'] = $ashPassword;//todo en attendant (ou peut etre définitif)
+    $_SESSION['password'] = $ashPassword;
     $_SESSION['email'] = $email;
 }
 
 
 if (isset($_POST["changeQty"])) {
     $sql->updateQuantity($_POST["changeQty"], $_POST["id"]);
-    header("Location: adminZonne.php?message=updateOK");
+    header("Location: adminZone.php?message=updateOK");
     exit(0);
 }
 
@@ -53,7 +51,7 @@ if (isset($_POST['fname'])) {
     $zip_code = filter_input(INPUT_POST, 'ZipCode', FILTER_SANITIZE_STRING);
     $country = filter_input(INPUT_POST, 'country', FILTER_SANITIZE_STRING);
     $sql->insertFournisseur($fname, $email, $address, $city, $zip_code, $country);
-    header("Location: adminZonne.php");
+    header("Location: adminZone.php");
     exit(0);
 }
 
@@ -122,22 +120,19 @@ if (isset($_POST["name"])) {
     $language = filter_input(INPUT_POST, 'language', FILTER_SANITIZE_STRING);
     $date = filter_input(INPUT_POST, 'outDate', FILTER_SANITIZE_STRING);
     $sql->insertProduct($name, $ref, $public_price, $paid_price, $description, $image, $quantity, $pages, $publisher, $date, $author, $language, $format, $dimensions, $category);
-    header("Location: adminZonne.php");
+    header("Location: adminZone.php");
     exit(0);
 }
 
 
-function closeConnection($db)
+function closeConnection($db): void
 {
     $db->close();
 }
 
-function showProducts($sql)
+function showProducts($sql): void
 {
-    //get all products from DB
-
     $allProducts = $sql->getProducts();
-
     echo "<table  class='responsive-table  highlight'>";
     echo "<tr>";
     echo "<th>Id</th>";
@@ -173,22 +168,20 @@ function showProducts($sql)
         echo "<td>" . $product['publisher'] . "</td>";
         echo "<td>" . $product['category'] . "</td>";
         echo "<td >";
-        echo "<form class='inputTD' action='adminZonne.php' method='post'>";
+        echo "<form class='inputTD' action='adminZone.php' method='post'>";
         echo "<input name='changeQty'  type='number' value=" . $product['quantity'] . " id='quantity" . $product['id'] . "'>
         <input type='hidden' name='id' value=" . $product['id'] . ">
 <input type='submit' value='Modifier' class='btn waves-effect'/>
 </form>
 </td>";
-        echo "<td><a href='deleteProduct.php?id=" . $product['id'] . "'>Supprimer</a></td>";
+        echo "<td><a href='deleter.php?product=1&id=" . $product['id'] . "'>Supprimer</a></td>";
         echo "</tr>";
     }
     echo "</table>";
 
 }
 
-//detect if a product's quantity is less than 10
-
-function detectQuantity($sql)
+function detectQuantity($sql): int
 {
     $allProducts = $sql->getProducts();
     $count = 0;
@@ -207,7 +200,7 @@ function detectQuantity($sql)
 
 }
 
-function showMessage($sql)
+function showMessage($sql): void
 {
     $messages = array("delOk" => "Entrée supprimer avec succès", "delFail" => "Erreur lors de la suppression de l'entrée", "updateOK" => "Quantité modifié avec succès", "updateFail" => "Erreur lors de la modification de la quantité");
     if (isset($_GET['message'])) {
@@ -221,7 +214,7 @@ function showMessage($sql)
     }
 }
 
-function showClient($sql)
+function showClient($sql): void
 {
     $allProducts = $sql->getClients();
 
@@ -245,13 +238,13 @@ function showClient($sql)
         echo "<td>" . $product['address'] . "</td>";
         echo "<td>" . $product['city'] . "</td>";
         echo "<td>" . $product['zip_code'] . "</td>";
-        echo "<td><a href='deleteClient.php?id=" . $product['id'] . "'>Supprimer</a></td>";
+        echo "<td><a href='deleter.php?client=1&id=" . $product['id'] . "'>Supprimer</a></td>";
         echo "</tr>";
     }
     echo "</table>";
 }
 
-function showFour($sql)
+function showFour($sql): void
 {
     $allProducts = $sql->getFour();
 
@@ -275,13 +268,13 @@ function showFour($sql)
         echo "<td>" . $product['city'] . "</td>";
         echo "<td>" . $product['zip_code'] . "</td>";
         echo "<td>" . $product['country'] . "</td>";
-        echo "<td><a href='deleteFour.php?id=" . $product['id'] . "'>Supprimer</a></td>";
+        echo "<td><a href='deleter.php?four=1&id=" . $product['id'] . "'>Supprimer</a></td>";
         echo "</tr>";
     }
     echo "</table>";
 }
 
-function showCommands($sql)
+function showCommands($sql): void
 {
     $allProducts = $sql->getCommands();
 
@@ -307,7 +300,7 @@ function showCommands($sql)
         echo "<td>" . $product['fournisseur_id'] . "</td>";
         echo "<td>" . $product['date'] . "</td>";
         echo "<td>" . $product['products'] . "</td>";
-        echo "<td><a href='deleteCommand.php?id=" . $product['id'] . "'>Supprimer</a></td>";
+        echo "<td><a href='deleter.php?command=1&id=" . $product['id'] . "'>Supprimer</a></td>";
         echo "</tr>";
     }
     echo "</table>";
@@ -555,8 +548,8 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
 <script src="assets/js/product.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.querySelectorAll('.tabs');
-        var instance = M.Tabs.init(elems, {
+        let elems = document.querySelectorAll('.tabs');
+        let instance = M.Tabs.init(elems, {
             swipeable: true
         });
     });
@@ -690,20 +683,22 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                 card.appendChild(id);
                 card.appendChild(priceP);
                 card.addEventListener("click", () => {
+                    window.scrollTo(0, 0);
                     document.querySelector("#name").value = cdata["volumeInfo"]["title"];
                     document.querySelector("#ref").value = cdata["id"];
-                    document.querySelector("#description").value = cdata["volumeInfo"]["description"];
-                    document.querySelector("#public_price").value = price;
+                    document.querySelector("#description").value = cdata["volumeInfo"]["description"] ?? "";
+                    document.querySelector("#public_price").value = price !== null ? price : 0;
                     document.querySelector("#paid_price").value = 0;
                     document.querySelector("#imageURL").value = cover;
-                    document.querySelector("#pages").value = cdata["volumeInfo"]["pageCount"];
-                    document.querySelector("#author").value = cdata["volumeInfo"]["authors"][0];
-                    document.querySelector("#editor").value = cdata["volumeInfo"]["publisher"];
-                    document.querySelector("#outDate").value = cdata["volumeInfo"]["publishedDate"];
-                    document.querySelector("#category").value = cdata["volumeInfo"]["categories"][0];
-                    document.querySelector("#language").value = cdata["volumeInfo"]["language"];
-                    document.querySelector("#dimensions").value = cdata["volumeInfo"]["dimensions"]["height"] + "x" + cdata["volumeInfo"]["dimensions"]["width"] + "x" + cdata["volumeInfo"]["dimensions"]["thickness"];
-                    document.querySelector("#format").value = cdata["volumeInfo"]["printType"];
+                    document.querySelector("#pages").value = cdata["volumeInfo"]["pageCount"] !== undefined ? cdata["volumeInfo"]["pageCount"] : 0;
+                    document.querySelector("#author").value = cdata["volumeInfo"]["authors"] !== undefined ? cdata["volumeInfo"]["authors"].join(", ") : "";
+                    document.querySelector("#editor").value = cdata["volumeInfo"]["publisher"] !== undefined ? cdata["volumeInfo"]["publisher"] : "";
+                    document.querySelector("#outDate").value = cdata["volumeInfo"]["publishedDate"] !== undefined ? cdata["volumeInfo"]["publishedDate"] : "0000-00-00";
+                    document.querySelector("#category").value = cdata["volumeInfo"]["categories"] !== undefined ? cdata["volumeInfo"]["categories"][0] : "";
+                    document.querySelector("#language").value = cdata["volumeInfo"]["language"] !== undefined ? cdata["volumeInfo"]["language"] : "";
+                    document.querySelector("#dimensions").value = cdata["volumeInfo"]["dimensions"] !== undefined ? cdata["volumeInfo"]["dimensions"]["height"] + "x" + cdata["volumeInfo"]["dimensions"]["width"] + "x" + cdata["volumeInfo"]["dimensions"]["thickness"] : "unknown";
+                    document.querySelector("#format").value = cdata["volumeInfo"]["printType"] !== undefined ? cdata["volumeInfo"]["printType"] : "";
+
                 })
                 div.appendChild(card);
             }
@@ -712,7 +707,7 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
             title.innerText = "No results";
             div.appendChild(title);
         }
-        document.querySelector("#GBContent").innerHTML = "Results for " + ISBN+"<span class='sprt s-category-border-rr inline-block'></span></h1>";
+        document.querySelector("#GBContent").innerHTML = "Results for " + ISBN + "<span class='sprt s-category-border-rr inline-block'></span></h1>";
         document.getElementById("GBContent").appendChild(div);
     }
 

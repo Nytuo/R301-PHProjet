@@ -35,8 +35,6 @@ $products = $sql->getProducts();
     ?>
     </div>
     <?php
-    //TODO publisher
-    //for all products get publisher's name
     $publisherList = array();
     foreach ($prodList as $product) {
         $publisherList[] = $product->getPublisher();
@@ -59,5 +57,4 @@ $products = $sql->getProducts();
 include_once "footer.php"
 ?>
 </body>
-
 </html>

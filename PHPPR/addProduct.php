@@ -1,5 +1,4 @@
 <?php
-//add product to cart
 session_start();
 if (isset($_POST['id'])) {
     $id = $_POST['id'];

@@ -3,7 +3,6 @@ require_once "head.php";
 require_once "header.php";
 require_once "SqlApi.php";
 $sql = new SqlApi();
-session_start();
 echo "<p style='color: red'>" . $_SESSION['error'] . "</p>";
 $_SESSION['error'] = "";
 if (isset($_SESSION['password']) && isset($_SESSION['email'])) {

@@ -1,6 +1,4 @@
 <?php
-
-//remove product from cart
 session_start();
 if (isset($_POST['id'])) {
     $id = $_POST['id'];

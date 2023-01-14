@@ -58,7 +58,7 @@ class product implements JsonSerializable
     }
 
 
-    public function getCategory()
+    public function getCategory(): string
     {
         return $this->category;
     }
@@ -66,7 +66,7 @@ class product implements JsonSerializable
     /**
      * @return mixed
      */
-    public function getId()
+    public function getId(): mixed
     {
         return $this->id;
     }
@@ -292,11 +292,11 @@ class product implements JsonSerializable
         $this->quantity = $quantity;
     }
 
-    public function isAvailable()
+    public function isAvailable(): string
     {
         if ($this->quantity == 0) {
             return "<span class='OutOfStock'>Rupture de stock</span>";
-        } else if ($this->quantity < 10) {
+        } else if ($this->quantity < 10 && $this->quantity > 0) {
             return "<span class='NotThatMuch'>" . $this->quantity . " restants</span>";
         } else if ($this->quantity > 0) {
             return "<span class='InStock'>En stock</span>";
@@ -330,7 +330,7 @@ class product implements JsonSerializable
 
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): array
     {
         return [
             'id' => $this->id,
@@ -353,4 +353,3 @@ class product implements JsonSerializable
     }
 }
 
-?>

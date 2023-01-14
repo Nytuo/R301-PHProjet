@@ -1,7 +1,6 @@
 <?php
 include_once "head.php";
 include_once "header.php";
-session_start();
 require_once "SqlApi.php";
 $sql = new SqlApi();
 
@@ -21,10 +20,10 @@ if (isset($_POST['password'])) {
         header("Location: connexion.php");
         exit(0);
     } else {
-        $_SESSION['password'] = $ashPassword;//todo en attendant (ou peut etre définitif)
+        $_SESSION['password'] = $ashPassword;
         $_SESSION['email'] = $email;
         if ($resultAdmin){
-            header("Location: adminZonne.php");
+            header("Location: adminZone.php");
         }
         if ($resultUser){
             header("Location: userProfile.php");
@@ -42,7 +41,7 @@ if (isset($_POST['password'])) {
             exit(0);
         } else {
             if ($resultAdmin){
-                header("Location: adminZonne.php");
+                header("Location: adminZone.php");
             }
             if ($resultUser){
                 header("Location: userProfile.php");
@@ -74,8 +73,6 @@ if (isset($_POST['password'])) {
     </main>
 
 <?php
-//open session
-session_start();
 echo "<p style='color: red'>" . $_SESSION['error'] . "</p>";
 $_SESSION['error'] = "";
 

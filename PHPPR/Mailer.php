@@ -3,7 +3,7 @@
 class Mailer
 {
 
-    public static function sendMail($to,$subject, $message)
+    public static function sendMail($to,$subject, $message): void
     {
         $message = "Bonjour, \n\n" . $message . "\n\nCordialement,\nL'équipe de Comics Sans MS";
         $headers = "From: COMICSsansMS@CSMS.fr" . "\r\n" .

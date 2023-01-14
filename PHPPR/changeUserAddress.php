@@ -4,7 +4,6 @@ require_once "header.php";
 require_once "SqlApi.php";
 require_once "Mailer.php";
 $sql = new SqlApi();
-session_start();
 
 if (isset($_SESSION['password']) && isset($_SESSION['email'])) {
     $ashPassword = $_SESSION['password'];

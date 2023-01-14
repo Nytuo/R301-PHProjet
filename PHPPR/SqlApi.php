@@ -9,7 +9,7 @@ class SqlApi
         $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
-    public function createTable()
+    public function createTable(): void
     {
         $dbInit = "
         CREATE TABLE IF NOT EXISTS admin (
@@ -94,7 +94,7 @@ class SqlApi
         }
     }
 
-    public function insertProduct(string $name, string $ref, float $public_price, float $paid_price, string $description, string $image, int $quantity, int $pages, string $publisher, string $out_date, string $author, string $language, string $format, string $dimensions, string $category)
+    public function insertProduct(string $name, string $ref, float $public_price, float $paid_price, string $description, string $image, int $quantity, int $pages, string $publisher, string $out_date, string $author, string $language, string $format, string $dimensions, string $category): void
     {
         $sqlQuery = "INSERT INTO products (id,title,ref, public_price,paid_price, description, image,pages,publisher,out_date,author,language,format,dimensions,category) VALUES (?,:title,:ref,:public_price,:paid_price,:description,:image,:pages,:publisher,:out_date,:author,:language,:format,:dimensions,:category)";
         $stmt = $this->db->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
@@ -108,7 +108,7 @@ class SqlApi
         $stmt->execute(array('product_id' => $id, 'quantity' => $quantity));
     }
 
-    public function insertFournisseur(string $name, string $email, string $address, string $city, string $zip_code, string $country)
+    public function insertFournisseur(string $name, string $email, string $address, string $city, string $zip_code, string $country): void
     {
         $sqlQuery = "INSERT INTO fournisseur (id,name,email, address,city, zip_code, country) VALUES (NULL,:name,:email, :address,:city, :zip_code, :country)";
         $stmt = $this->db->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
@@ -121,7 +121,7 @@ class SqlApi
         $result = $result->fetchAll();
         $qty = $this->db->query("SELECT products.id,quantity FROM gestionStock,products WHERE gestionStock.product_id=products.id");
         $qty = $qty->fetchAll();
-        $result = array_map(function ($product) use ($qty) {
+        return array_map(function ($product) use ($qty) {
             foreach ($qty as $q) {
                 if ($product['id'] == $q['id']) {
                     $product['quantity'] = $q['quantity'];
@@ -129,7 +129,6 @@ class SqlApi
             }
             return $product;
         }, $result);
-        return $result;
     }
 
     public function getProduct(int $id)
@@ -144,14 +143,14 @@ class SqlApi
         return $result;
     }
 
-    public function searchProduct(string $search)
+    public function searchProduct(string $search): array
     {
         $stmt = $this->db->prepare("SELECT * FROM products WHERE title LIKE :search OR ref LIKE :search", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->execute(array('search' => "%$search%"));
         $stmt = $stmt->fetchAll();
         $qty = $this->db->query("SELECT products.id,quantity FROM gestionStock,products WHERE gestionStock.product_id=products.id");
         $qty = $qty->fetchAll();
-        $stmt = array_map(function ($product) use ($qty) {
+        return array_map(function ($product) use ($qty) {
             foreach ($qty as $q) {
                 if ($product['id'] == $q['id']) {
                     $product['quantity'] = $q['quantity'];
@@ -159,16 +158,15 @@ class SqlApi
             }
             return $product;
         }, $stmt);
-        return $stmt;
     }
 
-    public function deleteProduct(int $id)
+    public function deleteProduct(int $id): void
     {
         $stmt = $this->db->prepare("DELETE FROM products WHERE id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->execute(array('id' => $id));
     }
 
-    public function getClients()
+    public function getClients(): array
     {
         $result = $this->db->query("SELECT id,name,firstName,email,address,city,zip_code,country FROM client");
         $result = $result->fetchAll();
@@ -179,13 +177,13 @@ class SqlApi
         return $clients;
     }
 
-    public function deleteClient(int $id)
+    public function deleteClient(int $id): void
     {
         $stmt = $this->db->prepare("DELETE FROM client WHERE id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->execute(array('id' => $id));
     }
 
-    public function getFour()
+    public function getFour(): array
     {
         $result = $this->db->query("SELECT id,name,email,address,city,zip_code,country FROM fournisseur");
         $result = $result->fetchAll();
@@ -196,13 +194,13 @@ class SqlApi
         return $clients;
     }
 
-    public function deleteFour(int $id)
+    public function deleteFour(int $id): void
     {
         $stmt = $this->db->prepare("DELETE FROM fournisseur WHERE id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->execute(array('id' => $id));
     }
 
-    public function getCommands()
+    public function getCommands(): array
     {
         $result = $this->db->query("SELECT id,client_id,fournisseur_id,product_id,quantity,total,date,products FROM facturation");
         $result = $result->fetchAll();
@@ -213,7 +211,7 @@ class SqlApi
         return $clients;
     }
 
-    public function deleteCommands(int $id)
+    public function deleteCommands(int $id): void
     {
         $stmt = $this->db->prepare("DELETE FROM facturation WHERE id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->execute(array('id' => $id));
@@ -255,13 +253,13 @@ class SqlApi
             }
             return $product;
         }, $result);
-        $benefice = ($totalVente["sum(total)"] == null ? 0 : $totalVente["sum(total)"]) - array_reduce($result, function ($carry, $item) {
+        return ($totalVente["sum(total)"] == null ? 0 : $totalVente["sum(total)"]) - array_reduce($result, function ($carry, $item) {
                 return $carry + ($item["paid_price"] * $item["quantity"]);
             }, 0);
-        return $benefice;
     }
 
-    public function getMA(){
+    public function getMA(): int
+    {
         $result = $this->db->query("SELECT products.title,products.id,products.paid_price,gestionStock.quantity FROM products,gestionStock WHERE products.id = gestionStock.product_id");
         $result = $result->fetchAll();
 
@@ -280,13 +278,12 @@ class SqlApi
             }
             return $product;
         }, $result);
-        $MA = array_reduce($result, function ($carry, $item) {
+        return array_reduce($result, function ($carry, $item) {
                 return $carry + ($item["paid_price"] * $item["quantity"]);
             }, 0);
-        return $MA;
     }
 
-    public function getAchatsEtMontant()
+    public function getAchatsEtMontant(): string
     {
 
         $result = $this->db->query("SELECT products.title,products.id,products.paid_price,gestionStock.quantity FROM products,gestionStock WHERE products.id = gestionStock.product_id");
@@ -341,19 +338,19 @@ class SqlApi
     }
 
 
-    public function close()
+    public function close(): void
     {
         $this->db = null;
     }
 
-    public function insertUser(mixed $nom, mixed $prenom, mixed $email, mixed $password, mixed $adresse, mixed $ville, mixed $codePostal, mixed $pays)
+    public function insertUser(mixed $nom, mixed $prenom, mixed $email, mixed $password, mixed $adresse, mixed $ville, mixed $codePostal, mixed $pays): void
     {
         $stmt = $this->db->prepare("INSERT INTO client (name,firstName,email,password,address,city,zip_code,country) VALUES (:nom,:prenom,:email,:password,:adresse,:ville,:codePostal,:pays)", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $password = hash('sha256', $password);
         $stmt->execute(array('nom' => $nom, 'prenom' => $prenom, 'email' => $email, 'password' => $password, 'adresse' => $adresse, 'ville' => $ville, 'codePostal' => $codePostal, 'pays' => $pays));
     }
 
-    public function connectUser(mixed $email, mixed $ashPassword)
+    public function connectUser(mixed $email, mixed $ashPassword): bool
     {
 $stmt = $this->db->prepare("SELECT count(*) FROM client WHERE email=:email AND password=:password", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->execute(array('email' => $email, 'password' => $ashPassword));
@@ -370,17 +367,16 @@ $stmt = $this->db->prepare("SELECT count(*) FROM client WHERE email=:email AND p
     {
         $stmt = $this->db->prepare("SELECT * FROM client WHERE email=:email AND password=:password", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->execute(array('email' => $email, 'password' => $ashPassword));
-        $result = $stmt->fetch();
-        return $result;
+        return $stmt->fetch();
     }
 
-    public function updateUserAddress(mixed $email, mixed $address, mixed $city, mixed $zip, mixed $country)
+    public function updateUserAddress(mixed $email, mixed $address, mixed $city, mixed $zip, mixed $country): void
     {
         $stmt = $this->db->prepare("UPDATE client SET address=:address,city=:city,zip_code=:zip,country=:country WHERE email=:email", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->execute(array('address' => $address, 'city' => $city, 'zip' => $zip, 'country' => $country, 'email' => $email));
     }
 
-    public function updateUserPassword(mixed $email, mixed $password)
+    public function updateUserPassword(mixed $email, mixed $password): void
     {
         $stmt = $this->db->prepare("UPDATE client SET password=:password WHERE email=:email", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $password = hash('sha256', $password);
