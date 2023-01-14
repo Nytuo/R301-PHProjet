@@ -1,10 +1,7 @@
 <?php
-require_once "SqlApi.php";
-
 class product
 {
     public $ref;
-
     public $id;
     public string $title;
     public float $publicPrice;
@@ -12,14 +9,186 @@ class product
     public string $description;
     public string $image;
     public int $quantity;
-    public SqlApi $sql;
+    public int $pages;
+    public string $publisher;
+    public string $outDate;
+    public string $author;
+    public string $language;
+    public string $format;
+    public string $dimensions;
+    public string $category;
 
-    public function __construct($id)
+    /**
+     * @param $ref
+     * @param $id
+     * @param string $title
+     * @param float $publicPrice
+     * @param float $paidPrice
+     * @param string $description
+     * @param string $image
+     * @param int $quantity
+     * @param int $pages
+     * @param string $publisher
+     * @param string $outDate
+     * @param string $author
+     * @param string $language
+     * @param string $format
+     * @param string $dimensions
+     * @param string $category
+     */
+    public function __construct($ref, $id, string $title, float $publicPrice, float $paidPrice, string $description, string $image, int $quantity, int $pages, string $publisher, string $outDate, string $author, string $language, string $format, string $dimensions, string $category)
     {
-        $this->sql = new SqlApi();
-        $this->ref = $id;
-        $this->getProduct();
+        $this->ref = $ref;
+        $this->id = $id;
+        $this->title = $title;
+        $this->publicPrice = $publicPrice;
+        $this->paidPrice = $paidPrice;
+        $this->description = $description;
+        $this->image = $image;
+        $this->quantity = $quantity;
+        $this->pages = $pages;
+        $this->publisher = $publisher;
+        $this->outDate = $outDate;
+        $this->author = $author;
+        $this->language = $language;
+        $this->format = $format;
+        $this->dimensions = $dimensions;
+        $this->category = $category;
+    }
 
+
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
+    }
+
+
+    /**
+     * @return int
+     */
+    public function getPages(): int
+    {
+        return $this->pages;
+    }
+
+    /**
+     * @param int $pages
+     */
+    public function setPages(int $pages): void
+    {
+        $this->pages = $pages;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPublisher(): string
+    {
+        return $this->publisher;
+    }
+
+    /**
+     * @param string $publisher
+     */
+    public function setPublisher(string $publisher): void
+    {
+        $this->publisher = $publisher;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOutDate(): string
+    {
+        return $this->outDate;
+    }
+
+    /**
+     * @param string $outDate
+     */
+    public function setOutDate(string $outDate): void
+    {
+        $this->outDate = $outDate;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthor(): string
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param string $author
+     */
+    public function setAuthor(string $author): void
+    {
+        $this->author = $author;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLanguage(): string
+    {
+        return $this->language;
+    }
+
+    /**
+     * @param string $language
+     */
+    public function setLanguage(string $language): void
+    {
+        $this->language = $language;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormat(): string
+    {
+        return $this->format;
+    }
+
+    /**
+     * @param string $format
+     */
+    public function setFormat(string $format): void
+    {
+        $this->format = $format;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDimensions(): string
+    {
+        return $this->dimensions;
+    }
+
+    /**
+     * @param string $dimensions
+     */
+    public function setDimensions(string $dimensions): void
+    {
+        $this->dimensions = $dimensions;
     }
 
     /**
@@ -141,16 +310,6 @@ class product
     public function setCategory(string $category): void
     {
         $this->category = $category;
-    }
-
-    private function getProduct(): void
-    {
-        $result = $this->sql->getProduct($this->ref);
-        $this->title = $result['title'];
-        $this->publicPrice = $result['public_price'];
-        $this->description = $result['description'];
-        $this->image = $result['image'];
-        $this->quantity = $result['quantity'] ?? 0;
     }
 
     public function getRef()

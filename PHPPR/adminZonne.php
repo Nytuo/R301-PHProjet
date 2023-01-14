@@ -3,18 +3,11 @@ require_once "head.php";
 require_once "header.php";
 session_set_cookie_params(36000, '/');
 session_start();
-// importe SqlApi
 require_once "SqlApi.php";
 require_once "productClass.php";
 $sql = new SqlApi();
 
-// open sql connection
 
-
-// filter input
-
-
-// pasword max 50 char
 if (isset($_POST['password'])) {
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
 
@@ -69,16 +62,12 @@ if (isset($_POST['fname'])) {
 var_dump($_FILES);
 if (isset($_POST["name"])) {
     $fileUploaded = false;
-    if (isset($_POST["image"])) {
+    if ($_FILES["image"]["name"] != "") {
         $fileUploaded = true;
-        //save the image in the server
         $target_dir = "uploads/";
-        // print in console the name of the file
         $target_file = $target_dir . basename($_FILES["image"]["name"]);
         $uploadOk = 1;
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        // Check if image file is a actual image or fake image
-
         $check = getimagesize($_FILES["image"]["tmp_name"]);
         if ($check !== false) {
             echo "File is an image - " . $check["mime"] . ".";
@@ -87,32 +76,24 @@ if (isset($_POST["name"])) {
             echo "File is not an image.";
             $uploadOk = 0;
         }
-
-        // Check if file already exists
         if (file_exists($target_file)) {
             echo "Sorry, file already exists.";
             $uploadOk = 0;
         }
-        // Check file size
         if ($_FILES["image"]["size"] > 5000000) {
             echo "Sorry, your file is too large.";
             $uploadOk = 0;
         }
-        // Allow certain file formats
         if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
             echo "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
             echo $imageFileType;
             $uploadOk = 0;
         }
-        // Check if $uploadOk is set to 0 by an error
         if ($uploadOk == 0) {
             echo "Sorry, your file was not uploaded.";
-            // if everything is ok, try to upload file
         } else {
             if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
                 echo "The file " . basename($_FILES["image"]["name"]) . " has been uploaded.";
-
-
             } else {
                 echo "Sorry, there was an error uploading your file.";
             }
@@ -134,7 +115,15 @@ if (isset($_POST["name"])) {
     }
     $public_price = filter_input(INPUT_POST, 'public_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
     $paid_price = filter_input(INPUT_POST, 'paid_price', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-    $sql->insertProduct($name, $ref, $public_price, $paid_price, $description, $image, $quantity);
+    $pages = filter_input(INPUT_POST, 'pages', FILTER_SANITIZE_NUMBER_INT);
+    $publisher = filter_input(INPUT_POST, 'editor', FILTER_SANITIZE_STRING);
+    $author = filter_input(INPUT_POST, 'author', FILTER_SANITIZE_STRING);
+    $category = filter_input(INPUT_POST, 'category', FILTER_SANITIZE_STRING);
+    $dimensions = filter_input(INPUT_POST, 'dimensions', FILTER_SANITIZE_STRING);
+    $format = filter_input(INPUT_POST, 'format', FILTER_SANITIZE_STRING);
+    $language = filter_input(INPUT_POST, 'language', FILTER_SANITIZE_STRING);
+    $date = filter_input(INPUT_POST, 'outDate', FILTER_SANITIZE_STRING);
+    $sql->insertProduct($name, $ref, $public_price, $paid_price, $description, $image, $quantity, $pages, $publisher, $date, $author, $language, $format, $dimensions, $category);
     header("Location: adminZonne.php");
     exit(0);
 }
@@ -155,9 +144,17 @@ function showProducts($sql)
     echo "<tr>";
     echo "<th>Id</th>";
     echo "<th>Name</th>";
-    echo "<th>Price</th>";
-    echo "<th>Description</th>";
     echo "<th>Image</th>";
+    echo "<th>Description</th>";
+    echo "<th>Date de parution</th>";
+    echo "<th>Langage</th>";
+    echo "<th>Price</th>";
+    echo "<th>Pages</th>";
+    echo "<th>Auteur</th>";
+    echo "<th>Éditeur</th>";
+    echo "<th>Format</th>";
+    echo "<th>Dimensions</th>";
+    echo "<th>Catégorie</th>";
     echo "<th>Quantity</th>";
     echo "<th>Delete</th>";
     echo "</tr>";
@@ -165,14 +162,22 @@ function showProducts($sql)
         echo "<tr>";
         echo "<td>" . $product['id'] . "</td>";
         echo "<td>" . $product['title'] . "</td>";
-        echo "<td>" . $product['public_price'] . "</td>";
-        echo "<td>" . $product['description'] . "</td>";
         echo "<td><img src=" . $product['image'] . " /  width='100'></td>";
+        echo "<td>" . $product['description'] . "</td>";
+        echo "<td>" . $product['out_date'] . "</td>";
+        echo "<td>" . $product['language'] . "</td>";
+        echo "<td>" . $product['price'] . "</td>";
+        echo "<td>" . $product['pages'] . "</td>";
+        echo "<td>" . $product['author'] . "</td>";
+        echo "<td>" . $product['publisher'] . "</td>";
+        echo "<td>" . $product['format'] . "</td>";
+        echo "<td>" . $product['dimensions'] . "</td>";
+        echo "<td>" . $product['category'] . "</td>";
         echo "<td >";
         echo "<form class='inputTD' action='adminZonne.php' method='post'>";
         echo "<input name='changeQty'  type='number' value=" . $product['quantity'] . " id='quantity" . $product['id'] . "'>
         <input type='hidden' name='id' value=" . $product['id'] . ">
-<input type='submit' value='Modifier la quantité' class='btn waves-effect'/>
+<input type='submit' value='Modifier' class='btn waves-effect'/>
 </form>
 </td>";
         echo "<td><a href='deleteProduct.php?id=" . $product['id'] . "'>Delete</a></td>";
@@ -190,7 +195,11 @@ function detectQuantity($sql)
     $count = 0;
     foreach ($allProducts as $product) {
 
-        if ($product['quantity'] !== null && $product['quantity'] !== "undefined" && $product['quantity'] < 10) {
+        if ($product['quantity'] !== null && $product['quantity'] !== "undefined" && $product['quantity'] < 10 && $product['quantity'] > 0) {
+            echo "<p class='NotThatMuch'>Attention, le produit " . $product['title'] . " à moins de 10 exemplaires en stock</p>";
+            $count++;
+        }
+        if ($product['quantity'] !== null && $product['quantity'] !== "undefined" && $product['quantity'] == 0) {
             echo "<p class='OutOfStock'>Attention, le produit " . $product['title'] . " est en rupture de stock</p>";
             $count++;
         }
@@ -202,7 +211,12 @@ function detectQuantity($sql)
 function showMessage($sql)
 {
     $messages = array("delOk" => "Entrée supprimer avec succès", "delFail" => "Erreur lors de la suppression de l'entrée", "updateOK" => "Quantité modifié avec succès", "updateFail" => "Erreur lors de la modification de la quantité");
-    echo "<script>Toastifycation('" . $messages[$_GET['message']] . "')</script>";
+    if (isset($_GET['message'])) {
+        $message = $_GET['message'];
+        if (array_key_exists($message, $messages)) {
+            echo "<script>Toastifycation('" . $message . "')</script>";
+        }
+    }
     if (detectQuantity($sql) != 0) {
         echo "<script>Toastifycation('Vous avez des alertes de stock!','#ff0000')</script>";
     }
@@ -387,6 +401,10 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                 echo $sql->getNbVente()
 
                 ?></p>
+            <p class="soloInTheMiddle priceFOnly" id="MA">Montant des achats : <?php
+                echo $sql->getMA()
+
+                ?>€</p>
             <p class="priceFOnly soloInTheMiddle" id="CA">Chiffre d'affaire : <?php
                 echo $sql->getChiffreAffaire();
                 ?>€</p>
@@ -403,7 +421,7 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                 a.innerText = "Perte : " + a.innerText.split("-")[1];
             } else {
                 a.className = "InStock";
-                a.innerText = "Bénéfice : " + a.innerText.split("-")[1];
+                a.innerText = "Bénéfice : " + a.innerText.split(" : ")[1];
             }
         </script>
         <div id="addproduct" class="col s12">
@@ -437,7 +455,7 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                 </div>
                 <div class="file-field input-field">
                     <div class="btn">
-                        <span>File</span>
+                        <span>Fichier</span>
                         <input type="file" name="image" id="image">
                     </div>
                     <div class="file-path-wrapper">
@@ -445,7 +463,31 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                     </div>
                 </div>
                 <div class="input-field">
-                    <input type="text" id="imageURL" name="imageURL">
+                    <label for="imageURL">URL vers couverture</label><input type="text" id="imageURL" name="imageURL">
+                </div>
+                <div class="input-field">
+                    <label for="pages">Nombre de pages</label><input type="text" id="pages" name="pages">
+                </div>
+                <div class="input-field">
+                    <label for="author">Auteur</label><input type="text" id="author" name="author">
+                </div>
+                <div class="input-field">
+                    <label for="editor">Editeur</label><input type="text" id="editor" name="editor">
+                </div>
+                <div class="input-field">
+                    <label for="outDate">Date de parution</label><input type="text" id="outDate" name="outDate">
+                </div>
+                <div class="input-field">
+                    <label for="language">Langage</label><input type="text" id="language" name="language">
+                </div>
+                <div class="input-field">
+                    <label for="format">Format</label><input type="text" id="format" name="format">
+                </div>
+                <div class="input-field">
+                    <label for="dimensions">Dimensions</label><input type="text" id="dimensions" name="dimensions">
+                </div>
+                <div class="input-field">
+                    <label for="category">Catégorie</label><input type="text" id="category" name="category">
                 </div>
                 <input type="submit" class="waves-effect btn" value="Add product">
             </form>
@@ -508,13 +550,13 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
 
 
 </main>
+<script src="assets/js/product.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var elems = document.querySelectorAll('.tabs');
         var instance = M.Tabs.init(elems, {
             swipeable: true
         });
-        document.querySelector(".tabs-content").style.height = "1000vh";
     });
 
     async function getBookByTitle(name = "") {
@@ -543,6 +585,7 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                 if (cdata["volumeInfo"]["imageLinks"] !== undefined) {
 
                     cover = cdata["volumeInfo"]["imageLinks"]
+                    console.log(cover);
                     if (cover["large"] !== undefined) {
                         cover = cover["large"]
                     } else if (cover["thumbnail"] !== undefined) {
@@ -559,27 +602,27 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                 } else {
                     price = null;
                 }
-                let card = document.createElement("div");
-                card.classList.add("product");
-                let subDiv = document.createElement("div");
-                subDiv.classList.add("flip");
-                let subDiv2 = document.createElement("div");
-                subDiv2.classList.add("front");
-                subDiv2.style.backgroundImage = "url(" + cover + ")";
-                subDiv2.style.backgroundSize = "cover";
-                subDiv.appendChild(subDiv2);
-                let subDiv3 = document.createElement("div");
-                subDiv3.classList.add("back");
-                subDiv3.innerHTML = "<h3>" + cdata["volumeInfo"]["title"] + "</h3><p>" + cdata["volumeInfo"]["description"] + "</p>";
-                subDiv.appendChild(subDiv3);
-                card.appendChild(subDiv);
+                //use php class to create card
+                //    constructor(ISBN, id, title, publicPrice, paidPrice, description, image, quantity, pages, publisher, outDate, author, language, format, dimensions, category) {
+             let card = new Product(cdata["volumeInfo"]["industryIdentifiers"][0]["identifier"], cdata["id"], cdata["volumeInfo"]["title"], price, price, cdata["volumeInfo"]["description"], cover, 1, cdata["volumeInfo"]["pageCount"], cdata["volumeInfo"]["publisher"], cdata["volumeInfo"]["publishedDate"], cdata["volumeInfo"]["authors"], cdata["volumeInfo"]["language"], cdata["volumeInfo"]["printType"], cdata["volumeInfo"]["dimensions"], cdata["volumeInfo"]["categories"]).displayProduct();
+
                 card.addEventListener("click", () => {
                     document.querySelector("#name").value = cdata["volumeInfo"]["title"];
                     document.querySelector("#ref").value = cdata["id"];
                     document.querySelector("#description").value = cdata["volumeInfo"]["description"];
-                    document.querySelector("#public_price").value = price;
+                    document.querySelector("#public_price").value = price !== null ? price : 0;
                     document.querySelector("#paid_price").value = 0;
                     document.querySelector("#imageURL").value = cover;
+                    document.querySelector("#pages").value = cdata["volumeInfo"]["pageCount"];
+                    document.querySelector("#author").value = cdata["volumeInfo"]["authors"][0];
+                    document.querySelector("#editor").value = cdata["volumeInfo"]["publisher"];
+                    document.querySelector("#outDate").value = cdata["volumeInfo"]["publishedDate"];
+                    document.querySelector("#category").value = cdata["volumeInfo"]["categories"][0];
+                    document.querySelector("#language").value = cdata["volumeInfo"]["language"];
+                    document.querySelector("#dimensions").value = cdata["volumeInfo"]["dimensions"] !== undefined ? cdata["volumeInfo"]["dimensions"]["height"] + "x" + cdata["volumeInfo"]["dimensions"]["width"] + "x" + cdata["volumeInfo"]["dimensions"]["thickness"]:"unknown";
+                    document.querySelector("#format").value = cdata["volumeInfo"]["printType"];
+
+
                 })
                 div.appendChild(card);
             }
@@ -588,7 +631,7 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
             title.innerText = "No results";
             div.appendChild(title);
         }
-
+        document.querySelector("#GBContent").innerHTML = "Results for " + name;
         document.getElementById("GBContent").appendChild(div);
 
     }
@@ -653,6 +696,14 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                     document.querySelector("#public_price").value = price;
                     document.querySelector("#paid_price").value = 0;
                     document.querySelector("#imageURL").value = cover;
+                    document.querySelector("#pages").value = cdata["volumeInfo"]["pageCount"];
+                    document.querySelector("#author").value = cdata["volumeInfo"]["authors"][0];
+                    document.querySelector("#editor").value = cdata["volumeInfo"]["publisher"];
+                    document.querySelector("#outDate").value = cdata["volumeInfo"]["publishedDate"];
+                    document.querySelector("#category").value = cdata["volumeInfo"]["categories"][0];
+                    document.querySelector("#language").value = cdata["volumeInfo"]["language"];
+                    document.querySelector("#dimensions").value = cdata["volumeInfo"]["dimensions"]["height"] + "x" + cdata["volumeInfo"]["dimensions"]["width"] + "x" + cdata["volumeInfo"]["dimensions"]["thickness"];
+                    document.querySelector("#format").value = cdata["volumeInfo"]["printType"];
                 })
                 div.appendChild(card);
             }
@@ -661,7 +712,7 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
             title.innerText = "No results";
             div.appendChild(title);
         }
-
+        document.querySelector("#GBContent").innerHTML = "Results for " + ISBN;
         document.getElementById("GBContent").appendChild(div);
     }
 

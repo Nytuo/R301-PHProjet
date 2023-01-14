@@ -3,12 +3,14 @@
 session_start();
 require_once "head.php";
 require_once "header.php";
-
 require_once "productClass.php";
+require_once "SqlApi.php";
+$sql=new SqlApi();
 
 $cartList = array();
 foreach ($_SESSION['cart'] as $cart) {
-    $productObject = new product($cart['id'][0]);
+    $DBProduct = $sql->getProduct($cart['id'][0]);
+    $productObject = new product($DBProduct['ref'],$DBProduct['id'], $DBProduct['title'], $DBProduct['public_price'], $DBProduct['paid_price'],$DBProduct['description'], $DBProduct['image'],$DBProduct['quantity'], $DBProduct['pages'], $DBProduct['publisher'],$DBProduct['out_date'], $DBProduct['author'], $DBProduct['language'], $DBProduct['format'], $DBProduct['dimensions'], $DBProduct['category']);
     $cartList[] = array('product' => $productObject, 'quantity' => $cart['quantity']);
 }
 function calculateTotal($cartList) {

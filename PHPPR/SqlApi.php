@@ -17,13 +17,21 @@ class SqlApi
             password TEXT NOT NULL
         );
         create table products (
-            id INTEGER PRIMARY KEY,
+            id INTEGER PRIMARY KEY not null,
             ref varchar(255) not null,
             title varchar(255) not null,
             public_price float not null,
             paid_price float not null,
-            description text not null,
-            image varchar(255) not null
+            description text,
+            image varchar(255),
+            pages int,
+            publisher varchar(255),
+            out_date varchar(255),
+            author varchar(255),
+            language varchar(255),
+            format varchar(255),
+            dimensions varchar(255),   
+            category varchar(255)
         );
         create table client(
             id INTEGER PRIMARY KEY,
@@ -85,11 +93,11 @@ class SqlApi
         }
     }
 
-    public function insertProduct(string $name, string $ref, float $public_price, float $paid_price, string $description, string $image, int $quantity)
+    public function insertProduct(string $name, string $ref, float $public_price, float $paid_price, string $description, string $image, int $quantity, int $pages, string $publisher, string $out_date, string $author, string $language, string $format, string $dimensions, string $category)
     {
-        $sqlQuery = "INSERT INTO products (id,title,ref, public_price,paid_price, description, image) VALUES (NULL,:title,:ref, :public_price,:paid_price, :description, :image)";
+        $sqlQuery = "INSERT INTO products (id,title,ref, public_price,paid_price, description, image,pages,publisher,out_date,author,language,format,dimensions,category) VALUES (?,:title,:ref,:public_price,:paid_price,:description,:image,:pages,:publisher,:out_date,:author,:language,:format,:dimensions,:category)";
         $stmt = $this->db->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-        $stmt->execute(array('title' => $name, 'ref' => $ref, 'public_price' => $public_price, 'paid_price' => $paid_price, 'description' => $description, 'image' => $image));
+        $stmt->execute(array(':title' => $name, ':ref' => $ref, ':public_price' => $public_price, ':paid_price' => $paid_price, ':description' => $description, ':image' => $image, ':pages' => $pages, ':publisher' => $publisher, ':out_date' => $out_date, ':author' => $author, ':language' => $language, ':format' => $format, ':dimensions' => $dimensions, ':category' => $category));
         $sqlQuery = "SELECT id FROM products WHERE ref=:ref";
         $stmt = $this->db->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
         $stmt->execute(array('ref' => $ref));
@@ -98,6 +106,7 @@ class SqlApi
         $stmt = $this->db->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
         $stmt->execute(array('product_id' => $id, 'quantity' => $quantity));
     }
+
     public function insertFournisseur(string $name, string $email, string $address, string $city, string $zip_code, string $country)
     {
         $sqlQuery = "INSERT INTO fournisseur (id,name,email, address,city, zip_code, country) VALUES (NULL,:name,:email, :address,:city, :zip_code, :country)";
@@ -119,7 +128,7 @@ class SqlApi
             }
             return $product;
         }, $result);
-           return $result;
+        return $result;
     }
 
     public function getProduct(int $id)
@@ -129,8 +138,8 @@ class SqlApi
         $qty = $this->db->prepare("SELECT quantity FROM gestionStock WHERE product_id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $qty->execute(array('id' => $id));
         $result = $stmt->fetch();
-        $result2=$qty->fetch();
-        $result["quantity"] = $result2["quantity"]??0;
+        $result2 = $qty->fetch();
+        $result["quantity"] = $result2["quantity"] ?? 0;
         return $result;
     }
 
@@ -217,45 +226,72 @@ class SqlApi
     {
         $totalVente = $this->db->query("SELECT sum(total) FROM facturation WHERE strftime('%Y',date) = strftime('%Y','now')");
         $totalVente = $totalVente->fetch();
-        $qtyParProduct = $this->db->query("SELECT  products.title,facturation.product_id, sum(facturation.quantity), sum(gestionStock.quantity) FROM facturation, products,gestionStock WHERE facturation.product_id = products.id AND strftime('%Y',facturation.date) = strftime('%Y','now') GROUP BY facturation.product_id;");
-        $qtyParProduct = $qtyParProduct->fetchAll();
-        $qtyParProduct = array_map(function ($product) {
-            $product["quantity"] = $product["sum(facturation.quantity)"] + $product["sum(gestionStock.quantity)"];
+        $result = $this->db->query("SELECT products.title,products.id,products.paid_price,gestionStock.quantity FROM products,gestionStock WHERE products.id = gestionStock.product_id");
+        $result = $result->fetchAll();
+
+        $result = array_map(function ($product) {
+            $product["montant"] = $product["paid_price"] * $product["quantity"];
             return $product;
-        }, $qtyParProduct);
-        $paidPrice = $this->db->query("SELECT facturation.product_id, paid_price FROM facturation INNER JOIN products ON facturation.product_id = products.id WHERE strftime('%Y',facturation.date) = strftime('%Y','now') GROUP BY facturation.product_id;");
-        $paidPrice = $paidPrice->fetchAll();
-        $qtyParProduct = array_map(function ($product) use ($paidPrice) {
-            foreach ($paidPrice as $product2) {
-                if ($product["product_id"] == $product2["product_id"]) {
-                    $product["montant"] = $product2["paid_price"] * $product["quantity"];
-                    $product["paid_price"] = $product2["paid_price"];
+        }, $result);
+        $result2 = $this->db->query("SELECT facturation.product_id,facturation.quantity FROM facturation INNER JOIN products ON facturation.product_id = products.id WHERE strftime('%Y',facturation.date) = strftime('%Y','now') GROUP BY facturation.product_id;");
+        $result2 = $result2->fetchAll();
+        $result = array_map(function ($product) use ($result2) {
+            foreach ($result2 as $product2) {
+                if ($product["id"] == $product2["product_id"]) {
+                    $product["quantity"] += $product2["quantity"];
+                    $product["montant"] = $product["paid_price"] * $product["quantity"];
                 }
             }
             return $product;
-        }, $qtyParProduct);
-        $benefice = ($totalVente["sum(total)"] == null ? 0 : $totalVente["sum(total)"]) - array_reduce($qtyParProduct, function ($carry, $item) {
-            return $carry + ($item["paid_price"] * $item["quantity"]);
-        }, 0);
+        }, $result);
+        $benefice = ($totalVente["sum(total)"] == null ? 0 : $totalVente["sum(total)"]) - array_reduce($result, function ($carry, $item) {
+                return $carry + ($item["paid_price"] * $item["quantity"]);
+            }, 0);
         return $benefice;
+    }
+
+    public function getMA(){
+        $result = $this->db->query("SELECT products.title,products.id,products.paid_price,gestionStock.quantity FROM products,gestionStock WHERE products.id = gestionStock.product_id");
+        $result = $result->fetchAll();
+
+        $result = array_map(function ($product) {
+            $product["montant"] = $product["paid_price"] * $product["quantity"];
+            return $product;
+        }, $result);
+        $result2 = $this->db->query("SELECT facturation.product_id,facturation.quantity FROM facturation INNER JOIN products ON facturation.product_id = products.id WHERE strftime('%Y',facturation.date) = strftime('%Y','now') GROUP BY facturation.product_id;");
+        $result2 = $result2->fetchAll();
+        $result = array_map(function ($product) use ($result2) {
+            foreach ($result2 as $product2) {
+                if ($product["id"] == $product2["product_id"]) {
+                    $product["quantity"] += $product2["quantity"];
+                    $product["montant"] = $product["paid_price"] * $product["quantity"];
+                }
+            }
+            return $product;
+        }, $result);
+        $MA = array_reduce($result, function ($carry, $item) {
+                return $carry + ($item["paid_price"] * $item["quantity"]);
+            }, 0);
+        return $MA;
     }
 
     public function getAchatsEtMontant()
     {
-        $result = $this->db->query("SELECT  products.title,facturation.product_id, sum(facturation.quantity), sum(gestionStock.quantity) FROM facturation, products,gestionStock WHERE facturation.product_id = products.id AND strftime('%Y',facturation.date) = strftime('%Y','now') GROUP BY facturation.product_id;");
+
+        $result = $this->db->query("SELECT products.title,products.id,products.paid_price,gestionStock.quantity FROM products,gestionStock WHERE products.id = gestionStock.product_id");
         $result = $result->fetchAll();
 
         $result = array_map(function ($product) {
-            $product["quantity"] = $product["sum(facturation.quantity)"] + $product["sum(gestionStock.quantity)"];
+            $product["montant"] = $product["paid_price"] * $product["quantity"];
             return $product;
         }, $result);
-        $result2 = $this->db->query("SELECT facturation.product_id, paid_price FROM facturation INNER JOIN products ON facturation.product_id = products.id WHERE strftime('%Y',facturation.date) = strftime('%Y','now') GROUP BY facturation.product_id;");
+        $result2 = $this->db->query("SELECT facturation.product_id,facturation.quantity FROM facturation INNER JOIN products ON facturation.product_id = products.id WHERE strftime('%Y',facturation.date) = strftime('%Y','now') GROUP BY facturation.product_id;");
         $result2 = $result2->fetchAll();
         $result = array_map(function ($product) use ($result2) {
             foreach ($result2 as $product2) {
-                if ($product["product_id"] == $product2["product_id"]) {
-                    $product["montant"] = $product2["paid_price"] * $product["quantity"];
-                    $product["paid_price"] = $product2["paid_price"];
+                if ($product["id"] == $product2["product_id"]) {
+                    $product["quantity"] += $product2["quantity"];
+                    $product["montant"] = $product["paid_price"] * $product["quantity"];
                 }
             }
             return $product;
@@ -273,11 +309,12 @@ class SqlApi
                     <tbody>";
         foreach ($result as $product) {
             $res .= "<tr>
-                        <td>" . $product["product_id"] . "</td>
+                        <td>" . $product["id"] . "</td>
                         <td>" . $product["title"] . "</td>
                         <td>" . $product["quantity"] . "</td>
                         <td class='priceFOnly'>" . $product["paid_price"] . "€</td>
-                        <td class='priceFOnly'>" . $product["montant"] . "€</td>  
+                        <td class='priceFOnly'>" . $product["montant"] . "€</td>
+                        
 
                     </tr>";
         }
@@ -285,8 +322,9 @@ class SqlApi
         return $res;
     }
 
-    public function updateQuantity(int $newqty, int $id):void{
-$stmt = $this->db->prepare("UPDATE gestionStock SET quantity=:quantity WHERE product_id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+    public function updateQuantity(int $newqty, int $id): void
+    {
+        $stmt = $this->db->prepare("UPDATE gestionStock SET quantity=:quantity WHERE product_id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->execute(array('quantity' => $newqty, 'id' => $id));
 
     }
