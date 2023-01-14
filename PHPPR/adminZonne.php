@@ -229,6 +229,7 @@ function showClient($sql)
     echo "<tr>";
     echo "<th>Id</th>";
     echo "<th>Nom</th>";
+    echo "<th>Prénom</th>";
     echo "<th>Email</th>";
     echo "<th>Adresse</th>";
     echo "<th>Ville</th>";
@@ -240,6 +241,7 @@ function showClient($sql)
         echo "<tr>";
         echo "<td>" . $product['id'] . "</td>";
         echo "<td>" . $product['name'] . "</td>";
+        echo "<td>" . $product['firstName'] . "</td>";
         echo "<td>" . $product['email'] . "</td>";
         echo "<td>" . $product['address'] . "</td>";
         echo "<td>" . $product['city'] . "</td>";

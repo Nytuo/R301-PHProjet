@@ -69,6 +69,7 @@ if (isset($_POST['password'])) {
             <button type="submit" class="btn waves-effect">Connexion</button>
             ou
         <a class="btn waves-effect" href="register.php">Créé un compte</a>
+        <a class="btn waves-effect" href="passForgot.php">Mot de passe oublié</a>
         </form>
     </main>
 

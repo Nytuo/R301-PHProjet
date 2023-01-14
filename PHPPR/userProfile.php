@@ -36,4 +36,26 @@ if (!$result) {
 } else {
     $_SESSION['password'] = $ashPassword;//todo en attendant (ou peut etre définitif)
     $_SESSION['email'] = $email;
+    $user = $sql->getUser($email, $ashPassword);
 }
+?>
+
+        <main>
+            <h1>Bienvenue <?php echo $user["name"].", ".$user["firstName"] ?> <span class="sprt s-category-border-rr inline-block"></span></h1>
+            <div class="user-info">
+<h1>Voici vos informations personnels<span class="sprt s-category-border-rr inline-block"></span></h1>
+                <p>Adresse mail : <?php echo $user["email"] ?></p>
+                <p>Nom : <?php echo $user["name"] ?></p>
+                <p>Prénom : <?php echo $user["firstName"] ?></p>
+                <button class="btn waves-effect" onclick="window.location.href='changeUserPassword.php'">Demander un changement de mot de passe</button>
+                <h1>Adresse<span class="sprt s-category-border-rr inline-block"></span></h1>
+                <p><?php echo $user["address"] ?><br><?php echo $user["zip_code"] ?><br><?php echo $user["city"] ?>
+                    <br>
+                    <?php echo $user["country"] ?></p>
+                <button class="btn waves-effect" onclick="window.location.href = 'changeUserAddress.php';">Changer d'adresse</button>
+            </div>
+        </main>
+
+<?php
+require_once "footer.php";
+?>

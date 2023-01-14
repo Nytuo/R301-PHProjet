@@ -366,4 +366,25 @@ $stmt = $this->db->prepare("SELECT count(*) FROM client WHERE email=:email AND p
 
     }
 
+    public function getUser(mixed $email, mixed $ashPassword)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM client WHERE email=:email AND password=:password", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $stmt->execute(array('email' => $email, 'password' => $ashPassword));
+        $result = $stmt->fetch();
+        return $result;
+    }
+
+    public function updateUserAddress(mixed $email, mixed $address, mixed $city, mixed $zip, mixed $country)
+    {
+        $stmt = $this->db->prepare("UPDATE client SET address=:address,city=:city,zip_code=:zip,country=:country WHERE email=:email", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $stmt->execute(array('address' => $address, 'city' => $city, 'zip' => $zip, 'country' => $country, 'email' => $email));
+    }
+
+    public function updateUserPassword(mixed $email, mixed $password)
+    {
+        $stmt = $this->db->prepare("UPDATE client SET password=:password WHERE email=:email", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $password = hash('sha256', $password);
+        $stmt->execute(array('password' => $password, 'email' => $email));
+    }
+
 }

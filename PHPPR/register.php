@@ -17,7 +17,7 @@ if (isset($_POST["nom"])){
     $sql = new SqlApi();
     if ($password == $password2){
         $sql->insertUser($nom, $prenom, $email, $password, $adresse, $ville, $codePostal, $pays);
-        header("Location: successPage.php");
+        header("Location: connexion.php");
         exit();
     }else{
         $_SESSION['error'] = "Les mots de passe ne correspondent pas";
