@@ -5,8 +5,18 @@
     --text: #fff;
 }
 
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
 .material-icons {
     color: var(--text);
+    line-height: 1;
 }
 .tabs {
     background-color: var(--color-primary);
@@ -417,6 +427,10 @@ font-size: 1rem;
         }
     }
 
+}
+.page-footer{
+    background-color: var(--color-primary);
+    margin-top: 50px;
 }
 @-webkit-keyframes scale-in {
     100% {

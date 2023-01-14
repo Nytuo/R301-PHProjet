@@ -20,7 +20,6 @@
                     <li><a  href="products.php"><i class="material-icons left">book</i>Comics</a></li>
                     <li><a href="cart.php"><i class="material-icons left">shopping_cart</i>Chariot</a></li>
                     <li><a  href="connexion.php"><i class="material-icons left">account_circle</i>Profile</a></li>
-                    <li><a href="about.php"><i class="material-icons left">info</i>A propos</a></li>
                 </ul>
             </div>
         </nav>
@@ -29,7 +28,6 @@
             <li><a class="waves-effect" href="products.php"><i class="material-icons">book</i>Comics</a></li>
             <li><a href="cart.php"><i class="material-icons">shopping_cart</i>Chariot</a></li>
             <li><a class="waves-effect" href="connexion.php"><i class="material-icons">account_circle</i>Profile</a></li>
-            <li><a class="waves-effect" href="about.php"><i class="material-icons">info</i>A propos</a></li>
         </ul>
     </div>
 </header>
