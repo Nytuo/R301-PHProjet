@@ -1,38 +1,36 @@
 <header>
     <div>
         <nav>
-            <div class="nav-wrapper">
 
+            <div class="nav-wrapper">
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <a href="index.php" class="brand-logo center"><img src="assets/images/logo.gif" alt="" width="70%"></a>
                 <ul class="right hide-on-med-and-down">
-                    <li><a href="cart.php"><i class="material-icons">shopping_cart</i></a></li>
+                        <form action="search.php" method="get">
+                            <div class="input-field">
+                                <input id="search" type="search" name="search" required>
+                                <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                                <i class="material-icons">close</i>
+                            </div>
+                            <input type="submit" style="display: none">
+                        </form>
+                </ul>
+                <ul class="left hide-on-med-and-down">
+                    <li><a  href="index.php"><i class="material-icons left">home</i>Accueil</a></li>
+                    <li><a  href="products.php"><i class="material-icons left">book</i>Comics</a></li>
+                    <li><a href="cart.php"><i class="material-icons left">shopping_cart</i>Chariot</a></li>
+                    <li><a  href="connexion.php"><i class="material-icons left">account_circle</i>Profile</a></li>
+                    <li><a href="about.php"><i class="material-icons left">info</i>A propos</a></li>
                 </ul>
             </div>
         </nav>
-
-        <ul id="slide-out" class="sidenav sidenav-fixed">
-            <li>
-                <div class="user-view" style="height: 150px">
-                    <div class="background" style="background-color: #344288; height: 150px">
-                        <img src="assets/images/logo.webp" style="width: 100%; margin-top:-70px;scale: 1">
-                    </div>
-                </div>
-            </li>
-            <li>
-                <div class="search-container">
-                    <form action="search.php" method="get">
-                        <label>
-                            <input id="search" type="text" placeholder="Search.." name="search" style="width: 80%;margin-left: 5px">
-                        </label>
-                        <button type="submit" class="waves-effect waves-teal btn-flat"><i class="material-icons">search</i></button>
-                    </form>
-                </div>
-            </li>
-            <li><a class="waves-effect" href="index.php">Home</a></li>
-            <li><a class="waves-effect" href="products.php">Comics</a></li>
-            <li><a class="waves-effect" href="connexion.php">Connexion</a></li>
-            <li><a class="waves-effect" href="about.php">About</a></li>
+        <ul class="sidenav" id="mobile-demo">
+            <li><a class="waves-effect" href="index.php"><i class="material-icons">home</i>Accueil</a></li>
+            <li><a class="waves-effect" href="products.php"><i class="material-icons">book</i>Comics</a></li>
+            <li><a href="cart.php"><i class="material-icons">shopping_cart</i>Chariot</a></li>
+            <li><a class="waves-effect" href="connexion.php"><i class="material-icons">account_circle</i>Profile</a></li>
+            <li><a class="waves-effect" href="about.php"><i class="material-icons">info</i>A propos</a></li>
         </ul>
-        <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
     </div>
 </header>
 

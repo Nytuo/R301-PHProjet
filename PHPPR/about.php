@@ -12,4 +12,7 @@ require_once "header.php";
     Si vous avez des questions ou des commentaires, n'hésitez pas à nous contacter. Nous sommes impatients de vous aider à trouver vos prochaines lectures préférées.
     <br>Merci de visiter Comics Sans MS.</p>
 </main>
+<?php
+require_once "footer.php";
+?>
 </body>

@@ -59,7 +59,7 @@ if (isset($_POST['fname'])) {
     exit(0);
 }
 
-var_dump($_FILES);
+
 if (isset($_POST["name"])) {
     $fileUploaded = false;
     if ($_FILES["image"]["name"] != "") {
@@ -161,7 +161,6 @@ function showProducts($sql)
         echo "<td>" . $product['id'] . "</td>";
         echo "<td>" . $product['title'] . "</td>";
         echo "<td><img src=" . $product['image'] . " /  width='100'></td>";
-        //truncate description for 20 words
         $description = $product['description'];
         $description = explode(" ", $description);
         $description = array_slice($description, 0, 20);
@@ -317,7 +316,6 @@ function showCommands($sql)
 
 
 }
-
 putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
 
 ?>

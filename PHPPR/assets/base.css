@@ -56,15 +56,18 @@ table.highlight > tbody > tr:hover {
 }
 h1{
     position: relative;
-    width: fit-content;
-    background: #e0001c;
+    background: var(--color-primary);
     color: #ffffff;
     font-family: "Comic Sans MS",sans-serif;
     height: 31px;
     line-height: 31px;
     padding: 0 5px 0 10px;
-    font-size: 28px;
+    font-size: 24px;
     text-transform: uppercase;
+    margin-top: 80px;
+}
+.sidenav li > a > i, .sidenav li > a > [class^="mdi-"], .sidenav li > a li > a > [class*="mdi-"], .sidenav li > a > i.material-icons {
+    color: var(--text);
 }
 .tabs-content.carousel.carousel-slider .carousel-item.active{
     position: relative;
@@ -97,6 +100,9 @@ h1{
     color: white;
 }
 .dropdown-content li > a, .dropdown-content li > span {
+    color: var(--text);
+}
+input[type="search"]{
     color: var(--text);
 }
 .product_cart > input:not([type]), .product_cart > input[type="text"]:not(.browser-default), .product_cart > input[type="password"]:not(.browser-default), .product_cart > input[type="email"]:not(.browser-default), .product_cart > input[type="url"]:not(.browser-default), .product_cart > input[type="time"]:not(.browser-default), .product_cart > input[type="date"]:not(.browser-default), .product_cart > input[type="datetime"]:not(.browser-default), .product_cart > input[type="datetime-local"]:not(.browser-default), .product_cart > input[type="tel"]:not(.browser-default), .product_cart > input[type="number"]:not(.browser-default), .product_cart > input[type="search"]:not(.browser-default),.product_cart >  textarea.materialize-textarea{
@@ -280,23 +286,12 @@ main {
     background: rgba(255, 255, 255, 0.5);
 }
 
-header, main, footer {
-    padding-left: 300px;
-}
+
 
 nav {
     background-color: var(--color-primary);
 }
-@media only screen and (min-width: 993px){
-    nav a.button-collapse {
-        display: none;
-    }
-}
-@media only screen and (max-width: 992px) {
-    header, main, footer {
-        padding-left: 0;
-    }
-}
+
 
 .sidenav {
     background-color: var(--color-secondary);
@@ -363,7 +358,27 @@ nav {
     -webkit-animation: fade-in 0.65s ease-in forwards;
     animation: fade-in 0.65s ease-in forwards;
 }
+@media screen and (max-width: 900px){
+    .price {
+        display: inline-block;
+        color: yellow;
+        font-size: 1rem;
+        font-weight: bold;
+        line-height: 1;
+        margin-top:5px;
+    }
 
+    .priceFOnly {
+        color: yellow;
+        font-size: 1rem;
+        font-weight: bold;
+        line-height: 1;
+        margin-top:5px;
+    }
+    h1{
+        margin: 15px;
+    }
+}
 @-webkit-keyframes scale-in {
     100% {
         transform: scale(1);

@@ -147,8 +147,18 @@ class SqlApi
     {
         $stmt = $this->db->prepare("SELECT * FROM products WHERE title LIKE :search OR ref LIKE :search", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->execute(array('search' => "%$search%"));
-        $result = $stmt->fetchAll();
-        return $result;
+        $stmt = $stmt->fetchAll();
+        $qty = $this->db->query("SELECT products.id,quantity FROM gestionStock,products WHERE gestionStock.product_id=products.id");
+        $qty = $qty->fetchAll();
+        $stmt = array_map(function ($product) use ($qty) {
+            foreach ($qty as $q) {
+                if ($product['id'] == $q['id']) {
+                    $product['quantity'] = $q['quantity'];
+                }
+            }
+            return $product;
+        }, $stmt);
+        return $stmt;
     }
 
     public function deleteProduct(int $id)
