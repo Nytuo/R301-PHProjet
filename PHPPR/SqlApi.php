@@ -57,15 +57,10 @@ class SqlApi
             
             id INTEGER PRIMARY KEY,
             client_id int not null,
-            fournisseur_id int not null,
-            product_id int not null,
-            quantity int not null,
             total varchar(255) not null,
-            date varchar(255) not null,          
-            products text not null,           
-            foreign key (client_id) references client(id),
-            foreign key (fournisseur_id) references fournisseur(id),
-            foreign key (product_id) references products(id)
+            dateF varchar(255) not null,          
+            json text not null,
+            foreign key (client_id) references client(id)
         );
         create table gestionStock(
             product_id int not null,
@@ -369,6 +364,13 @@ class SqlApi
         $stmt->execute(array('email' => $email, 'password' => $ashPassword));
         return $stmt->fetch();
     }
+    public function getUserId(mixed $email)
+    {
+        $stmt = $this->db->prepare("SELECT id FROM client WHERE email=:email", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $stmt->execute(array('email' => $email));
+        return $stmt->fetch();
+    }
+
 
     public function updateUserAddress(mixed $email, mixed $address, mixed $city, mixed $zip, mixed $country): void
     {
@@ -382,5 +384,11 @@ class SqlApi
         $password = hash('sha256', $password);
         $stmt->execute(array('password' => $password, 'email' => $email));
     }
+    public function insertFacturation(mixed $client_id,mixed $jsonProduit,mixed $total): void
+    {
+        $stmt = $this->db->prepare("INSERT INTO facturation (client_id,total,dateF,json) VALUES (:client_id,:total,date(),:json)", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $stmt->execute(array('client_id' => $client_id, 'total' => $total, 'json' => $jsonProduit));
+    }
+
 
 }
