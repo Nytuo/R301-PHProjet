@@ -297,7 +297,8 @@ function showCommands($sql): void
         echo "<td>";
         $products = $command['json'];
         foreach ($products as $product) {
-            echo "<p>" . $product['products'] . " x" . $product['quantity'] . "</p>";
+            $prod = $sql->getProduct($product['products']);
+            echo "<p>" . $prod['title'] . " x" . $product['quantity'] . "</p>";
         }
         echo "</td>";
         echo "<td><a href='deleter.php?command=1&id=" . $command['id'] . "'>Supprimer</a></td>";

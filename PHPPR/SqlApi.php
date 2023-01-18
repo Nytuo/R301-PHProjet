@@ -204,10 +204,13 @@ class SqlApi
         foreach ($result as $client) {
             $clients[] = $client;
         }
-        return array_map(function ($product) {
+        $clients = array_map(function ($product) {
             $product['json'] = json_decode($product['json'], true);
             return $product;
         }, $clients);
+
+        return $clients;
+
     }
 
     public function deleteCommands(int $id): void
