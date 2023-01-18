@@ -282,24 +282,24 @@ function showCommands($sql): void
     echo "<tr>";
     echo "<th>Id</th>";
     echo "<th>Client</th>";
-    echo "<th>Product ID</th>";
-    echo "<th>Quantity</th>";
     echo "<th>Price</th>";
-    echo "<th>fournisseur_id</th>";
-    echo "<th>Delivery date</th>";
+    echo "<th>Date</th>";
     echo "<th>Products</th>";
     echo "<th>Suppression</th>";
     echo "</tr>";
     foreach ($allCommands as $command) {
+
         echo "<tr>";
         echo "<td>" . $command['id'] . "</td>";
         echo "<td>" . $command['client_id'] . "</td>";
-        echo "<td>" . $command['product_id'] . "</td>";
-        echo "<td>" . $command['quantity'] . "</td>";
         echo "<td>" . $command['total'] . "</td>";
-        echo "<td>" . $command['fournisseur_id'] . "</td>";
-        echo "<td>" . $command['date'] . "</td>";
-        echo "<td>" . $command['products'] . "</td>";
+        echo "<td>" . $command['dateF'] . "</td>";
+        echo "<td>";
+        $products = $command['json'];
+        foreach ($products as $product) {
+            echo "<p>" . $product['products'] . " x" . $product['quantity'] . "</p>";
+        }
+        echo "</td>";
         echo "<td><a href='deleter.php?command=1&id=" . $command['id'] . "'>Supprimer</a></td>";
         echo "</tr>";
     }

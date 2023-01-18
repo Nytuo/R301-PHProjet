@@ -199,11 +199,15 @@ class SqlApi
     {
         $result = $this->db->query("SELECT id,client_id,json,total,dateF FROM facturation");
         $result = $result->fetchAll();
+
         $clients = [];
         foreach ($result as $client) {
             $clients[] = $client;
         }
-        return $clients;
+        return array_map(function ($product) {
+            $product['json'] = json_decode($product['json'], true);
+            return $product;
+        }, $clients);
     }
 
     public function deleteCommands(int $id): void
@@ -243,6 +247,7 @@ class SqlApi
             $product = json_decode($product["json"], true);
             return $product;
         }, $result2);
+        $result2 = $result2[0];
 
         $result = array_map(function ($product) use ($result2) {
             foreach ($result2 as $product2) {
@@ -273,6 +278,7 @@ class SqlApi
             $product = json_decode($product["json"], true);
             return $product;
         }, $result2);
+        $result2 = $result2[0];
         $result = array_map(function ($product) use ($result2) {
             foreach ($result2 as $product2) {
                 if ($product["id"] == $product2["products"]) {
@@ -300,9 +306,9 @@ class SqlApi
         $result2 = $this->db->query("SELECT facturation.json FROM facturation  WHERE strftime('%Y',facturation.dateF) = strftime('%Y','now') GROUP BY facturation.id;");
         $result2 = $result2->fetchAll();
         $result2 = array_map(function ($product) {
-            $product = json_decode($product["json"], true);
-            return $product;
+            return json_decode($product["json"], true);
         }, $result2);
+        $result2 = $result2[0];
         $result = array_map(function ($product) use ($result2) {
             foreach ($result2 as $product2) {
                 if ($product["id"] == $product2["products"]) {
