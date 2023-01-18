@@ -197,7 +197,7 @@ class SqlApi
 
     public function getCommands(): array
     {
-        $result = $this->db->query("SELECT id,client_id,fournisseur_id,product_id,quantity,total,date,products FROM facturation");
+        $result = $this->db->query("SELECT id,client_id,json,total,dateF FROM facturation");
         $result = $result->fetchAll();
         $clients = [];
         foreach ($result as $client) {
@@ -221,14 +221,14 @@ class SqlApi
 
     public function getChiffreAffaire()
     {
-        $result = $this->db->query("SELECT sum(total) FROM facturation WHERE strftime('%Y',date) = strftime('%Y','now')");
+        $result = $this->db->query("SELECT sum(total) FROM facturation WHERE strftime('%Y',dateF) = strftime('%Y','now')");
         $result = $result->fetch();
         return $result["sum(total)"] == null ? 0 : $result["sum(total)"];
     }
 
     function getBenefices()
     {
-        $totalVente = $this->db->query("SELECT sum(total) FROM facturation WHERE strftime('%Y',date) = strftime('%Y','now')");
+        $totalVente = $this->db->query("SELECT sum(total) FROM facturation WHERE strftime('%Y',dateF) = strftime('%Y','now')");
         $totalVente = $totalVente->fetch();
         $result = $this->db->query("SELECT products.title,products.id,products.paid_price,gestionStock.quantity FROM products,gestionStock WHERE products.id = gestionStock.product_id");
         $result = $result->fetchAll();
@@ -237,11 +237,16 @@ class SqlApi
             $product["montant"] = $product["paid_price"] * $product["quantity"];
             return $product;
         }, $result);
-        $result2 = $this->db->query("SELECT facturation.product_id,facturation.quantity FROM facturation INNER JOIN products ON facturation.product_id = products.id WHERE strftime('%Y',facturation.date) = strftime('%Y','now') GROUP BY facturation.product_id;");
+        $result2 = $this->db->query("SELECT facturation.json FROM facturation WHERE strftime('%Y',facturation.dateF) = strftime('%Y','now') GROUP BY facturation.id;");
         $result2 = $result2->fetchAll();
+        $result2 = array_map(function ($product) {
+            $product = json_decode($product["json"], true);
+            return $product;
+        }, $result2);
+
         $result = array_map(function ($product) use ($result2) {
             foreach ($result2 as $product2) {
-                if ($product["id"] == $product2["product_id"]) {
+                if ($product["id"] == $product2["products"]) {
                     $product["quantity"] += $product2["quantity"];
                     $product["montant"] = $product["paid_price"] * $product["quantity"];
                 }
@@ -262,11 +267,15 @@ class SqlApi
             $product["montant"] = $product["paid_price"] * $product["quantity"];
             return $product;
         }, $result);
-        $result2 = $this->db->query("SELECT facturation.product_id,facturation.quantity FROM facturation INNER JOIN products ON facturation.product_id = products.id WHERE strftime('%Y',facturation.date) = strftime('%Y','now') GROUP BY facturation.product_id;");
+        $result2 = $this->db->query("SELECT facturation.json FROM facturation  WHERE strftime('%Y',facturation.dateF) = strftime('%Y','now') GROUP BY facturation.id;");
         $result2 = $result2->fetchAll();
+        $result2 = array_map(function ($product) {
+            $product = json_decode($product["json"], true);
+            return $product;
+        }, $result2);
         $result = array_map(function ($product) use ($result2) {
             foreach ($result2 as $product2) {
-                if ($product["id"] == $product2["product_id"]) {
+                if ($product["id"] == $product2["products"]) {
                     $product["quantity"] += $product2["quantity"];
                     $product["montant"] = $product["paid_price"] * $product["quantity"];
                 }
@@ -288,11 +297,15 @@ class SqlApi
             $product["montant"] = $product["paid_price"] * $product["quantity"];
             return $product;
         }, $result);
-        $result2 = $this->db->query("SELECT facturation.product_id,facturation.quantity FROM facturation INNER JOIN products ON facturation.product_id = products.id WHERE strftime('%Y',facturation.date) = strftime('%Y','now') GROUP BY facturation.product_id;");
+        $result2 = $this->db->query("SELECT facturation.json FROM facturation  WHERE strftime('%Y',facturation.dateF) = strftime('%Y','now') GROUP BY facturation.id;");
         $result2 = $result2->fetchAll();
+        $result2 = array_map(function ($product) {
+            $product = json_decode($product["json"], true);
+            return $product;
+        }, $result2);
         $result = array_map(function ($product) use ($result2) {
             foreach ($result2 as $product2) {
-                if ($product["id"] == $product2["product_id"]) {
+                if ($product["id"] == $product2["products"]) {
                     $product["quantity"] += $product2["quantity"];
                     $product["montant"] = $product["paid_price"] * $product["quantity"];
                 }

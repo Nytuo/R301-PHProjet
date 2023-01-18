@@ -83,7 +83,7 @@ function calculateTotal($cartList)
         echo "<p id='totalTTC' class='price'>Total TTC : " . calculateTotal($cartList) . "€</p>";
         echo "</div>";
         echo "<form action='create-checkout-session.php'>
-<input type='submit' class='btn waves-effect' value='Payer via Paypal'>
+<input type='submit' class='btn waves-effect' value='Procéder au paiement'>
 </form>";
     } else {
         echo "<p>Le chariot est vide...</p>";
