@@ -19,6 +19,7 @@ foreach ($_SESSION['cart'] as $cart) {
         'unit_amount' => $productObject->getPublicPrice() * 100,
     ],
         'quantity' => $cart['quantity']);
+
 }
 
 print_r($cartList);
@@ -31,7 +32,7 @@ require 'payment/stripe-php-10.3.0/init.php';
 
 header('Content-Type: application/json');
 
-$YOUR_DOMAIN = 'http://localhost:80/PHPPR';
+$YOUR_DOMAIN = 'http://localhost:80';
 
 $checkout_session = \Stripe\Checkout\Session::create([
   'line_items' => $cartList,

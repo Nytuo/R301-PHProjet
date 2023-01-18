@@ -391,6 +391,7 @@ class SqlApi
         $stmt = $this->db->prepare("SELECT id FROM client WHERE email=:email", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->execute(array('email' => $email));
         return $stmt->fetch();
+
     }
 
 
