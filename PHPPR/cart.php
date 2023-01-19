@@ -47,14 +47,14 @@ function calculateTotal($cartList)
             echo "<input type='number' name='quantity' min='1' max='" . $cart->getQuantity() . "' value='" . $qty . "' onchange='updateQuantity(this.value, " . $cart->getId() . ")'>";
             echo "<form action='removeProduct.php' method='post'>";
             echo "<input type='hidden' name='id' value='" . $cart->getId() . "'>";
-            echo "<input type='submit' class='waves-effect btn' value='Supprimer'>";
+            echo "<button type='submit' class='waves-effect btn'>Supprimer</button>";
             echo "</form>";
             echo "</div>";
         }
         echo "<div class='promo'>";
         echo "<form action='sessionUpdater.php' method='post'>";
         echo "<input type='text' name='promo' id='submitCP'  placeholder='Code promo'>";
-        echo "<input type='submit' class='waves-effect btn' value='Valider'>";
+        echo "<button type='submit' class='waves-effect btn' >Valider</button>";
         echo "</form>";
         echo "</div>";
         echo "<div class='shipping'>";
@@ -67,7 +67,7 @@ function calculateTotal($cartList)
         echo "<option value='20'>International</option>";
         echo "<label>Shipping</label>";
         echo "</select>";
-        echo "<input type='submit' class='waves-effect btn' value='Valider'>";
+        echo "<button type='submit' class='waves-effect btn'>Valider</button>";
         echo "</form>";
         echo "</div>";
         echo "<div class='total'>";
@@ -82,7 +82,7 @@ function calculateTotal($cartList)
         echo "<p id='totalTTC' class='price'>Total TTC : " . calculateTotal($cartList) . "€</p>";
         echo "</div>";
         echo "<form action='create-checkout-session.php'>
-<input type='submit' class='btn waves-effect' value='Procéder au paiement'>
+<button type='submit' class='btn waves-effect' >Procéder au paiement</button>
 </form>";
     } else {
         echo "<p>Le chariot est vide...</p>";

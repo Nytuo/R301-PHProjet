@@ -9,5 +9,10 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
     <title>Comics Sans MS</title>
 </head>
+<?php 
+                  session_start();
+                  ob_start();
+                    ?>

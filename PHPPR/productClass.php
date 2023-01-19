@@ -305,6 +305,15 @@ class product implements JsonSerializable
         }
     }
 
+    public function isAvailableBoolVersion(): bool
+    {
+if ($this->quantity > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * @param string $category
      */

@@ -250,10 +250,10 @@ class SqlApi
             $product = json_decode($product["json"], true);
             return $product;
         }, $result2);
-        $result2 = $result2[0];
-
+        
         $result = array_map(function ($product) use ($result2) {
             foreach ($result2 as $product2) {
+                $product2 = $product2[0];
                 if ($product["id"] == $product2["products"]) {
                     $product["quantity"] += $product2["quantity"];
                     $product["montant"] = $product["paid_price"] * $product["quantity"];
@@ -281,9 +281,9 @@ class SqlApi
             $product = json_decode($product["json"], true);
             return $product;
         }, $result2);
-        $result2 = $result2[0];
         $result = array_map(function ($product) use ($result2) {
             foreach ($result2 as $product2) {
+                $product2 = $product2[0];
                 if ($product["id"] == $product2["products"]) {
                     $product["quantity"] += $product2["quantity"];
                     $product["montant"] = $product["paid_price"] * $product["quantity"];
@@ -291,6 +291,7 @@ class SqlApi
             }
             return $product;
         }, $result);
+    
         return array_reduce($result, function ($carry, $item) {
             return $carry + ($item["paid_price"] * $item["quantity"]);
         }, 0);
@@ -311,9 +312,10 @@ class SqlApi
         $result2 = array_map(function ($product) {
             return json_decode($product["json"], true);
         }, $result2);
-        $result2 = $result2[0];
+        
         $result = array_map(function ($product) use ($result2) {
             foreach ($result2 as $product2) {
+                $product2 = $product2[0];
                 if ($product["id"] == $product2["products"]) {
                     $product["quantity"] += $product2["quantity"];
                     $product["montant"] = $product["paid_price"] * $product["quantity"];

@@ -21,9 +21,15 @@ $product = new product($DBProduct['ref'], $DBProduct['id'], $DBProduct['title'],
             <p class="availability" style="position: relative;top: -40px"><?php echo $product->isAvailable() ?></p>
             <form action="addProduct.php" method="post" style="position: relative;top: -40px">
                 <input type="hidden" name="id" value="<?php echo $product->getId() ?>">
-                <input type="submit" value="Add to cart" class="waves-effect btn">
+                <button type="submit" class="waves-effect btn" id="buttonAddCart">Ajouter au panier <i class="material-icons right">add_shopping_cart</i></button>
             </form>
         </div>
+        <script>
+            if (document.querySelector('span.OutOfStock')) {
+                document.querySelector('#buttonAddCart').classList.add('disabled');
+                document.querySelector('#buttonAddCart').innerHTML = 'Indisponible';
+            }
+        </script>
         <div>
             <p>Pages: <?php echo $product->getPages() ?></p>
             <p>Author: <?php echo $product->getAuthor() ?></p>

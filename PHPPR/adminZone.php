@@ -40,7 +40,6 @@ if (!$result) {
 if (isset($_POST["changeQty"])) {
     $sql->updateQuantity($_POST["changeQty"], $_POST["id"]);
     header("Location: adminZone.php?message=updateOK");
-    exit(0);
 }
 
 if (isset($_POST['fname'])) {
@@ -99,7 +98,7 @@ if (isset($_POST["name"])) {
     $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
     $ref = filter_input(INPUT_POST, 'ref', FILTER_SANITIZE_STRING);
     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_STRING);
-    $image = "uploads/default.png";
+    $image = "assets/images/no-image.webp";
     if ($fileUploaded) {
         $image = $target_file;
     } else if (isset($_POST["imageURL"])) {
@@ -171,7 +170,7 @@ function showProducts($sql): void
         echo "<form class='inputTD' action='adminZone.php' method='post'>";
         echo "<input name='changeQty'  type='number' value=" . $product['quantity'] . " id='quantity" . $product['id'] . "'>
         <input type='hidden' name='id' value=" . $product['id'] . ">
-<input type='submit' value='Modifier' class='btn waves-effect'/>
+<button type='submit' class='btn waves-effect'>Modifier</button>
 </form>
 </td>";
         echo "<td><a href='deleter.php?product=1&id=" . $product['id'] . "'>Supprimer</a></td>";
@@ -483,9 +482,9 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                     <label for="dimensions">Dimensions</label><input type="text" id="dimensions" name="dimensions">
                 </div>
                 <div class="input-field">
-                    <label for="category">Catégorie</label><input type="text" id="category" name="category">
+                    <label for="category">Catégorie</label><input type="text" id="category" name="category">cover
                 </div>
-                <input type="submit" class="waves-effect btn" value="Ajouter un produit">
+                <button type="submit" class="waves-effect btn">Ajouter un produit</button>
             </form>
 
             <div id="GoogleBooksAPI">
@@ -516,12 +515,7 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                 <div class="input-field">
 
                     <input type="email" name="email" id="email">
-                    <label for="email">email</label>
-                </div>
-                <div class="input-field">
-
-                    <input type="text" name="adresse" id="adresse">
-                    <label for="adresse">adresse</label>
+                    <label for="email">email</label>image
                 </div>
                 <div class="input-field">
                     <input type="text" name="City" id="City">
@@ -535,7 +529,7 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                     <input type="text" name="country" id="country">
                     <label for="country">Pays</label>
                 </div>
-                <input type="submit" class="waves-effect btn" value="Ajouter un fournisseur">
+                <button type="submit" class="waves-effect btn">Ajouter un fournisseur</button>
             </form>
         </div>
         <div id="listProducts" class="col s12">    <?php showProducts($sql) ?> </div>

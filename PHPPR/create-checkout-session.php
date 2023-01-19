@@ -4,8 +4,11 @@
 require_once "SqlApi.php";
 require_once "productClass.php";
 $sql = new SqlApi();
-// open session
+//show errors
+ini_set('display_errors', 1);
+
 session_start();
+ob_start();
 $cartList = array();
 foreach ($_SESSION['cart'] as $cart) {
     $DBProduct = $sql->getProduct($cart['id'][0]);
@@ -22,17 +25,20 @@ foreach ($_SESSION['cart'] as $cart) {
 
 }
 
-print_r($cartList);
 
 require 'payment/stripe-php-10.3.0/init.php';
 // This is a public sample test API key.
 // Don’t submit any personally identifiable information in requests made with this key.
 // Sign in to see your own test API key embedded in code samples.
+
 \Stripe\Stripe::setApiKey('sk_test_VePHdqKTYQjKNInc7u56JBrQ');
+
+
+
 
 header('Content-Type: application/json');
 
-$YOUR_DOMAIN = 'http://localhost:80';
+$YOUR_DOMAIN = 'https://comicssansms.pq.lu/'
 
 $checkout_session = \Stripe\Checkout\Session::create([
   'line_items' => $cartList,

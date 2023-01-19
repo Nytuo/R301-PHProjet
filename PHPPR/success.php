@@ -10,14 +10,13 @@ require_once "Mailer.php";
 $sql = new SqlApi();
 
 $cartList = array();
-echo "<div class='cards-list'>";
+$prodList = array();
 foreach ($_SESSION['cart'] as $cart) {
     $DBProduct = $sql->getProduct($cart['id'][0]);
     $productObject = new product($DBProduct['ref'], $DBProduct['id'], $DBProduct['title'], $DBProduct['public_price'], $DBProduct['paid_price'], $DBProduct['description'], $DBProduct['image'], $DBProduct['quantity'], $DBProduct['pages'], $DBProduct['publisher'], $DBProduct['out_date'], $DBProduct['author'], $DBProduct['language'], $DBProduct['format'], $DBProduct['dimensions'], $DBProduct['category']);
-    $productObject->displayProduct();
+    $prodList[] = $productObject;
     $cartList[] = array('product' => $productObject, 'quantity' => $cart['quantity']);
 }
-echo "</div>";
 function resetCart()
 {
     unset($_SESSION['cart']);
@@ -49,18 +48,34 @@ foreach($cartList as $cart){
 }
 
 $sql->insertFacturation($userId,json_encode($json),calculateTotal($cartList));
-Mailer::sendMail($_SESSION['email'], "Facture", "Votre facture est de " . calculateTotal($cartList) . "€ et vous avez acheté : " . json_encode($json));
-Mailer::sendMail("arnaud.beux.ab@gmail.com", "New order", "Une nouvelle commande a été passée de " . calculateTotal($cartList) . "€ par " . $_SESSION['email']);
+foreach ($cartList as $cart) {
+    $sql->updateQuantity( $cart['product']->getQuantity() - $cart['quantity'],$cart['product']->getId());
+}
+$paidProducts = array();
+foreach ($cartList as $cart) {
+    $paidProducts[] = $cart['product']->getTitle() . " x" . $cart['quantity'] . " à " . $cart['product']->getPublicPrice() . "€/unité soit " . $cart['product']->getPublicPrice() * $cart['quantity'] . "€";
+}
+Mailer::sendMail($_SESSION['email'], "Comics Sans MS -- Facture", "Comics Sans MS vous remercie de votre achat !\nLe montant de votre facture est de " . calculateTotal($cartList) . "€ et vous avez acheté les articles suivants: \n" . implode("\n", $paidProducts));  
+Mailer::sendMail("arnaud.beux.ab@gmail.com", "New order", "Une nouvelle commande a été passée de " . calculateTotal($cartList) . "€ par " . $_SESSION['email']."\nLes articles achetés sont les suivants: \n" . implode("\n", $paidProducts));
 resetCart();
 
 ?>
-
-<div class="center">
+<div class="center spaceXUp">
     <img src="assets/images/merciAchat.gif" alt="">
     <p class="center">Comics Sans MS vous remercie pour votre achat !</p>
     <p class="center">Votre commande a bien été prise en compte, vous allez recevoir un mail contenant votre facture.</p>
 </div>
+<div class="cards-list">
+    <?php 
+    foreach ($prodList as $prod){
+        $prod->displayProduct();
+    }
+    ?>
+    </div>
 <?php
+
+
+
 require_once "footer.php";
 ?>
 </body>

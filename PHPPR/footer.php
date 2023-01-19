@@ -13,6 +13,8 @@
                 <p>Lire en style avec COMICS SANS MS</p>
                 <p>COMICS SANS MS est une filiale non officiel de 512 Bank</p>
                 <a href="about.php">Qui sommes nous ?</a>
+                <br>
+                <a href="resetator.php">Quand dans ma vie, ça va mal, je vais voir le RESETATOR</a>
             </div>
         </div>
     </div>

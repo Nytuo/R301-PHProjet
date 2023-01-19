@@ -54,7 +54,7 @@ if (isset($_SESSION['password']) && isset($_SESSION['email'])) {
             <label for="password2">Confirmer le mot de passe</label>
         </div>
         <div class="input-field">
-            <input type="submit" value="Changer" class="waves-effect btn">
+            <button type="submit"  class="waves-effect btn">Changer</button>
         </div>
 </main>
 <?php
