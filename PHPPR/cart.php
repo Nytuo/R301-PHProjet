@@ -62,7 +62,7 @@ function calculateTotal($cartList)
         echo "<div class='input-field col s12'>";
         echo "<select name='shipping'>";
         echo "<option value='0' selected disabled>Calculer les frais de port</option>";
-        echo "<option value='5.9'>France</option>";
+        echo "<option value='6'>France</option>";
         echo "<option value='10'>Europe</option>";
         echo "<option value='20'>International</option>";
         echo "<label>Shipping</label>";

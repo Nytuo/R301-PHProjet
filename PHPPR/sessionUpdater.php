@@ -1,6 +1,6 @@
 <?php
 session_start();
-$valid_code = array(array('code' => 'CODE1', 'discount' => 0.1), array('code' => 'CODE2', 'discount' => 0.2), array('code' => 'CODE3', 'discount' => 0.3));
+$valid_code = array(array('code' => 'CODE1', 'discount' => 1), array('code' => 'CODE2', 'discount' => 2), array('code' => 'CODE3', 'discount' => 3));
 
 if (isset($_POST['shipping'])) {
     $_SESSION['shipping'] = $_POST['shipping'];
