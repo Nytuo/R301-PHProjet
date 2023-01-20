@@ -46,9 +46,9 @@ if (isset($_POST['fname'])) {
     $fname = filter_input(INPUT_POST, 'fname', FILTER_SANITIZE_STRING);
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
     $address = filter_input(INPUT_POST, 'address', FILTER_SANITIZE_STRING);
-    $city = filter_input(INPUT_POST, 'city', FILTER_SANITIZE_STRING);
+    $city = filter_input(INPUT_POST, 'City', FILTER_SANITIZE_STRING);
     $zip_code = filter_input(INPUT_POST, 'ZipCode', FILTER_SANITIZE_STRING);
-    $country = filter_input(INPUT_POST, 'country', FILTER_SANITIZE_STRING);
+    $country = filter_input(INPUT_POST, 'country', FILTER_SANITIZE_STRING);    
     $sql->insertFournisseur($fname, $email, $address, $city, $zip_code, $country);
     header("Location: adminZone.php");
     exit(0);
@@ -520,6 +520,10 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                 <div class="input-field">
                     <input type="text" name="City" id="City">
                     <label for="City">Ville</label>
+                </div>
+                <div class="input-field">
+                    <input type="text" name="address" id="address">
+                    <label for="address">Adresse</label>
                 </div>
                 <div class="input-field">
                     <input type="text" name="ZipCode" id="ZipCode">

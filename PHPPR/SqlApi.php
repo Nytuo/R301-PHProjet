@@ -45,7 +45,7 @@ class SqlApi
             country varchar(255) not null
         );
         create table fournisseur(
-            id INTEGER PRIMARY KEY,
+            id INTEGER PRIMARY KEY AUTOINCREMENT not null,
             name varchar(255) not null,
             email varchar(255) not null,
             address varchar(255) not null,
@@ -105,9 +105,10 @@ class SqlApi
 
     public function insertFournisseur(string $name, string $email, string $address, string $city, string $zip_code, string $country): void
     {
-        $sqlQuery = "INSERT INTO fournisseur (id,name,email, address,city, zip_code, country) VALUES (?,:name,:email, :address,:city, :zip_code, :country)";
-        $stmt = $this->db->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-        $stmt->execute(array(':name' => $name, ':email' => $email, ':address' => $address, ':city' => $city, ':zip_code' => $zip_code, ':country' => $country));
+            $sqlQuery = "INSERT INTO fournisseur (id,name,email, address,city, zip_code, country) VALUES (?,:name,:email, :address,:city, :zip_code, :country)";
+            $stmt = $this->db->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $stmt->execute(array(':name' => $name, ':email' => $email, ':address' => $address, ':city' => $city, ':zip_code' => $zip_code, ':country' => $country));
+
     }
 
     public function getProducts(): array

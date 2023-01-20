@@ -14,7 +14,7 @@
                 <p>COMICS SANS MS est une filiale non officiel de 512 Bank</p>
                 <a href="about.php">Qui sommes nous ?</a>
                 <br>
-                <a href="resetator.php">Quand dans ma vie, ça va mal, je vais voir le RESETATOR</a>
+                <a href="resetator.php">BFR (Big F***ing Reset) 3000</a>
             </div>
         </div>
     </div>
