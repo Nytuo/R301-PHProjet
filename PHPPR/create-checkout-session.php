@@ -10,7 +10,7 @@ session_start();
 $cartList = array();
 foreach ($_SESSION['cart'] as $cart) {
     print_r($cart);
-    $DBProduct = $sql->getProduct($cart['id'][0]);
+    $DBProduct = $sql->getProduct($cart['id']);
     $productObject = new product($DBProduct['ref'], $DBProduct['id'], $DBProduct['title'], $DBProduct['public_price'], $DBProduct['paid_price'], $DBProduct['description'], $DBProduct['image'], $DBProduct['quantity'], $DBProduct['pages'], $DBProduct['publisher'], $DBProduct['out_date'], $DBProduct['author'], $DBProduct['language'], $DBProduct['format'], $DBProduct['dimensions'], $DBProduct['category']);
 //    $cartList[] = array('name' => $productObject->getTitle(), 'quantity' => $cart['quantity']);
     $cartList[] = array('price_data' => [
