@@ -105,9 +105,9 @@ class SqlApi
 
     public function insertFournisseur(string $name, string $email, string $address, string $city, string $zip_code, string $country): void
     {
-        $sqlQuery = "INSERT INTO fournisseur (id,name,email, address,city, zip_code, country) VALUES (NULL,:name,:email, :address,:city, :zip_code, :country)";
+        $sqlQuery = "INSERT INTO fournisseur (id,name,email, address,city, zip_code, country) VALUES (?,:name,:email, :address,:city, :zip_code, :country)";
         $stmt = $this->db->prepare($sqlQuery, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-        $stmt->execute(array('name' => $name, 'email' => $email, 'address' => $address, 'city' => $city, 'zip_code' => $zip_code, 'country' => $country));
+        $stmt->execute(array(':name' => $name, ':email' => $email, ':address' => $address, ':city' => $city, ':zip_code' => $zip_code, ':country' => $country));
     }
 
     public function getProducts(): array
@@ -129,9 +129,9 @@ class SqlApi
     public function getProduct(int $id)
     {
         $stmt = $this->db->prepare("SELECT * FROM products WHERE id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
-        $stmt->execute(array('id' => $id));
+        $stmt->execute(array(':id' => $id));
         $qty = $this->db->prepare("SELECT quantity FROM gestionStock WHERE product_id=:id", [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
-        $qty->execute(array('id' => $id));
+        $qty->execute(array(':id' => $id));
         $result = $stmt->fetch();
         $result2 = $qty->fetch();
         $result["quantity"] = $result2["quantity"] ?? 0;

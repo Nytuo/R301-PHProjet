@@ -7,7 +7,8 @@ $sql = new SqlApi();
 
 $cartList = array();
 foreach ($_SESSION['cart'] as $cart) {
-    $DBProduct = $sql->getProduct($cart['id'][0]);
+    print_r($cart);
+    $DBProduct = $sql->getProduct($cart['id']);
     $productObject = new product($DBProduct['ref'], $DBProduct['id'], $DBProduct['title'], $DBProduct['public_price'], $DBProduct['paid_price'], $DBProduct['description'], $DBProduct['image'], $DBProduct['quantity'], $DBProduct['pages'], $DBProduct['publisher'], $DBProduct['out_date'], $DBProduct['author'], $DBProduct['language'], $DBProduct['format'], $DBProduct['dimensions'], $DBProduct['category']);
     $cartList[] = array('product' => $productObject, 'quantity' => $cart['quantity']);
 }
@@ -81,9 +82,13 @@ function calculateTotal($cartList)
         echo "<p id='totalHT'>Total Hors-Taxes : " . calculateTotal($cartList) - (calculateTotal($cartList) * 0.2) . "€ dont " . calculateTotal($cartList) * 0.2 . "€ de TVA (20%)</p>";
         echo "<p id='totalTTC' class='price'>Total TTC : " . calculateTotal($cartList) . "€</p>";
         echo "</div>";
-        echo "<form action='create-checkout-session.php'>
-<button type='submit' class='btn waves-effect' >Procéder au paiement</button>
-</form>";
+        echo "<form action='create-checkout-session.php'>";
+        if (isset($_SESSION['email'])){
+            echo "<button type='submit' class='btn waves-effect' >Procéder au paiement</button>";
+        }else{
+            echo "<button type='submit' class='btn waves-effect disabled'>Procéder au paiement</button>";
+        }
+        echo "</form>";
     } else {
         echo "<p>Le chariot est vide...</p>";
         echo "<a href='products.php' class='btn waves-effect'>Retour aux produits</a>";

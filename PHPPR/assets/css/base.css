@@ -162,6 +162,8 @@ input[type="search"] {
 .product {
     transform: scale(1);
     transition: transform .3s ease-out;
+    margin: 0 10px 50px 10px;
+    max-width: 300px;
 }
 
 .product:hover {

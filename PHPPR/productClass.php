@@ -332,7 +332,7 @@ if ($this->quantity > 0) {
         echo "<a href='product.php?id=" . $this->id . "'>";
         echo "<div class='product'>";
         echo "<img src=" . $this->image . " alt='' width='300' height='450'>";
-        echo "<h2 style='font-size:  larger; text-align: center; margin-top: 5px'>" . $this->title . "</h2>";
+        echo "<h2 style='font-size:  larger; text-align: center; margin-top: 5px;word-wrap: break-word;word-break: break-word;'>" . $this->title . "</h2>";
         echo "<p class='priceFOnly f1rem center'>" . $this->publicPrice . "€</p>";
         echo "</div>";
         echo "</a>";

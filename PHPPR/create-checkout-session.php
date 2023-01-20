@@ -40,7 +40,7 @@ $shipping_rate = \Stripe\ShippingRate::create([
     'display_name' => 'Comics Sans Shipping',
     'type' => 'fixed_amount',
     'fixed_amount' => [
-      'amount' => $_SESSION['shipping']*100,
+      'amount' => $_SESSION['shipping'] != null ? $_SESSION['shipping']*100 : 20*100,
       'currency' => 'EUR',
     ],
     'delivery_estimate' => [
@@ -54,35 +54,39 @@ $shipping_rate = \Stripe\ShippingRate::create([
       ],
     ],
   ]);
-  try{
-    $coupon = \Stripe\Coupon::retrieve($_SESSION['discount_code']);
-  }catch (\Exception $e){
-    $coupon = \Stripe\Coupon::create([
-        'amount_off' => $_SESSION['discount']*100,
-        'currency' => 'eur',
-        'duration' => 'forever',
-        'id' => $_SESSION['discount_code'],
-      ]);
+  if ($_SESSION['discount_code'] != null){
+    
+    try{
+      $coupon = \Stripe\Coupon::retrieve($_SESSION['discount_code']);
+    }catch (\Exception $e){
+      $coupon = \Stripe\Coupon::create([
+          'amount_off' => $_SESSION['discount']*1000,
+          'currency' => 'eur',
+          'duration' => 'forever',
+          'id' => $_SESSION['discount_code'],
+        ]);
+    }
   }
-$checkout_session = \Stripe\Checkout\Session::create([
-  'line_items' => $cartList,
-  'mode' => 'payment',
-  'success_url' => $YOUR_DOMAIN . '/success.php',
-  'cancel_url' => $YOUR_DOMAIN . '/cart.php',
-  'currency' => 'EUR',
-  'customer_email' => $_SESSION['email'],
-  'payment_method_types' => [
+  $makeSession = array();
+  $makeSession['line_items'] = $cartList;
+  $makeSession['mode'] = 'payment';
+  $makeSession['success_url'] = $YOUR_DOMAIN . '/success.php';
+  $makeSession['cancel_url'] = $YOUR_DOMAIN . '/cart.php';
+  $makeSession['currency'] = 'EUR';
+  $makeSession['customer_email'] = $_SESSION['email'];
+  $makeSession['payment_method_types'] = [
     'card',
-  ],
-  'shipping_options' => [['shipping_rate' => $shipping_rate->id]],
-  'discounts' => [
-    [
-        'coupon' => $_SESSION['discount_code'],
-        ]
-    ]
+  ];
+  $makeSession['shipping_options'] = [['shipping_rate' => $shipping_rate->id]];
+  if($_SESSION["discount_code"] != null){
+    $makeSession['discounts'] = [
+        [
+            'coupon' => $_SESSION['discount_code'],
+            ]
+        ];
+  }
 
-
-]);
+$checkout_session = \Stripe\Checkout\Session::create($makeSession);
 
 header("HTTP/1.1 303 See Other");
 header("Location: " . $checkout_session->url);

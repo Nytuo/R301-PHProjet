@@ -482,7 +482,7 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                     <label for="dimensions">Dimensions</label><input type="text" id="dimensions" name="dimensions">
                 </div>
                 <div class="input-field">
-                    <label for="category">Catégorie</label><input type="text" id="category" name="category">cover
+                    <label for="category">Catégorie</label><input type="text" id="category" name="category">
                 </div>
                 <button type="submit" class="waves-effect btn">Ajouter un produit</button>
             </form>
@@ -515,7 +515,7 @@ putenv("GBAPIKEY=AIzaSyCMmAxUdCNLNh14IMSmHV6tQwZ-zs5iW6g")
                 <div class="input-field">
 
                     <input type="email" name="email" id="email">
-                    <label for="email">email</label>image
+                    <label for="email">email</label>
                 </div>
                 <div class="input-field">
                     <input type="text" name="City" id="City">
