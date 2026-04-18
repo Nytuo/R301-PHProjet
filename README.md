@@ -1,3 +1,6 @@
+> [!NOTE]
+> Ce projet a été réalisé dans un cadre universitaire.
+
 # Comics Sans MS
 
 A web application for managing and selling books with easy addition via the Google Books API and secure payments using Stripe.
